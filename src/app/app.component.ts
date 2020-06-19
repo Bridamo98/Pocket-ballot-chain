@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Usuario } from './Modelo/Usuario';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,6 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'pocket-ballot-chain';
+
+  usuario = new Usuario("Diego", 1200, "yo@aaa", "Aadadsd");
 }
