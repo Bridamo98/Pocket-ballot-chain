@@ -8,7 +8,7 @@ export class Usuario{
     idValidador : String;
     bloqAprobados : Number;
     bloqPropuestos : Number;
-    bloqRevisador : Number;
+    bloqRevisados : Number;
     bloqValidados : Number;
     genera : Voto[];
 
