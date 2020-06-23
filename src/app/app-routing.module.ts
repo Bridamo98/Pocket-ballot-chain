@@ -4,12 +4,14 @@ import { InicioSesionComponent } from './Componentes/Autenticacion/inicio-sesion
 import { AppComponent } from './app.component';
 import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/votacion-crear.component';
 import { UsuarioPerfilComponent } from './Componentes/Usuario/usuario-perfil/usuario-perfil.component';
+import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usuario-editar.component';
 
 
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
   {path: 'CrearVotacion', component: VotacionCrearComponent},
-  {path: 'perfil/:name', component: UsuarioPerfilComponent}
+  {path: 'perfil/:name', component: UsuarioPerfilComponent},
+  {path: 'perfil-eidtar/:name', component: UsuarioEditarComponent}
 ];
 
 @NgModule({
