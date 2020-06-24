@@ -9,6 +9,7 @@ import { InicioSesionComponent } from './Componentes/Autenticacion/inicio-sesion
 import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/votacion-crear.component';
 import { UsuarioPerfilComponent } from './Componentes/Usuario/usuario-perfil/usuario-perfil.component';
 import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usuario-editar.component';
+import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/votacion-lista.component';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,8 @@ import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usu
     InicioSesionComponent,
     VotacionCrearComponent,
     UsuarioPerfilComponent,
-    UsuarioEditarComponent
+    UsuarioEditarComponent,
+    VotacionListaComponent
   ],
   imports: [
     BrowserModule,

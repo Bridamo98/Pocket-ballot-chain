@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Router, ActivatedRoute } from '@angular/router';
-import { NgForm, FormsModule, FormGroup, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn, Form } from '@angular/forms';
+import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
   selector: 'app-usuario-editar',
