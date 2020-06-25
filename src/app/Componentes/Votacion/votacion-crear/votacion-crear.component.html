@@ -1,1 +1,28 @@
 <p>votacion-crear works!</p>
+
+<tr *ngFor="let votacion of votaciones">
+    <td>{{votacion.id}}</td>
+    <td>{{votacion.descripcion}}</td>
+</tr>
+
+<form>
+    <div >
+        <div class="form-group">
+            <input class="form-check-input" id="fecha">
+            <label class="form-check-label" for="fecha">Fecha</label>
+        </div>
+        <div class="form-group">
+            <input class="form-check-input" id="tipoVotacion">
+            <label class="form-check-label" for="tipoVotacion">tipoVotacion</label>
+        </div>
+        <div class="form-group">
+            <input class="form-check-input" id="descripcion">
+            <label class="form-check-label" for="descripcion">descripcion</label>
+        </div>
+        <div class="form-group">
+            <input class="form-check-input" id="votos">
+            <label class="form-check-label" for="votos">votos</label>
+        </div>
+        <button type="submit" class="btn btn-primary">Agregar</button>
+    </div>
+</form>
