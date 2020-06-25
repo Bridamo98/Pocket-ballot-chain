@@ -1,27 +1,65 @@
 <h1>Mis invitaciones</h1>
 <div class="container-fluid">
   <h2>Propias</h2>
+  <button class="btn btn-primary" (click)="crearVotacion()">Nueva votación</button>
   <table class="table">
     <thead>
       <tr>
         <th>No.</th>
-        <th>Tìtulo</th>
+        <th class="btn btn-secondary" (click)="ordenarPorTitulo(misVotaciones)">Tìtulo</th>
         <th>Grupo</th>
-        <th>No. Participantes</th>
+        <th class="btn btn-secondary" (click)="ordenarPorParticipantes(misVotaciones)">No. Participantes</th>
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
       <tr #row *ngFor="let votacion of misVotaciones">
-        <td>{{row.rowIndex}}</td>
-        <td>{{votacion}}</td>
+        <td>{{ row.rowIndex }}</td>
+        <td>{{ votacion.titulo }}</td>
         <td>XD</td>
-        <td>XD</td>
-        <td>XD</td>
+        <td>{{ votacion.participantes.length }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="eliminar(votacion, misVotaciones)"
+          >
+            Eliminar
+          </button>
+        </td>
       </tr>
     </tbody>
   </table>
 </div>
 <div class="container-fluid">
   <h2>Participante</h2>
+  <button class="btn btn-primary" (click)="verInvitaciones()">Ver invitaciones</button>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>No.</th>
+        <th class="btn btn-secondary" (click)="ordenarPorTitulo(votaciones)">Tìtulo</th>
+        <th>Grupo</th>
+        <th class="btn btn-secondary" (click)="ordenarPorParticipantes(votaciones)">No. Participantes</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr #row *ngFor="let votacion of votaciones">
+        <td>{{ row.rowIndex }}</td>
+        <td>{{ votacion.titulo }}</td>
+        <td>XD</td>
+        <td>{{ votacion.participantes.length }}</td>
+        <td>
+          <button
+            type="button"
+            class="btn btn-danger"
+            (click)="eliminar(votacion, votaciones)"
+          >
+            Eliminar
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 </div>
