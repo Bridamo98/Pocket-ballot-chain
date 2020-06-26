@@ -4,6 +4,7 @@ import { Voto } from './Voto';
 import { Opcion } from './Opcion';
 
 export class Votacion{
+    titulo: string;
     id : Number;
     fechaLimite : Date;
     plantillaAsociada : String;

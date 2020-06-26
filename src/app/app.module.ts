@@ -1,11 +1,18 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { InicioSesionComponent } from './Componentes/Autenticacion/inicio-sesion/inicio-sesion.component';
 import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/votacion-crear.component';
+import { UsuarioPerfilComponent } from './Componentes/Usuario/usuario-perfil/usuario-perfil.component';
+import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usuario-editar.component';
+import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/votacion-lista.component';
+import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
+import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 
 //servicios
 import { VotacionService } from './Servicios/votacion.service';
@@ -17,11 +24,18 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
     AppComponent,
     InicioSesionComponent,
     VotacionCrearComponent,
+    UsuarioPerfilComponent,
+    UsuarioEditarComponent,
+    VotacionListaComponent,
+    VotacionReporteComponent,
+    ValidadorPostularseComponent
     VotacionCrearInformacionComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
     HttpClientModule,
     NgbModule
   ],
