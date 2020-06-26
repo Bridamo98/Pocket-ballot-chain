@@ -186,7 +186,7 @@ export class GrupoCrearComponent implements OnInit {
         idValidador: "String",
         bloqAprobados: 2,
         bloqPropuestos: 3,
-        bloqRevisador: 3,
+        bloqRevisados: 3,
         bloqValidados: 1,
         genera: []
       },
@@ -197,7 +197,7 @@ export class GrupoCrearComponent implements OnInit {
         idValidador: "String",
         bloqAprobados: 2,
         bloqPropuestos: 3,
-        bloqRevisador: 3,
+        bloqRevisados: 3,
         bloqValidados: 1,
         genera: []
       },
@@ -208,7 +208,7 @@ export class GrupoCrearComponent implements OnInit {
         idValidador: "String",
         bloqAprobados: 2,
         bloqPropuestos: 3,
-        bloqRevisador: 3,
+        bloqRevisados: 3,
         bloqValidados: 1,
         genera: []
       },
@@ -219,7 +219,7 @@ export class GrupoCrearComponent implements OnInit {
         idValidador: "String",
         bloqAprobados: 2,
         bloqPropuestos: 3,
-        bloqRevisador: 3,
+        bloqRevisados: 3,
         bloqValidados: 1,
         genera: []
       },
@@ -230,7 +230,7 @@ export class GrupoCrearComponent implements OnInit {
         idValidador: "String",
         bloqAprobados: 2,
         bloqPropuestos: 3,
-        bloqRevisador: 3,
+        bloqRevisados: 3,
         bloqValidados: 1,
         genera: []
       },
@@ -241,7 +241,7 @@ export class GrupoCrearComponent implements OnInit {
         idValidador: "String",
         bloqAprobados: 2,
         bloqPropuestos: 3,
-        bloqRevisador: 3,
+        bloqRevisados: 3,
         bloqValidados: 1,
         genera: []
       }
@@ -261,7 +261,7 @@ export class GrupoCrearComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -273,7 +273,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -284,7 +284,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -304,7 +304,7 @@ export class GrupoCrearComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -316,7 +316,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -327,7 +327,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -338,7 +338,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -350,7 +350,7 @@ export class GrupoCrearComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         }],
@@ -368,7 +368,7 @@ export class GrupoCrearComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -380,7 +380,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -391,7 +391,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -411,7 +411,7 @@ export class GrupoCrearComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -423,7 +423,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -434,7 +434,7 @@ export class GrupoCrearComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }

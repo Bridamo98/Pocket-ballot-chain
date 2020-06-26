@@ -15,11 +15,11 @@ export class RegistrarComponent implements OnInit {
   constructor() { }
 
 
-  
+
   registrarse()
   {
-	
-	
+
+
 	console.log("hola mundo");
 	if(this.nombre!= null && this.nombre!=""&& this.nombre!=undefined &&
 		this.correo!=null && this.correo!="" && this.correo!=undefined)
@@ -32,9 +32,9 @@ export class RegistrarComponent implements OnInit {
 			idValidador: null,
 			bloqAprobados : null,
 			bloqPropuestos : null,
-			bloqRevisador : null,
+			bloqRevisados : null,
 			bloqValidados : null,
-			genera : null,
+			genera : null
 		};
 	}
 	else

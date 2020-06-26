@@ -15,7 +15,7 @@ export class GrupoListarComponent implements OnInit {
   otros: Grupo[] = [];
   esOtro: boolean;
   ruta:string;
-  date: Date = new Date(); #Quemado 
+  date: Date = new Date(); #Quemado
   iniciado: string = "us4";//QUEMADO - SE DEBE OBTENER CUAL ES EL USUARIO INICIADO
 
   obenerTodos():void{
@@ -32,7 +32,7 @@ export class GrupoListarComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -44,7 +44,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -55,7 +55,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -75,7 +75,7 @@ export class GrupoListarComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -87,7 +87,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -98,7 +98,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -109,7 +109,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -121,7 +121,7 @@ export class GrupoListarComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         }],
@@ -139,7 +139,7 @@ export class GrupoListarComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -151,7 +151,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -162,7 +162,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -182,7 +182,7 @@ export class GrupoListarComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -194,7 +194,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -205,7 +205,7 @@ export class GrupoListarComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -232,13 +232,13 @@ export class GrupoListarComponent implements OnInit {
       val.pendientes.forEach(val2=>{
         if(!val2.nombre.localeCompare(this.iniciado)){
           this.invitaciones.push(Object.assign({}, val));
-          this.esOtro = false; 
+          this.esOtro = false;
         }
       });
       val.miembros.forEach(val2 => {
         if (!val2.nombre.localeCompare(this.iniciado)) {
           this.pertenecientes.push(Object.assign({}, val));
-          this.esOtro = false; 
+          this.esOtro = false;
         }
       });
       if(this.esOtro){

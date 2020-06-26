@@ -41,7 +41,10 @@ export class VotacionListaComponent implements OnInit {
         participantes: [new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456')],
         almacena: [],
         opcionDeVotacion: [],
-        acesosExtra: []
+        accesosExtra: [],
+        id: 0,
+        descripcion: 'prueba 0',
+        votos: 0
       },
       {
         titulo: 'votacion 2',
@@ -51,7 +54,10 @@ export class VotacionListaComponent implements OnInit {
         participantes: [],
         almacena: [],
         opcionDeVotacion: [],
-        acesosExtra: []
+        accesosExtra: [],
+        id: 1,
+        descripcion: 'prueba 1',
+        votos: 0
       }
     ];
   }
@@ -67,7 +73,10 @@ export class VotacionListaComponent implements OnInit {
         participantes: [],
         almacena: [],
         opcionDeVotacion: [],
-        acesosExtra: []
+        accesosExtra: [],
+        id: 2,
+        descripcion: 'prueba 2',
+        votos: 0
       }
     ];
   }

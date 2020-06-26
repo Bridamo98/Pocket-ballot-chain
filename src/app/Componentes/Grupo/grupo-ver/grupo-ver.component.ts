@@ -14,7 +14,7 @@ export class GrupoVerComponent implements OnInit {
   grupos:Grupo[]=[];
   ruta: string;
   iniciado:string="us4";//QUEMADO - SE DEBE OBTENER CUAL ES EL USUARIO INICIADO
-  date: Date = new Date(); #Quemado  
+  date: Date = new Date(); #Quemado
 
   constructor(private routeParams: ActivatedRoute) {
 
@@ -50,7 +50,7 @@ export class GrupoVerComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -62,7 +62,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -73,7 +73,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -93,7 +93,7 @@ export class GrupoVerComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -105,7 +105,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -116,7 +116,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -127,7 +127,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -139,7 +139,7 @@ export class GrupoVerComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         }],
@@ -157,7 +157,7 @@ export class GrupoVerComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -169,7 +169,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -180,7 +180,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }
@@ -200,7 +200,7 @@ export class GrupoVerComponent implements OnInit {
           idValidador: "String",
           bloqAprobados: 2,
           bloqPropuestos: 3,
-          bloqRevisador: 3,
+          bloqRevisados: 3,
           bloqValidados: 1,
           genera: []
         },
@@ -212,7 +212,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           },
@@ -223,7 +223,7 @@ export class GrupoVerComponent implements OnInit {
             idValidador: "String",
             bloqAprobados: 2,
             bloqPropuestos: 3,
-            bloqRevisador: 3,
+            bloqRevisados: 3,
             bloqValidados: 1,
             genera: []
           }

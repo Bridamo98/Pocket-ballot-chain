@@ -40,6 +40,8 @@ export class VotacionReporteComponent implements OnInit {
   getVotacion(): void {
     this.votacion = {
       titulo: 'votacion 1',
+      id: 0,
+      descripcion: 'Votacion de prueba',
       fechaLimite: new Date(),
       plantillaAsociada: 'plantilla-1',
       tipoDeVotacion: 'popular',
@@ -47,23 +49,25 @@ export class VotacionReporteComponent implements OnInit {
       new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456'),
       new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456')],
       almacena: [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }],
+      votos: 0,
       opcionDeVotacion: [{
         descripcion: 'Candidato',
-        id: 'a',
+        id: 0,
         nombre: 'Alice'
       },
       {
         descripcion: 'Candidato',
-        id: 'b',
+        id: 1,
         nombre: 'Bob'
       },
       {
         descripcion: 'Candidato',
-        id: 'c',
+        id: 2,
         nombre: 'Carl'
       }],
-      acesosExtra: []
+      accesosExtra: []
     };
+    this.votacion.votos = this.votacion.almacena.length;
   }
 
   // Seguramente debe ser reemplazada esta función si se hace la correción

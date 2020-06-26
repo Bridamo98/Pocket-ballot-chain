@@ -13,7 +13,6 @@ import { InicioSesionComponent } from './Componentes/Autenticacion/inicio-sesion
 import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/votacion-crear.component';
 
 import { RegistrarComponent } from './Componentes/Autenticacion/registrar/registrar.component';
-import {FormsModule} from '@angular/forms';
 import { VotoRankingComponent } from './Componentes/Votacion/voto-ranking/voto-ranking.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -62,7 +61,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     AppRoutingModule,
     FormsModule,
     BrowserAnimationsModule,
-    DragDropModule
+    DragDropModule,
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
