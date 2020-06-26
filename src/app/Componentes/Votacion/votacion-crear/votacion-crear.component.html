@@ -1,28 +1,24 @@
-<p>votacion-crear works!</p>
 
 <tr *ngFor="let votacion of votaciones">
     <td>{{votacion.id}}</td>
     <td>{{votacion.descripcion}}</td>
 </tr>
 
-<form>
-    <div >
-        <div class="form-group">
-            <input class="form-check-input" id="fecha">
-            <label class="form-check-label" for="fecha">Fecha</label>
-        </div>
-        <div class="form-group">
-            <input class="form-check-input" id="tipoVotacion">
-            <label class="form-check-label" for="tipoVotacion">tipoVotacion</label>
-        </div>
-        <div class="form-group">
-            <input class="form-check-input" id="descripcion">
-            <label class="form-check-label" for="descripcion">descripcion</label>
-        </div>
-        <div class="form-group">
-            <input class="form-check-input" id="votos">
-            <label class="form-check-label" for="votos">votos</label>
-        </div>
-        <button type="submit" class="btn btn-primary">Agregar</button>
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Seleccione una plantilla</h1>
     </div>
-</form>
+</div>
+
+<div class="container">
+    <div class="row card-group">
+        <div *ngFor="let opcion of opciones" class="col-sm-4">
+            <div class="card bg-light mb-3">
+                <div class="card-header">{{opcion.nombre}}</div>
+                <div class="card-body">
+                    <p class="card-text">{{opcion.descripcion}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

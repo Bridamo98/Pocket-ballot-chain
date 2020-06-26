@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VotacionService } from './../../../Servicios/votacion.service'
 import { Votacion } from 'src/app/Modelo/Votacion';
+import { Opcion } from 'src/app/Modelo/Opcion';
 
 @Component({
   selector: 'app-votacion-crear',
@@ -10,6 +11,8 @@ import { Votacion } from 'src/app/Modelo/Votacion';
 export class VotacionCrearComponent implements OnInit {
 
   votaciones: Votacion[] = [];
+  opciones: Opcion[] = [{id:1, nombre:"uno", descripcion:"Descripcion"}, {id:2, nombre:'dos', descripcion:'descripcion dos'}, {id:3, nombre:'tres', descripcion:'descripcion tres'}];
+  otros: String[] = ["hola", "mundo"];
 
   constructor(public votacionService: VotacionService) { 
     
@@ -20,6 +23,7 @@ export class VotacionCrearComponent implements OnInit {
   }*/
 
   ngOnInit() {
+    console.log(this.opciones);
     this.getVotacion();
     //this.getVotacion();
   }

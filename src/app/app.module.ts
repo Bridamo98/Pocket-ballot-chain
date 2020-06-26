@@ -8,13 +8,15 @@ import { InicioSesionComponent } from './Componentes/Autenticacion/inicio-sesion
 import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/votacion-crear.component';
 
 //servicios
-import { VotacionService } from './Servicios/votacion.service'
+import { VotacionService } from './Servicios/votacion.service';
+import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component'
 
 @NgModule({
   declarations: [
     AppComponent,
     InicioSesionComponent,
-    VotacionCrearComponent
+    VotacionCrearComponent,
+    VotacionCrearInformacionComponent
   ],
   imports: [
     BrowserModule,
