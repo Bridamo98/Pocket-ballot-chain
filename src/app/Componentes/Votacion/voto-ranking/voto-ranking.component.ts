@@ -24,7 +24,7 @@ export class VotoRankingComponent implements OnInit {
   	moveItemInArray(this.candidatos, before, actual);
   	//console.log(this.candidatos);
   }
-  registrarse()
+  votar()
   {
   	console.log(this.candidatos);
   }

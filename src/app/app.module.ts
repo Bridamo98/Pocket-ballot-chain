@@ -10,6 +10,8 @@ import {FormsModule} from '@angular/forms';
 import { VotoRankingComponent } from './Componentes/Votacion/voto-ranking/voto-ranking.component';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { VotoClasificacionComponent } from './Componentes/Votacion/voto-clasificacion/voto-clasificacion.component';
+import { VotoPopularComponent } from './Componentes/Votacion/voto-popular/voto-popular.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -17,6 +19,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
     VotacionCrearComponent,
     RegistrarComponent,
     VotoRankingComponent,
+    VotoClasificacionComponent,
+    VotoPopularComponent,
   ],
   imports: [
     BrowserModule,
