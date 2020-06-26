@@ -1,7 +1,7 @@
 <div class="container-fluid">
   <h2>Información personal</h2>
   <p>Correo: {{ usuario.correo }}</p>
-  <button type="button" class="btn btn-primary">Nueva contraseña</button>
+  <button type="button" class="btn btn-primary" (click)="editarPerfil()">Editar perfil</button>
 </div>
 <div class="container-fluid">
   <img
@@ -17,5 +17,5 @@
   <p>Bloques propuestos: {{ usuario.bloqPropuestos }}</p>
   <p>Bloques aprobados: {{ usuario.bloqAprobados }}</p>
   <p>Saldo: ${{ usuario.saldo }}</p>
-  <button type="button" class="btn btn-primary">Ser validador</button>
+  <button type="button" class="btn btn-primary" (click)="serValidador()">Ser validador</button>
 </div>

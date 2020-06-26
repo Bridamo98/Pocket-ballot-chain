@@ -10,6 +10,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 })
 export class VotacionListaComponent implements OnInit {
 
+  usuario: Usuario = new Usuario('', 0, '', '');
   misVotaciones: Votacion[];
   votaciones: Votacion[];
 
@@ -17,7 +18,7 @@ export class VotacionListaComponent implements OnInit {
     private router: Router,
     private rutaActiva: ActivatedRoute
   ) {
-    //this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
+    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
    }
 
   ngOnInit(): void {
@@ -99,9 +100,16 @@ export class VotacionListaComponent implements OnInit {
 
   crearVotacion(): void {
     console.log('crearVotacion');
+    //this.router.navigate(['*/'+this.usuario.nombre]);
   }
 
   verInvitaciones(): void {
     console.log('verVotaciones');
+    //this.router.navigate(['*/'+this.usuario.nombre]);
+  }
+
+  verVotacion(titulo: string): void {
+    console.log('verVotacion ' + titulo);
+    this.router.navigate(['votacion-reporte/'+titulo]);
   }
 }

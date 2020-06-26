@@ -46,4 +46,12 @@ export class UsuarioPerfilComponent implements OnInit {
     };
   }
 
+  editarPerfil(): void {
+    this.router.navigate(['perfil-editar/'+this.usuario.nombre]);
+  }
+
+  serValidador(): void {
+    this.router.navigate(['validador-postularse/'+this.usuario.nombre]);
+  }
+
 }

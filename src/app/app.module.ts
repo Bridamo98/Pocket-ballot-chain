@@ -11,6 +11,7 @@ import { UsuarioPerfilComponent } from './Componentes/Usuario/usuario-perfil/usu
 import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usuario-editar.component';
 import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/votacion-lista.component';
 import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
+import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,8 @@ import { VotacionReporteComponent } from './Componentes/Votacion/votacion-report
     UsuarioPerfilComponent,
     UsuarioEditarComponent,
     VotacionListaComponent,
-    VotacionReporteComponent
+    VotacionReporteComponent,
+    ValidadorPostularseComponent
   ],
   imports: [
     BrowserModule,

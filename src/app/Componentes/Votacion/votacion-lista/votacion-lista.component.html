@@ -13,7 +13,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr #row *ngFor="let votacion of misVotaciones">
+      <tr #row *ngFor="let votacion of misVotaciones" (click)="verVotacion(votacion.titulo)">
         <td>{{ row.rowIndex }}</td>
         <td>{{ votacion.titulo }}</td>
         <td>XD</td>
@@ -45,7 +45,7 @@
       </tr>
     </thead>
     <tbody>
-      <tr #row *ngFor="let votacion of votaciones">
+      <tr #row *ngFor="let votacion of votaciones" (click)="verVotacion(votacion.titulo)">
         <td>{{ row.rowIndex }}</td>
         <td>{{ votacion.titulo }}</td>
         <td>XD</td>

@@ -16,6 +16,7 @@ export class VotacionReporteComponent implements OnInit {
   @ViewChild('canvas', { static: true })
   canvas: ElementRef<HTMLCanvasElement>;
   ctx;
+  ejeLong = 250;
   dsp: number = 20;
   maxX: number = 300;
   maxY: number = 300;
@@ -82,9 +83,9 @@ export class VotacionReporteComponent implements OnInit {
     this.maxY -= this.dsp;
     this.ctx = this.canvas.nativeElement.getContext("2d");
     this.calcularMaximo();
-    let ancho = 250 / this.votacion.opcionDeVotacion.length;
-    let unidad = 250 / this.maxVal;
-    this.dibEjes(250, 250);
+    let ancho = this.ejeLong / this.votacion.opcionDeVotacion.length;
+    let unidad = this.ejeLong / this.maxVal;
+    this.dibEjes(this.ejeLong, this.ejeLong);
     this.dibUnidades(unidad);
     for (let i = 0; i < this.votos.length; i++) {
       this.dibBarra(this.votacion.opcionDeVotacion[i].nombre.valueOf(), ancho * i, unidad * this.votos[i], ancho);
@@ -100,7 +101,7 @@ export class VotacionReporteComponent implements OnInit {
   }
 
   dibBarra(nombre: string, x: number, y: number, ancho: number): void {
-    this.ctx.fillStyle = "#FF0000";
+    this.ctx.fillStyle = "#277ed6";
     this.ctx.fillRect(x + this.dsp, this.maxY - y, ancho - 1, y);
     this.ctx.fillStyle = "#000000";
     this.ctx.font = "10px Arial";
@@ -111,7 +112,7 @@ export class VotacionReporteComponent implements OnInit {
     this.ctx.font = "8px Arial";
     let nCeros = this.numCeros();
     let numero = 0;
-    for (let i = 0; i <= 251; i += unidad * Math.pow(10, nCeros)) {
+    for (let i = 0; i <= this.ejeLong + 1; i += unidad * Math.pow(10, nCeros)) {
       this.ctx.fillText(numero, 0, this.maxY - i);
       numero += Math.pow(10, nCeros);
     }
