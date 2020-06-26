@@ -2,6 +2,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -13,6 +14,11 @@ import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/vo
 import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 
+//servicios
+import { VotacionService } from './Servicios/votacion.service';
+import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -23,14 +29,19 @@ import { ValidadorPostularseComponent } from './Componentes/Validador/validador-
     VotacionListaComponent,
     VotacionReporteComponent,
     ValidadorPostularseComponent
+    VotacionCrearInformacionComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule
+    HttpClientModule,
+    NgbModule
   ],
-  providers: [],
+  providers: [
+    VotacionService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

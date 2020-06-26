@@ -1,5 +1,5 @@
 export class Opcion{
     descripcion : String;
-    id : String;
+    id : number;
     nombre : String;
 }
