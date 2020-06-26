@@ -1,4 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { VotacionService } from './../../../Servicios/votacion.service'
+import { Votacion } from 'src/app/Modelo/Votacion';
+import { Opcion } from 'src/app/Modelo/Opcion';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'app-votacion-crear',
@@ -7,9 +11,36 @@ import { Component, OnInit } from '@angular/core';
 })
 export class VotacionCrearComponent implements OnInit {
 
-  constructor() { }
+  votaciones: Votacion[] = [];
+  otros: String[] = ["hola", "mundo"];
+  opciones: Opcion[] = [
+    {id:1, nombre:"uno", descripcion:"descripcion uno"}, 
+    {id:2, nombre:'dos', descripcion:'descripcion dos'}, 
+    {id:3, nombre:'tres', descripcion:'descripcion tres'}];
 
-  ngOnInit(): void {
+  constructor(public votacionService: VotacionService) { 
+
+  }
+
+  /*getVotacion(){
+    this.votacionService.getVotaciones().subscribe();
+  }*/
+
+  cambio(){
+    console.log('is Over');
+    //console.log(document.getElementById(nombre).innerHTML);
+  }
+
+  ngOnInit() {
+    this.getVotacion();
+    //this.getVotacion();
+  }
+
+  getVotacion(){
+    this.votacionService.getVotaciones().subscribe(res => {
+      this.votaciones = res
+      console.log(this.votaciones);
+    });
   }
 
 }
