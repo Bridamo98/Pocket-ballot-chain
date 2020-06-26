@@ -1,17 +1,12 @@
 
-
-<ul  >
-	<div class="numeros">
-		<ul class="list-group-item" *ngFor="let candidato of candidatos; let i= index" >
-			{{i+1}}.
-		</ul>
-	</div>
-</ul>
-
-<ul class="list-group" cdkDropList>
+<h1 [innerHtml]="tituloVotacion"> </h1>
+<p>Rankea a los candidatos o propuestas de la votación, siendo el numero 1 con el que estas mas deacuerdo.</p>
+<ul class="list-group" cdkDropList (cdkDropListDropped)="onDropped($event)">
 	<div class="candidatos">
 		<ul class="list-group-item" *ngFor="let candidato of candidatos; let i= index" cdkDrag>
-			{{candidato}}
+			{{i+1}}. {{candidato}}
 		</ul>
 	</div>
 </ul>
+
+<button (click)="registrarse()">Votar</button>
