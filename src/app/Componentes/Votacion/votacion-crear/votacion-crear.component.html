@@ -13,7 +13,7 @@
 <div class="container">
     <div class="row card-group">
         <div *ngFor="let opcion of opciones" class="col-sm-4">
-            <div class="card bg-light mb-3">
+            <div (mouseover)="cambio()"class="card bg-light mb-3">
                 <div class="card-header">{{opcion.nombre}}</div>
                 <div class="card-body">
                     <p class="card-text">{{opcion.descripcion}}</p>

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { VotacionService } from './../../../Servicios/votacion.service'
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Opcion } from 'src/app/Modelo/Opcion';
+import { $ } from 'protractor';
 
 @Component({
   selector: 'app-votacion-crear',
@@ -18,12 +19,17 @@ export class VotacionCrearComponent implements OnInit {
     {id:3, nombre:'tres', descripcion:'descripcion tres'}];
 
   constructor(public votacionService: VotacionService) { 
-    
+
   }
 
   /*getVotacion(){
     this.votacionService.getVotaciones().subscribe();
   }*/
+
+  cambio(){
+    console.log('is Over');
+    //console.log(document.getElementById(nombre).innerHTML);
+  }
 
   ngOnInit() {
     this.getVotacion();
