@@ -1,0 +1,19 @@
+
+<h1 [innerHtml]="tituloVotacion"> </h1>
+<p>¡Reparte los votos asignados a los candidatos que quieras!</p>
+<ul class="list-group" >
+	<style >
+		input{
+        border: none;
+		border-color: transparent;
+    }
+	</style>
+	<ul class="list-group-item" *ngFor="let voto of votos; let index= index" (click)="votar2(index)" >
+		{{candidatos[index]}} votos:
+		<input type="text" readonly [(ngModel)]="votos[index]" placeholder="voto">
+	</ul>
+</ul>
+<p>Cantidad de votos: <input type="text" readonly [(ngModel)]="cantVotos" placeholder="cantidad votos"> </p>
+
+
+<button (click)="votar()">Votar</button>

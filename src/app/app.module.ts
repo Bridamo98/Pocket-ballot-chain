@@ -12,6 +12,15 @@ import { AppComponent } from './app.component';
 import { InicioSesionComponent } from './Componentes/Autenticacion/inicio-sesion/inicio-sesion.component';
 import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/votacion-crear.component';
 
+import { RegistrarComponent } from './Componentes/Autenticacion/registrar/registrar.component';
+import {FormsModule} from '@angular/forms';
+import { VotoRankingComponent } from './Componentes/Votacion/voto-ranking/voto-ranking.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { VotoClasificacionComponent } from './Componentes/Votacion/voto-clasificacion/voto-clasificacion.component';
+import { VotoPopularComponent } from './Componentes/Votacion/voto-popular/voto-popular.component';
+
+
 import { GrupoCrearComponent } from './Componentes/Grupo/grupo-crear/grupo-crear.component';
 import { GrupoVerComponent } from './Componentes/Grupo/grupo-ver/grupo-ver.component';
 import { GrupoListarComponent } from './Componentes/Grupo/grupo-listar/grupo-listar.component';
@@ -28,12 +37,15 @@ import { VotacionService } from './Servicios/votacion.service';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-
 @NgModule({
   declarations: [
     AppComponent,
     InicioSesionComponent,
     VotacionCrearComponent,
+    RegistrarComponent,
+    VotoRankingComponent,
+    VotoClasificacionComponent,
+    VotoPopularComponent,
     GrupoCrearComponent,
     GrupoVerComponent,
     GrupoListarComponent,
@@ -49,6 +61,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     BrowserModule,
     AppRoutingModule,
     FormsModule,
+    BrowserAnimationsModule,
+    DragDropModule
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,

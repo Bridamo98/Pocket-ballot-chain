@@ -1,0 +1,16 @@
+
+<h1 [innerHtml]="tituloVotacion"> </h1>
+<p>Rankea a los candidatos o propuestas de la votación, siendo el numero 1 con el que estas mas deacuerdo.</p>
+<p>ACEPTADO </p>
+<div class="list-group"  cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="candidatos" [cdkDropListConnectedTo]="segundaLista" #primeraLista="cdkDropList"  >
+	<div class="list-group-item" *ngFor="let candidato of candidatos; let i= index" cdkDrag>
+		{{candidato}}
+	</div>
+</div>
+<p>RECHAZADO </p>
+<div  class="list-group" cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]= "otraLista"  [cdkDropListConnectedTo]="primeraLista" #segundaLista="cdkDropList" > 
+	<div class="list-group-item" *ngFor="let candidato2 of otraLista; let i= index" cdkDrag>
+		{{candidato2}}
+	</div>
+</div>
+<button (click)="votar()">Votar</button>
