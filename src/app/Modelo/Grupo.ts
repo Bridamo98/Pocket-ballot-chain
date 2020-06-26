@@ -6,6 +6,8 @@ export class Grupo{
     creacion : Date;
     id : String;
     nombre : String;
+    creador : Usuario;
     miembros : Usuario[];
+    pendientes: Usuario[];
     historial : Votacion[];
 }

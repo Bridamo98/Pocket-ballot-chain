@@ -1,0 +1,113 @@
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header">
+                    Mis grupos
+                </div>
+                <div class="card-body">
+                    <div *ngIf="propios.length != 0; then thenBlock1 else elseBlock1"></div>
+                    <ng-template #thenBlock1>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nombre de grupo</th>
+                                    <th>Cantidad de miembros</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let g of propios; let i = index">
+                                    <td>{{g.nombre}}</td>
+                                    <td>{{g.miembros?.length || '0'}}</td>
+                                    <td>
+                                        <a href="{{ruta + '/VerGrupo/propios/' + g.id}}" target="_blank"
+                                            class="btn btn-primary mr-1">
+                                            Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-template>
+                    <ng-template #elseBlock1>
+                        No tienes grupos
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header">
+                    Participante
+                </div>
+                <div class="card-body">
+                    <div *ngIf="pertenecientes.length != 0; then thenBlock2 else elseBlock2"></div>
+                    <ng-template #thenBlock2>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nombre de grupo</th>
+                                    <th>Cantidad de miembros</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let g of pertenecientes; let i = index">
+                                    <td>{{g.nombre}}</td>
+                                    <td>{{g.miembros?.length || '0'}}</td>
+                                    <td>
+                                        <a href="{{ruta + '/VerGrupo/pertenecientes/' + g.id}}" target="_blank"
+                                            class="btn btn-primary mr-1">
+                                            Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-template>
+                    <ng-template #elseBlock2>
+                        No haces parte de ningún grupo
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm">
+            <div class="card">
+                <div class="card-header">
+                    Invitaciones
+                </div>
+                <div class="card-body">
+                    <div *ngIf="invitaciones.length != 0; then thenBlock3 else elseBlock3"></div>
+                    <ng-template #thenBlock3>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nombre de grupo</th>
+                                    <th>Cantidad de miembros</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let g of invitaciones; let i = index">
+                                    <td>{{g.nombre}}</td>
+                                    <td>{{g.miembros?.length || '0'}}</td>
+                                    <td>
+                                        <a href="{{ruta + '/VerGrupo/invitaciones/' + g.id}}" target="_blank"
+                                            class="btn btn-primary mr-1">
+                                            Ver
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-template>
+                    <ng-template #elseBlock3>
+                        No tienes invitaciones
+                    </ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
