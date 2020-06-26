@@ -1,0 +1,11 @@
+
+.candidatos{
+  width: 25%;
+  float:left;
+  display:block;
+}
+.numeros{
+  width: 5%;
+  float:left;
+  display:block;
+}

@@ -1,0 +1,17 @@
+
+
+<ul  >
+	<div class="numeros">
+		<ul class="list-group-item" *ngFor="let candidato of candidatos; let i= index" >
+			{{i+1}}.
+		</ul>
+	</div>
+</ul>
+
+<ul class="list-group" cdkDropList>
+	<div class="candidatos">
+		<ul class="list-group-item" *ngFor="let candidato of candidatos; let i= index" cdkDrag>
+			{{candidato}}
+		</ul>
+	</div>
+</ul>

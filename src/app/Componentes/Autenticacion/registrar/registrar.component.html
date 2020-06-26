@@ -1,0 +1,21 @@
+
+
+
+<h1>Registro</h1>
+<p>Para poder registrarse en el sistema por favor diligenciar el siguiente formulario:</p>
+
+<form>
+
+	<input type="email" required="required" placeholder="Correo electronico" size="20" maxlength="20" name="" [(ngModel)]="correo" name="correo">
+	<br/>
+	<input type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre">
+	<br/>
+	<input type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia">
+	<br/>
+	<input type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar">
+	<br/>
+	<div class="one" [innerHtml]="htmlToAdd"></div>
+	<input type="submit" (click)="registrarse()" value="Registrarse">
+	<br/>
+</form>
+<a href="/">Volver a inicio de sesión </a>
