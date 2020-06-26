@@ -1,32 +1,74 @@
 
-<div class = "container">
-    <table class="table table-bordered table-striped">
-        <thead>
-            <tr>
-            <th scope="col">#</th>
-            <th scope="col">First</th>
-            <th scope="col">Last</th>
-            <th scope="col">Handle</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-            </tr>
-            <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-            </tr>
-            <tr>
-                <th scope="row">3</th>
-                <td colspan="2">Larry the Bird</td>
-                <td>@twitter</td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 container">
+            <div class="justify-content-center"><h4 class="text-center">Candidatos/opciones</h4></div>
+            <div id="tabla-opciones"><table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Id</th>
+                        <th scope="col">Descripción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let opcion of opciones; let i = index" [attr.data-index]="i">
+                        <th scope="row">{{i+1}}</th>
+                        <td>{{opcion.nombre}}</td>
+                        <td>{{opcion.id}}</td>
+                        <td>{{opcion.descripcion}}</td>
+                    </tr>
+                </tbody>
+            </table></div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <div class="input-group">
+                        <input id="date" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <button class="btn btn-primary justify-content-center">Nueva opción</button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <button class="btn btn-primary justify-content-center">Pre-visualizar votación</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="col-lg-6 container">
+            <div class="justify-content-center"><h4 class="text-center">Invitar votantes</h4></div>
+            <form>
+                <div class="form-group row">
+                    <input placeholder="Credencial" type="text" class="form-control col-sm-4">
+                    <button class="btn btn-primary col-sm-4">Invitar por Credencial</button>
+                    <button class="btn btn-primary col-sm-4">Importar datos</button>
+                </div>
+                <div class="form-group row">
+                    <input placeholder="Agregar persona o grupo" type="text" class="form-control col-sm-8">
+                    <button class="btn btn-primary col-sm-4">Agregar</button>
+                </div>
+            </form>
+
+            <div>
+                <ul class="list-group" id="lista-participantes">
+                    <li class="list-group-item">Cras justo odio</li>
+                </ul>
+            </div>
+
+            <div class = row>
+                <input placeholder="cantidad de credenciales" type="text" class="form-control col-sm-8">
+                <button type="submit" class="btn btn-primary col-sm-4">Descargar credenciales</button>
+            </div>
+
+        </div>
+    </div>
 </div>

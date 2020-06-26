@@ -9,7 +9,8 @@ import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/vo
 
 //servicios
 import { VotacionService } from './Servicios/votacion.service';
-import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component'
+import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap'
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votaci
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [
     VotacionService
