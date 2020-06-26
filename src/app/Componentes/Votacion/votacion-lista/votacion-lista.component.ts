@@ -16,7 +16,9 @@ export class VotacionListaComponent implements OnInit {
   constructor(
     private router: Router,
     private rutaActiva: ActivatedRoute
-  ) { }
+  ) {
+    //this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
+   }
 
   ngOnInit(): void {
     this.iniciarVista();

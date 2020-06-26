@@ -10,6 +10,7 @@ import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/vo
 import { UsuarioPerfilComponent } from './Componentes/Usuario/usuario-perfil/usuario-perfil.component';
 import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usuario-editar.component';
 import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/votacion-lista.component';
+import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/vo
     VotacionCrearComponent,
     UsuarioPerfilComponent,
     UsuarioEditarComponent,
-    VotacionListaComponent
+    VotacionListaComponent,
+    VotacionReporteComponent
   ],
   imports: [
     BrowserModule,

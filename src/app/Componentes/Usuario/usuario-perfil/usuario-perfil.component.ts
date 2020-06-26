@@ -15,7 +15,7 @@ export class UsuarioPerfilComponent implements OnInit {
     private router: Router,
     private rutaActiva: ActivatedRoute
   ) {
-    this.usuario.nombre = this.rutaActiva.snapshot.params.name;
+    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
   }
 
   ngOnInit(): void {

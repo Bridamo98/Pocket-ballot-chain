@@ -19,7 +19,7 @@ export class UsuarioEditarComponent implements OnInit {
     private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder
   ) {
-    this.usuario.nombre = this.rutaActiva.snapshot.params.name;
+    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
   }
 
   ngOnInit(): void {

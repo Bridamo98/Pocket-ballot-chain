@@ -6,14 +6,16 @@ import { VotacionCrearComponent } from './Componentes/Votacion/votacion-crear/vo
 import { UsuarioPerfilComponent } from './Componentes/Usuario/usuario-perfil/usuario-perfil.component';
 import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usuario-editar.component';
 import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/votacion-lista.component';
+import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
 
 
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
   {path: 'CrearVotacion', component: VotacionCrearComponent},
-  {path: 'perfil/:name', component: UsuarioPerfilComponent},
-  {path: 'perfil-eidtar/:name', component: UsuarioEditarComponent},
-  {path: 'votacion-lista/:name', component: VotacionListaComponent}
+  {path: 'perfil/:nombre', component: UsuarioPerfilComponent},
+  {path: 'perfil-editar/:nombre', component: UsuarioEditarComponent},
+  {path: 'votacion-lista/:nombre', component: VotacionListaComponent},
+  {path: 'votacion-reporte/:titulo', component: VotacionReporteComponent}
 ];
 
 @NgModule({
