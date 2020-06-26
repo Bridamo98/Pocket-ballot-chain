@@ -1,0 +1,201 @@
+<br>
+<div class="container">
+    <div class="card">
+        <div class="card-header">
+            <h3>{{titulo}}</h3>
+        </div>
+        <div class="card-body">
+            <form>
+                <h4>1. Información básica</h4>
+                <div class="form-group">
+                    <label for="nombre">Nombre del grupo</label>
+                    <input [(ngModel)]="grupo.nombre" name="nombre" class="form-control" id="nombre"
+                        placeholder="Ingrese el nombre del grupo">
+                </div>
+                <div class="form-group">
+                    <label for="descripcion">Descripción del grupo</label>
+                    <textarea class="form-control" id="descripcion" [(ngModel)]="grupo.descripcion" name="descripcion"
+                        placeholder="Ingrese la descripción del grupo"></textarea>
+                </div>
+                <h4>2. Miembros del grupo</h4>
+                <h5>Agregue grupos</h5>
+                <div *ngIf="hayGrupos; then thenBlock1 else elseBlock1"></div>
+                <ng-template #thenBlock1>
+                    <div>
+                        <input [(ngModel)]="buscadorGrupo" name="buscadorGrupo" id="buscadorGrupo"
+                            placeholder="Filtre por nombre de grupo" class="form-control" (input)="filtrarGrupos()">
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre de grupo</th>
+                                <th>Cantidad de miembros</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let g of gruposCopia; let i = index">
+                                <td>{{g.nombre}}</td>
+                                <td>{{g.miembros?.length || '0'}}</td>
+                                <td>
+                                    <a href="{{ruta + '/VerGrupo/todos/' + g.id}}" target="_blank"
+                                        class="btn btn-primary mr-1">
+                                        Ver
+                                    </a>
+                                    <a (click)="agregarGrupo(g)" class="btn btn-success">
+                                        Agregar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <ng-template #elseBlock1>
+                    No hay grupos para agregar
+                </ng-template>
+                <h5>Agregue usuarios</h5>
+                <div *ngIf="hayUsuarios; then thenBlock2 else elseBlock2"></div>
+                <ng-template #thenBlock2>
+                    <div>
+                        <input [(ngModel)]="buscadorUsuario" name="buscadorUsuario" id="buscadorUsuario"
+                            placeholder="Filtre por nombre de usuario" class="form-control" (input)="filtrarUsuarios()">
+                    </div>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre de usuario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of usuariosCopia; let i = index">
+                                <td>{{u.nombre}}</td>
+                                <td>
+                                    <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                        Ver
+                                    </a>
+                                    <a (click)="agregarUsuario(u)" class="btn btn-success">
+                                        Agregar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <ng-template #elseBlock2>
+                    <br>
+                    No hay usuarios para agregar
+                </ng-template>
+                <h4>Miembros agregados</h4>
+                <h5>Elimine grupos</h5>
+                <div *ngIf="hayGruposAgregados; then thenBlock3 else elseBlock3"></div>
+                <ng-template #thenBlock3>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre de grupo</th>
+                                <th>Cantidad de miembros</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let g of gruposSeleccionados; let i = index">
+                                <td>{{g.nombre}}</td>
+                                <td>{{g.miembros?.length || '0'}}</td>
+                                <td>
+                                    <a href="{{ruta + '/VerGrupo/todos/' + g.id}}" target="_blank"
+                                        class="btn btn-primary mr-1">
+                                        Ver
+                                    </a>
+                                    <a (click)="eliminarGrupo(i)" class="btn btn-danger">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <ng-template #elseBlock3>
+                    No hay grupos agregados
+                    <br>
+                    <br>
+                </ng-template>
+                <h5>Elimine usuarios</h5>
+                <div *ngIf="hayUsuariosAgregados; then thenBlock4 else elseBlock4"></div>
+                <ng-template #thenBlock4>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre de usuario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of usuariosSeleccionados; let i = index">
+                                <td>{{u.nombre}}</td>
+                                <td>
+                                    <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                        Ver
+                                    </a>
+                                    <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <ng-template #elseBlock4>
+                    No hay usurios agregados
+                    <br>
+                    <br>
+                </ng-template>
+                <div *ngIf="mostrarUsuarios; then thenBlock5 else elseBlock5"></div>
+                <ng-template #thenBlock5>
+                    <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-down"></i> Más detalles</button>
+                    <br>
+                    <br>
+                </ng-template>
+                <ng-template #elseBlock5>
+                    <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-up"></i> Menos detalles</button>
+                </ng-template>
+                <div [hidden]="mostrarUsuarios">
+                <div *ngIf="hayUsuariosAgregados || hayGruposAgregados; then thenBlock6 else elseBlock6"></div>
+                <ng-template #thenBlock6>
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre de usuario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of todosLosUsuarios; let i = index">
+                                <td>{{u.nombre}}</td>
+                                <td>
+                                    <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                        Ver
+                                    </a>
+                                    <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
+                                        Eliminar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
+                <ng-template #elseBlock6>
+                    No hay usurios agregados
+                    <br>
+                    <br>
+                </ng-template>
+                </div>
+                <button (click)=importar() class="btn btn-success">Importar</button>
+                <br>
+                <br>
+                <button (click)=actualizarGrupo() type="submit" class="btn btn-success" [hidden]="!camposEditar">Actualizar grupo</button>
+                <button (click)=crearGrupo() type="submit" class="btn btn-success" [hidden]="camposEditar">Crear grupo</button>
+            </form>
+        </div>
+    </div>
+</div>
