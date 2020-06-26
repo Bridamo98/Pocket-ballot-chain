@@ -1,1 +1,24 @@
-<p>votacion-crear works!</p>
+
+<tr *ngFor="let votacion of votaciones">
+    <td>{{votacion.id}}</td>
+    <td>{{votacion.descripcion}}</td>
+</tr>
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Seleccione una plantilla</h1>
+    </div>
+</div>
+
+<div class="container">
+    <div class="row card-group">
+        <div *ngFor="let opcion of opciones" class="col-sm-4">
+            <div (mouseover)="cambio()"class="card bg-light mb-3">
+                <div class="card-header">{{opcion.nombre}}</div>
+                <div class="card-body">
+                    <p class="card-text">{{opcion.descripcion}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
