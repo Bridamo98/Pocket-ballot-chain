@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../Modelo/Usuario';
 import { Votacion } from '../../../Modelo/Votacion';
+
+import { VotacionService } from '../../../Servicios/votacion.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 @Component({
   selector: 'app-voto-ranking',
@@ -9,12 +11,16 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 })
 export class VotoRankingComponent implements OnInit {
 
-  constructor() { }
+  votaciones: Votacion[] = [];
+
+  constructor(private votacionServicio:VotacionService) { 
+  }
   tituloVotacion: string="Titulo votacion"; //El modelo de votacion aun no tiene titulo
-    //Quemar
+  //Quemar
+  idVotacion: number= 1;
   candidatos: string[]=['Santiago', 'Brandonn', 'Diego', 'Briam'];
   ngOnInit(): void {
-  	console.log(this.candidatos);
+  	this.getVotacion()
 
   }
   onDropped(event: CdkDragDrop<any>){
@@ -28,6 +34,17 @@ export class VotoRankingComponent implements OnInit {
   {
   	console.log(this.candidatos);
   }
-
+  getVotaciones(){
+    this.votacionServicio.getVotaciones().subscribe(res => {
+      this.votaciones = res
+      console.log(this.votaciones);
+    });
+  }
+  getVotacion(){
+    this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
+      this.votaciones = res
+      console.log(this.votaciones);
+    });
+  }
 
 }

@@ -20,6 +20,11 @@ export class VotacionService {
     console.log('get: ', this.URLbase + '/votacion');
     return this.http.get<Votacion[]>(this.URLbase + '/votacion');
   }
+  getVotacion(id:number) {
+    console.log('get: ', this.URLbase + '/votacion');
+    return this.http.get<Votacion[]>(this.URLbase + '/votacion/'+id);
+  }
+  
   
 
   /*
