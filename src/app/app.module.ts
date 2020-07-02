@@ -33,6 +33,7 @@ import { ValidadorPostularseComponent } from './Componentes/Validador/validador-
 
 //servicios
 import { VotacionService } from './Servicios/votacion.service';
+import { OpcionService } from './Servicios/Opcion/opcion.service';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
@@ -68,7 +69,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     NgbModule
   ],
   providers: [
-    VotacionService
+    VotacionService,
+    OpcionService
   ],
   bootstrap: [AppComponent]
 })

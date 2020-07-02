@@ -1,5 +1,6 @@
 export class TipoVotacion{
-    cantidadVotos: Number;
+    id: Number;
     nombre: String;
     descripcion: String;
 }
+

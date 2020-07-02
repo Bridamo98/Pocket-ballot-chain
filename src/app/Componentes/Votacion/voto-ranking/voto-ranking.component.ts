@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../Modelo/Usuario';
 import { Votacion } from '../../../Modelo/Votacion';
+import { Opcion } from '../../../Modelo/Opcion';
 
 import { VotacionService } from '../../../Servicios/votacion.service';
+import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
 import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 @Component({
   selector: 'app-voto-ranking',
@@ -12,10 +14,12 @@ import {CdkDragDrop, moveItemInArray} from '@angular/cdk/drag-drop';
 export class VotoRankingComponent implements OnInit {
 
   votaciones: Votacion[] = [];
+  votacion: Votacion;
+  opciones:Opcion[]=[];
 
-  constructor(private votacionServicio:VotacionService) { 
+  constructor(private votacionServicio:VotacionService, private opcionServicio:OpcionService) { 
   }
-  tituloVotacion: string="Titulo votacion"; //El modelo de votacion aun no tiene titulo
+  tituloVotacion: String="Titulo votacion"; //El modelo de votacion aun no tiene titulo
   //Quemar
   idVotacion: number= 1;
   candidatos: string[]=['Santiago', 'Brandonn', 'Diego', 'Briam'];
@@ -27,12 +31,12 @@ export class VotoRankingComponent implements OnInit {
   	console.log(event);
   	const before=event.previousIndex;
   	const actual= event.currentIndex;
-  	moveItemInArray(this.candidatos, before, actual);
+  	moveItemInArray(this.opciones, before, actual);
   	//console.log(this.candidatos);
   }
   votar()
   {
-  	console.log(this.candidatos);
+  	console.log(this.opciones);
   }
   getVotaciones(){
     this.votacionServicio.getVotaciones().subscribe(res => {
@@ -41,9 +45,15 @@ export class VotoRankingComponent implements OnInit {
     });
   }
   getVotacion(){
+
+    this.opcionServicio.getOpcion(this.idVotacion).subscribe(res => {
+      this.opciones = res
+      console.log(this.opciones);
+    });
     this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
-      this.votaciones = res
-      console.log(this.votaciones);
+      this.votacion = res
+      console.log(this.votacion);
+      this.tituloVotacion= this.votacion.descripcion;
     });
   }
 
