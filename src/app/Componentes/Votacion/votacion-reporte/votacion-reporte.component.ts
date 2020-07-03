@@ -40,6 +40,7 @@ export class VotacionReporteComponent implements OnInit {
   getVotacion(): void {
     this.votacion = {
       titulo: 'votacion 1',
+      autor: 'Brandonn',
       id: 0,
       descripcion: 'Votacion de prueba',
       fechaLimite: new Date(),

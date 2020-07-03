@@ -2,6 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
+import { UsuarioService } from 'src/app/Servicios/usuario.service';
+import { element } from 'protractor';
+import { resourceUsage } from 'process';
 
 @Component({
   selector: 'app-usuario-editar',
@@ -13,21 +16,23 @@ export class UsuarioEditarComponent implements OnInit {
   usuario: Usuario = new Usuario('', 0, '', '');
   existeNombre = false;
   formulario;
+  usuarios: string[] = [];
 
   constructor(
     private router: Router,
     private rutaActiva: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private usuarioService: UsuarioService
   ) {
     this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
   }
 
   ngOnInit(): void {
-    this.iniciarVista();
+    this.getUsuario();
+    this.obtenerNombres();
   }
 
   iniciarVista(): void {
-    this.getUsuario();
     this.formulario = this.formBuilder.group({
       nombre: new FormControl(this.usuario.nombre, [
         Validators.required,
@@ -43,43 +48,43 @@ export class UsuarioEditarComponent implements OnInit {
 
   // Solicita al servicio el usuario
   getUsuario(): void {
-    /**this.service.getUsuario()
-     * .subscribe(
-     * result => (this.usuario = result)
-     * );
-    **/
-    this.usuario = {
-      nombre: 'Brandonn_C',
-      saldo: 50000,
-      correo: 'brandonn@gmail.com',
-      idValidador: '123',
-      bloqAprobados: 2,
-      bloqPropuestos: 10,
-      bloqRevisados: 2,
-      bloqValidados: 0,
-      genera: []
-    };
+    this.usuarioService.getUsuario(this.usuario.nombre.toString())
+      .subscribe(
+        result => {
+          this.usuario = result;
+          this.iniciarVista();
+        }
+      );
   }
 
   // Actualiza la información en la base de datos
   actualizar(nombre: string, correo: string): void {
+    let nombreViejo = this.usuario.nombre.toString();
     this.usuario.nombre = nombre;
     this.usuario.correo = correo;
-    // Llamar al servicio para actualizar
+    this.usuarioService.putUsuario(this.usuario, nombreViejo).subscribe(
+      result => {
+        this.obtenerNombres();
+      }
+    );
   }
 
   cancelar(formulario: NgForm): void {
-    formulario.setValue( {nombre: this.usuario.nombre, correo: this.usuario.correo} );
+    formulario.setValue({ nombre: this.usuario.nombre, correo: this.usuario.correo });
   }
 
-  verificarNombre(nombre: string): void {
-    // verificación
-    this.existeNombre = this.verificarEjemplo(nombre);
+  verificarNombre(nombre: string): boolean {
+    return this.usuarios.includes(nombre);
   }
 
-  verificarEjemplo(nombre: string): boolean {
-    let nombres: string[] = ['Alice', 'Bob', 'John'];
-    return nombres.includes(nombre);
+  obtenerNombres(): void {
+    this.usuarioService.getUsuarios()
+      .subscribe(
+        result => {
+          this.usuarios = [];
+          result.forEach(element => this.usuarios.push(element.nombre.toString()));
+        }
+      );
   }
 
   get nombre() { return this.formulario.get('nombre'); }
@@ -87,10 +92,10 @@ export class UsuarioEditarComponent implements OnInit {
   get correo() { return this.formulario.get('correo'); }
 
   alreadyExists(): ValidatorFn {
-    return (control: AbstractControl): {[key: string]: any} | null => {
-      if(this.verificarEjemplo(control.value)){
-        return {'alreadyExists': true};
-      }else {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (this.verificarNombre(control.value) && control.value.localeCompare(this.usuario.nombre) !== 0) {
+        return { 'alreadyExists': true };
+      } else {
         return null;
       }
     };
@@ -98,10 +103,10 @@ export class UsuarioEditarComponent implements OnInit {
 
   emailFormat(): ValidatorFn {
     let rExp = RegExp('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}');
-    return (control: AbstractControl): {[key: string]: any} | null => {
-      if(!rExp.test(control.value)){
-        return {'emailFormat': true};
-      }else {
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (!rExp.test(control.value)) {
+        return { 'emailFormat': true };
+      } else {
         return null;
       }
     };

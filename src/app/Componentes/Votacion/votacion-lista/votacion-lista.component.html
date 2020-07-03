@@ -17,7 +17,7 @@
         <td>{{ row.rowIndex }}</td>
         <td>{{ votacion.titulo }}</td>
         <td>XD</td>
-        <td>{{ votacion.participantes.length }}</td>
+        <td *ngIf="votacion.participantes != undefined">{{ votacion.participantes.length }}</td>
         <td>
           <button
             type="button"
@@ -46,19 +46,21 @@
     </thead>
     <tbody>
       <tr #row *ngFor="let votacion of votaciones" (click)="verVotacion(votacion.titulo)">
-        <td>{{ row.rowIndex }}</td>
-        <td>{{ votacion.titulo }}</td>
-        <td>XD</td>
-        <td>{{ votacion.participantes.length }}</td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="eliminar(votacion, votaciones)"
-          >
-            Eliminar
-          </button>
-        </td>
+        <ng-container *ngIf="votacion.autor.localeCompare(usuario.nombre) !== 0">
+          <td>{{ row.rowIndex }}</td>
+          <td>{{ votacion.titulo }}</td>
+          <td>XD</td>
+          <td *ngIf="votacion.participantes != undefined">{{ votacion.participantes.length }}</td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="eliminar(votacion, votaciones)"
+            >
+              Eliminar
+            </button>
+          </td>
+      </ng-container>
       </tr>
     </tbody>
   </table>

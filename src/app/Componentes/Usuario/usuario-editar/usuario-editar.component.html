@@ -1,7 +1,7 @@
 <h1>Información personal</h1>
 <form
+  *ngIf="formulario !== undefined"
   [formGroup]="formulario"
-  (ngSubmit)="actualizar(nombre.value, correo.value)"
 >
   <div class="form-group">
     <label for="txtNombre">Nombre: </label>
@@ -55,6 +55,7 @@
       type="submit"
       class="btn btn-primary"
       [disabled]="!formulario.valid"
+      (click)="actualizar(nombre.value, correo.value)"
     >
       Actualizar información
     </button>

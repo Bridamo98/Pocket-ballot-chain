@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Router, ActivatedRoute } from '@angular/router';
+import { VotacionService } from '../../../Servicios/votacion.service';
 
 @Component({
   selector: 'app-votacion-lista',
@@ -16,73 +17,40 @@ export class VotacionListaComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private rutaActiva: ActivatedRoute
+    private rutaActiva: ActivatedRoute,
+    private votacionService: VotacionService
   ) {
     this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
-   }
+  }
 
   ngOnInit(): void {
     this.iniciarVista();
   }
 
   iniciarVista(): void {
-    this.getMisVotaciones();
     this.getVotaciones();
-  }
-
-  // Solicita al servicio mis votaciones
-  getMisVotaciones(): void {
-    this.misVotaciones = [
-      {
-        titulo: 'votacion 1',
-        fechaLimite: new Date(),
-        plantillaAsociada: 'plantilla-1',
-        tipoDeVotacion: 'popular',
-        participantes: [new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456')],
-        almacena: [],
-        opcionDeVotacion: [],
-        accesosExtra: [],
-        id: 0,
-        descripcion: 'prueba 0',
-        votos: 0
-      },
-      {
-        titulo: 'votacion 2',
-        fechaLimite: new Date(),
-        plantillaAsociada: 'plantilla-1',
-        tipoDeVotacion: 'popular',
-        participantes: [],
-        almacena: [],
-        opcionDeVotacion: [],
-        accesosExtra: [],
-        id: 1,
-        descripcion: 'prueba 1',
-        votos: 0
-      }
-    ];
   }
 
   // Solicita al servicio las votaciones
   getVotaciones(): void {
-    this.votaciones = [
-      {
-        titulo: 'votacion3',
-        fechaLimite: new Date(),
-        plantillaAsociada: 'plantilla-1',
-        tipoDeVotacion: 'popular',
-        participantes: [],
-        almacena: [],
-        opcionDeVotacion: [],
-        accesosExtra: [],
-        id: 2,
-        descripcion: 'prueba 2',
-        votos: 0
-      }
-    ];
+    this.votacionService.getVotacionesAutor(this.usuario.nombre.toString())
+      .subscribe(
+        result => {
+          this.misVotaciones = result;
+          this.actualizarParticipantes(this.misVotaciones);
+        }
+      );
+    this.votacionService.getVotacionesUsuario(this.usuario.nombre.toString())
+      .subscribe(
+        result => {
+          this.votaciones = result;
+          this.actualizarParticipantes(this.votaciones);
+        }
+      );
   }
 
   eliminar(votacion: Votacion, votaciones: Votacion[]): void {
-    if(confirm('¿Está seguro de eliminar esta votación?')) {
+    if (confirm('¿Está seguro de eliminar esta votación?')) {
       votaciones.splice(votaciones.indexOf(votacion), 1);
     }
   }
@@ -119,6 +87,16 @@ export class VotacionListaComponent implements OnInit {
 
   verVotacion(titulo: string): void {
     console.log('verVotacion ' + titulo);
-    this.router.navigate(['votacion-reporte/'+titulo]);
+    this.router.navigate(['votacion-reporte/' + titulo]);
+  }
+
+  actualizarParticipantes(votaciones: Votacion[]): void {
+    for (let i = 0; i < votaciones.length; i++) {
+      const votacion = votaciones[i];
+      this.votacionService.getParticipanteVotacion(votacion.id.valueOf())
+        .subscribe(
+          result => { votacion.participantes = result; }
+        );
+    }
   }
 }
