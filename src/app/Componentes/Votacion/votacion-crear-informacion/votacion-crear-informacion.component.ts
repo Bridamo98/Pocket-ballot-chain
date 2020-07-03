@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Opcion } from 'src/app/Modelo/Opcion';
-import { NgbInputDatepicker, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
+import { VotacionService } from './../../../Servicios/votacion.service'
+import { NgbInputDatepicker, NgbDatepicker, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-votacion-crear-informacion',
@@ -9,23 +11,54 @@ import { NgbInputDatepicker, NgbDatepicker } from '@ng-bootstrap/ng-bootstrap';
 })
 export class VotacionCrearInformacionComponent implements OnInit {
 
-  opciones: Opcion[] = [
-    {id:1, nombre:"uno", descripcion:"descripcion uno"}, 
-    {id:2, nombre:'dos', descripcion:'descripcion dos'}, 
-    {id:3, nombre:'tres', descripcion:'descripcion tres'},
-    {id:1, nombre:"uno", descripcion:"descripcion uno"}, 
-    {id:2, nombre:'dos', descripcion:'descripcion dos'}, 
-    {id:3, nombre:'tres', descripcion:'descripcion tres'},
-    {id:1, nombre:"uno", descripcion:"descripcion uno"}, 
-    {id:2, nombre:'dos', descripcion:'descripcion dos'}, 
-    {id:3, nombre:'tres', descripcion:'descripcion tres'},
-    {id:1, nombre:"uno", descripcion:"descripcion uno"}, 
-    {id:2, nombre:'dos', descripcion:'descripcion dos'}, 
-    {id:3, nombre:'tres', descripcion:'descripcion tres'}];
 
-  constructor() { }
+  //atributos de la opcion
+  nombre;
+  identificacion;
+  descripcion;
+  opciones = [];
+  //atributos de la votacion
+  fechaLimite;
+  votacionDescripcion = "falta colocar la descripcion";;
+  tipo: string;
+  cantiVotos: number;
+  
+  status;
 
-  ngOnInit(): void {
+
+  constructor(public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal) {
+    this.tipo = this.rutaActiva.snapshot.params.tipo;
+    this.cantiVotos = this.rutaActiva.snapshot.params.cantiVotos;
   }
 
+  ngOnInit(): void {
+    if(this.cantiVotos == undefined){
+      console.log("Esta undefinido");
+      this.cantiVotos = 1;
+    }
+    else{
+      console.log(this.cantiVotos);
+    }
+    if(this.tipo !== "Popular" && this.tipo !== "Ranking" && this.tipo !== "Clasificacion"){
+      this.router.navigate(['CrearVotacion']);
+    }
+  }
+
+  showModal(modal){
+    this.modalService.open(modal);
+  }
+
+  crearOpcion(){
+    this.opciones.push({id:this.identificacion, nombre:this.nombre, descripcion:this.descripcion});
+  }
+
+  crearVotacion(){
+    console.log("Funciona");
+    let votacion = {fecha: "2020-10-10", tipoVotacion: this.tipo, descripcion: this.votacionDescripcion, votos: this.cantiVotos};
+    this.votacionService.addVotacion(votacion).subscribe(status => console.log(status));
+    
+    for (let index = 0; index < this.opciones.length; index++) {
+      //this.votacionService.addOpcion()
+    }
+  }
 }

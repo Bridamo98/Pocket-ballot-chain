@@ -1,21 +1,49 @@
 
+<div class="container">
+
+    <div class="row">
+        <h1>Registro</h1> 
+    </div>
 
 
-<h1>Registro</h1>
-<p>Para poder registrarse en el sistema por favor diligenciar el siguiente formulario:</p>
 
-<form>
+    <div class="row">
+        <p>Para poder registrarse en el sistema por favor diligenciar el siguiente formulario:</p>
+    </div>
 
-	<input type="email" required="required" placeholder="Correo electronico" size="20" maxlength="20" name="" [(ngModel)]="correo" name="correo">
-	<br/>
-	<input type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre">
-	<br/>
-	<input type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia">
-	<br/>
-	<input type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar">
-	<br/>
-	<div class="one" [innerHtml]="htmlToAdd"></div>
-	<input type="submit" (click)="registrarse()" value="Registrarse">
-	<br/>
+    <div class="row">
+    </div>
+
+    <form>
+        <div class="row">
+            <input type="email" required="required" placeholder="Correo electronico" size="20" maxlength="20" name="" [(ngModel)]="correo" name="correo">
+        </div>
+        <br/>
+        <div class="row">
+            <input type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre">
+        </div>
+
+        
+        <br/>
+        <div class="row">
+            <input type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia">
+        </div>
+        
+        <br/>
+        <div class="row">
+           <input type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar">
+       </div>
+       <br/>
+       <div class="row">
+        <div class="one" [innerHtml]="htmlToAdd"></div>
+    </div>
+    <div class="row">
+        <input type="submit" (click)="registrarse()" value="Registrarse">
+    </div>
+
+    <br/>
 </form>
-<a href="/">Volver a inicio de sesión </a>
+<div class="row">
+    <a href="/">Volver a inicio de sesión </a>
+</div>
+</div>

@@ -13,7 +13,7 @@ export class VotacionService {
 
   constructor(private http: HttpClient) { }
 
-  URLbase = 'http://localhost:3000';
+  URLbase = 'http://localhost:3000/';
 
   prueba(){
     console.log('funciona');
@@ -24,18 +24,9 @@ export class VotacionService {
     return this.http.get<Votacion[]>(this.URLbase + '/votacion');
   }
 
-
-  /*
-  addVotacion(votacion: any){
-    let json = JSON.stringify(votacion);
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post("localhost:3000/votacionAdd", json, { headers: headers });
+  getVotacion(id: number) {
+    return this.http.get<Votacion>(`${environment.serverUrl}/votacion/${id}`);
   }
-  */
-
- getVotacion(id: number) {
-  return this.http.get<Votacion>(`${environment.serverUrl}/votacion/${id}`);
-}
 
   getVotacionesAutor(nombre: string) {
     return this.http.get<Votacion[]>(`${environment.serverUrl}/votacionAutor/${nombre}`);

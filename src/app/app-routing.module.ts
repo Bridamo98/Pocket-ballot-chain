@@ -17,27 +17,29 @@ import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/vo
 import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
-
+import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
 
 
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
   {path: 'Registrar', component: RegistrarComponent},
-  { path: 'CrearVotacion', component: VotacionCrearComponent },
-  { path: 'CrearGrupo', component: GrupoCrearComponent },
-  { path: 'VerGrupo/:origen/:id', component: GrupoVerComponent },
-  { path: 'ListarGrupos', component: GrupoListarComponent },
-  { path: 'EditarGrupo/:id', component: GrupoEditarComponent },
+  {path: 'CrearVotacion', component: VotacionCrearComponent},
+  {path: 'CrearGrupo', component: GrupoCrearComponent},
+  {path: 'VerGrupo/:origen/:id', component: GrupoVerComponent},
+  {path: 'ListarGrupos', component: GrupoListarComponent},
+  {path: 'EditarGrupo/:id', component: GrupoEditarComponent},
   {path: 'CrearVotacion', component: VotacionCrearComponent},
   {path: 'perfil/:nombre', component: UsuarioPerfilComponent},
   {path: 'perfil-editar/:nombre', component: UsuarioEditarComponent},
   {path: 'votacion-lista/:nombre', component: VotacionListaComponent},
   {path: 'votacion-reporte/:id', component: VotacionReporteComponent},
   {path: 'validador-postularse/:nombre', component: ValidadorPostularseComponent},
-  {path: 'CrearVotacionInfo', component: VotacionCrearInformacionComponent},
+  {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent},
+  {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent},
   {path: 'VotoRanking', component: VotoRankingComponent},
   {path: 'VotoClasificacion', component: VotoClasificacionComponent},
   {path: 'VotoPopular', component: VotoPopularComponent},
+    {path: 'Credencial', component: CredencialComponent},
 ];
 
 @NgModule({

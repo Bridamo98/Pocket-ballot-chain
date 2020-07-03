@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../Modelo/Usuario';
+import {UsuarioService} from '../../../Servicios/Usuario/usuario.service'
 @Component({
   selector: 'app-registrar',
   templateUrl: './registrar.component.html',
@@ -12,7 +13,11 @@ export class RegistrarComponent implements OnInit {
   verificar: string;
   htmlToAdd: string ;
   usuario: Usuario  = new Usuario("", 0, '', '');
-  constructor() { }
+  usuarioService:UsuarioService;
+  constructor(  usuarioService2:UsuarioService) {
+  this.usuarioService= usuarioService2; 
+}
+
 
 
 
@@ -36,6 +41,7 @@ export class RegistrarComponent implements OnInit {
 			bloqValidados : null,
 			genera : null
 		};
+		this.usuarioService.addUsuario(this.usuario);
 	}
 	else
 	{
@@ -43,6 +49,7 @@ export class RegistrarComponent implements OnInit {
 	}
 
 	console.log(this.usuario);
+	
   }
   ngOnInit(): void {
   }

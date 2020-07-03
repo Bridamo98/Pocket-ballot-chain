@@ -11,7 +11,7 @@ export class Usuario{
     bloqRevisados : Number;
     bloqValidados : Number;
     genera : Voto[];
-
+    
     constructor(nombre: String, saldo: Number, correo : String, IdValidador : String){
         this.nombre = nombre;
         this.saldo = saldo;
