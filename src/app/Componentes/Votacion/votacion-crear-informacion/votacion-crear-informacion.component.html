@@ -2,7 +2,7 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-6 container">
-            <div class="justify-content-center"><h4 class="text-center">Candidatos/opciones</h4></div>
+            <div class="justify-content-center"><h4 class="text-center">Candidatos/Opciones</h4></div>
             <div id="tabla-opciones"><table class="table table-bordered table-striped">
                 <thead>
                     <tr>
@@ -25,14 +25,14 @@
             <div class="row">
                 <div class="form-group col-lg-6">
                     <div class="input-group">
-                        <input id="date" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
+                        <input id="date" [(ngModel)]="fechaLimite" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
                         </div>
                     </div>
                 </div>
                 <div class="col-lg-6 text-center">
-                    <button class="btn btn-primary justify-content-center">Nueva opción</button>
+                    <button class="btn btn-primary justify-content-center" (click)="showModal(opcion)">Nuevo candidato</button>
                 </div>
             </div>
 
@@ -66,9 +66,39 @@
 
             <div class = row>
                 <input placeholder="cantidad de credenciales" type="text" class="form-control col-sm-8">
-                <button type="submit" class="btn btn-primary col-sm-4">Descargar credenciales</button>
+                <button type="submit" class="btn btn-success col-sm-4" (click)="crearVotacion()">Crear votacion</button>
             </div>
 
         </div>
     </div>
 </div>
+
+
+
+<ng-template #opcion let-modalOpcion>
+    <div class="modal-header">
+        <h4 class="modal-title">Crear nuevo candidato</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modalOpcion.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <form>
+            <div class="form-group">
+              <label>Nombre del candidato</label>
+              <input class="form-control" name="nombre" [(ngModel)] = "nombre">
+            </div>
+            <div class="form-group">
+              <label>Identificacion del candidato</label>
+              <input class="form-control" name="identificacion" [(ngModel)] = "identificacion">
+            </div>
+            <div class="form-group">
+                <label>Descripción</label>
+                <input class="form-control" name="descripcion" [(ngModel)] = "descripcion">
+            </div>
+          </form>
+    </div>
+    <div class="modal-footer">
+        <button ngbAutofocus class="btn btn-success" (click)="crearOpcion(); modalOpcion.close('Save click')">Crear opción</button>
+    </div>
+</ng-template>
