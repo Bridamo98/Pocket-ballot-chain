@@ -1,6 +1,8 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import { Grupo } from '../../../Modelo/Grupo';
+import { GrupoService } from './../../../Servicios/grupo.service'
+
+import { Grupo, Relacion } from '../../../Modelo/Grupo';
 import { Usuario } from '../../../Modelo/Usuario';
 
 @Component({
@@ -8,22 +10,23 @@ import { Usuario } from '../../../Modelo/Usuario';
   templateUrl: './grupo-crear.component.html',
   styleUrls: ['./grupo-crear.component.css']
 })
+
 export class GrupoCrearComponent implements OnInit {
-  @Input() id: string;//Del grupo, cuando se quiere editar
-  titulo: string;
+  @Input() id: number;//Del grupo, cuando se quiere editar
+  titulo: string;//editar o crear
 
   ruta: string;//Para invocar a verGrupo
 
   mostrarUsuarios: boolean = true;
   grupo: Grupo = new Grupo();
 
-  todosLosUsuarios: Usuario[] = [];
-
   usuarios: Usuario[] = [];
   usuariosCopia: Usuario[] = [];
   grupos: Grupo[] = [];
   gruposCopia: Grupo[] = [];
+  nuevosMiembros:Usuario[] = [];
 
+  relacion: Relacion = new Relacion();
 
   usuariosSeleccionados: Usuario[] = [];
   gruposSeleccionados: Grupo[] = [];
@@ -34,12 +37,15 @@ export class GrupoCrearComponent implements OnInit {
   hayUsuariosAgregados: boolean;
   camposEditar: boolean;
 
-  date: Date = new Date(); #Quemado
-
   buscadorGrupo: String = "";
   buscadorUsuario: String = "";
 
-  constructor() { }
+  iniciado:string = "Usuario1";
+
+  constructor(public grupoService: GrupoService) {
+    this.grupo.miembros = [];
+    this.grupo.pendientes = [];
+   }
 
   arrayVacio(array: any[]): boolean {
     if (array.length == 0) {
@@ -53,17 +59,17 @@ export class GrupoCrearComponent implements OnInit {
     this.gruposSeleccionados.push(g);
     this.grupos = this.grupos.filter(
       res => {
-        return res.id.localeCompare(g.id);
+        return !(res.id == g.id);
       }
     );
     g.miembros.forEach(val => {
       console.log("val: " + val.nombre);
-      console.log(this.todosLosUsuarios.some(usu => {
+      console.log(this.grupo.miembros.some(usu => {
         console.log(usu.nombre + " " + val.nombre);
         return !usu.nombre.localeCompare(val.nombre);
       }));
-      if (!this.todosLosUsuarios.some(usu => !usu.nombre.localeCompare(val.nombre))) {
-        this.todosLosUsuarios.push(Object.assign({}, val));
+      if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(val.nombre))) {
+        this.grupo.miembros.push(Object.assign({}, val));
         this.usuarios = this.usuarios.filter(
           res => {
             return res.nombre.localeCompare(val.nombre);
@@ -83,7 +89,7 @@ export class GrupoCrearComponent implements OnInit {
     this.gruposSeleccionados[i].miembros.forEach(val => {
       if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString()))) {
         this.usuarios.push(Object.assign({}, val));
-        this.todosLosUsuarios = this.todosLosUsuarios.filter(
+        this.grupo.miembros = this.grupo.miembros.filter(
           res => {
             return res.nombre.localeCompare(val.nombre.toString());
           }
@@ -103,13 +109,14 @@ export class GrupoCrearComponent implements OnInit {
 
   agregarUsuario(u): void {
     this.usuariosSeleccionados.push(u);
-    if (!this.todosLosUsuarios.some(usu => !usu.nombre.localeCompare(u.nombre))) {
-      this.todosLosUsuarios.push(Object.assign({}, u));
+    if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(u.nombre))) {
+      this.grupo.miembros.push(Object.assign({}, u));
       this.usuarios = this.usuarios.filter(
         res => {
           return res.nombre.localeCompare(u.nombre);
         }
       );
+
     }
     this.filtrarUsuarios();
     this.hayUsuarios = this.arrayVacio(this.usuarios);
@@ -120,7 +127,7 @@ export class GrupoCrearComponent implements OnInit {
     this.usuariosSeleccionados.splice(i, 1);
     if (!this.usuarios.some(usu => !usu.nombre.localeCompare(u.nombre.toString()))) {
       this.usuarios.push(Object.assign({}, u));
-      this.todosLosUsuarios = this.todosLosUsuarios.filter(
+      this.grupo.miembros = this.grupo.miembros.filter(
         res => {
           return res.nombre.localeCompare(u.nombre.toString());
         }
@@ -131,11 +138,43 @@ export class GrupoCrearComponent implements OnInit {
     this.hayUsuariosAgregados = this.arrayVacio(this.usuariosSeleccionados);
   }
 
+  eliminarPendiente(u, i):void{
+
+  }
+
   importar(): void {
 
   }
 
   crearGrupo(): boolean {
+    this.grupo.creador = this.iniciado;
+    this.grupoService.agregarGrupo(this.grupo).subscribe(res=>{
+      console.log(res);     
+      this.grupo.miembros.forEach(val=>{
+        this.relacion.idUsuario = val.nombre.toString();
+        this.relacion.idGrupo = res.id;
+        this.grupoService.agregarPendiente(this.relacion).subscribe(res=>{
+          console.log(res);
+        })
+      });
+    });
+    return false;
+  }
+
+  actualizarGrupo(): boolean {
+    this.grupoService.actualizarGrupo(this.grupo).subscribe(res=>{
+      console.log(res);
+      this.grupoService.eliminarMiembros(this.grupo.id).subscribe(res=>{
+        console.log(res);
+        this.grupo.miembros.forEach(val => {
+          this.relacion.idUsuario = val.nombre.toString();
+          this.relacion.idGrupo = this.grupo.id;
+          this.grupoService.agregarMiembro(this.relacion).subscribe(res => {
+            console.log(res);
+          });
+        });
+      });
+    });
     return false;
   }
 
@@ -165,12 +204,8 @@ export class GrupoCrearComponent implements OnInit {
     }
   }
 
-  obtenerGrupo(id: string): Grupo {
-    return this.grupos.filter(res => { return !res.id.localeCompare(id); })[0];
-  }
-
-  actualizarGrupo(): boolean {
-    return false;
+  obtenerGrupo(id: number): Grupo {
+    return this.grupos.filter(res => { return !(res.id == id); })[0];
   }
 
   mostrar(): void {
@@ -178,289 +213,56 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.usuarios = [//Consultar usuarios y grupos de servidor o servicio
-      {
-        nombre: "us1",
-        saldo: 123,
-        correo: "String",
-        idValidador: "String",
-        bloqAprobados: 2,
-        bloqPropuestos: 3,
-        bloqRevisados: 3,
-        bloqValidados: 1,
-        genera: []
-      },
-      {
-        nombre: "us2",
-        saldo: 123,
-        correo: "String",
-        idValidador: "String",
-        bloqAprobados: 2,
-        bloqPropuestos: 3,
-        bloqRevisados: 3,
-        bloqValidados: 1,
-        genera: []
-      },
-      {
-        nombre: "us3",
-        saldo: 123,
-        correo: "String",
-        idValidador: "String",
-        bloqAprobados: 2,
-        bloqPropuestos: 3,
-        bloqRevisados: 3,
-        bloqValidados: 1,
-        genera: []
-      },
-      {
-        nombre: "us4",
-        saldo: 123,
-        correo: "String",
-        idValidador: "String",
-        bloqAprobados: 2,
-        bloqPropuestos: 3,
-        bloqRevisados: 3,
-        bloqValidados: 1,
-        genera: []
-      },
-      {
-        nombre: "us5",
-        saldo: 123,
-        correo: "String",
-        idValidador: "String",
-        bloqAprobados: 2,
-        bloqPropuestos: 3,
-        bloqRevisados: 3,
-        bloqValidados: 1,
-        genera: []
-      },
-      {
-        nombre: "us6",
-        saldo: 123,
-        correo: "String",
-        idValidador: "String",
-        bloqAprobados: 2,
-        bloqPropuestos: 3,
-        bloqRevisados: 3,
-        bloqValidados: 1,
-        genera: []
-      }
 
-    ];
-
-    this.grupos = [
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "1",
-        nombre: "gr1",
-        creador: {
-          nombre: "us6",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us1",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us2",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [],
-        historial: []
-      },
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "2",
-        nombre: "gr2",
-        creador: {
-          nombre: "us4",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us1",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us2",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us3",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [{
-          nombre: "us5",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        }],
-        historial: []
-      },
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "3",
-        nombre: "gr3",
-        creador: {
-          nombre: "us2",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us3",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us4",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [],
-        historial: []
-      },
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "4",
-        nombre: "gr4",
-        creador: {
-          nombre: "us4",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us5",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us6",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [],
-        historial: []
-      }
-    ];
-
-    this.usuarios.forEach(val => this.usuariosCopia.push(Object.assign({}, val)));
-    this.grupos.forEach(val => this.gruposCopia.push(Object.assign({}, val)));
-    this.hayGrupos = this.arrayVacio(this.grupos);
-    this.hayUsuarios = this.arrayVacio(this.usuarios);
-    this.ruta = window.location.origin;
-
-    if (this.id != undefined) {
-      this.grupo = this.obtenerGrupo(this.id);
-      this.grupo.miembros.forEach(val => {
-        this.agregarUsuario(val);
+    this.grupoService.obtenerGrupos().subscribe(res => {
+      this.grupos = res
+      console.log(this.grupos);
+      this.grupos.forEach(val => {
+        this.grupoService.obtenerMiembrosDeGrupo(val.id).subscribe(res => {
+          val.miembros = res;
+          this.gruposCopia.push(Object.assign({}, val))
+        });
       });
-      this.camposEditar = true;
-      this.titulo = "Editar grupo: " + this.grupo.nombre;
-    } else {
-      this.hayUsuariosAgregados = false;
-      this.camposEditar = false;
-      this.titulo = "Crear grupo";
-    }
+      console.log(this.gruposCopia);
+      this.hayGrupos = this.arrayVacio(this.grupos);
+    });
+
+    this.grupoService.obtenerUsuarios().subscribe(res => {
+      this.usuarios = res;
+      this.usuarios.forEach(val => this.usuariosCopia.push(Object.assign({}, val)));
+      this.hayUsuarios = this.arrayVacio(this.usuarios);
+
+      if (this.id != undefined) {
+        this.grupoService.obtenerGrupo(this.id).subscribe(res => {
+          this.grupo = res;
+          this.grupoService.obtenerMiembrosDeGrupo(res.id).subscribe(res2 => {
+            this.grupo.miembros = res2;
+            console.log("res2");   
+            console.log(res2);
+            this.grupo.miembros.forEach(val => {
+              console.log(val);
+              this.agregarUsuario(val);
+              this.usuarios = this.usuarios.filter(
+                res => {
+                  return res.nombre.localeCompare(val.nombre.toString());
+                }
+              );  
+            });
+            this.filtrarUsuarios();
+          });
+          this.grupoService.obtenerPendientes(res.id).subscribe(res2 => {
+            this.grupo.pendientes = res2;
+
+          });
+        });
+        this.camposEditar = true;
+        this.titulo = "Editar grupo: " + this.grupo.nombre;
+      } else {
+        this.hayUsuariosAgregados = false;
+        this.camposEditar = false;
+        this.titulo = "Crear grupo";
+      }
+      this.ruta = window.location.origin;
+    });
   }
 }

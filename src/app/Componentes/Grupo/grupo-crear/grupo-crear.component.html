@@ -150,6 +150,38 @@
                     <br>
                     <br>
                 </ng-template>
+                <div [hidden]="!camposEditar">
+                    <h4>Solicitudes pendientes</h4>
+                    <h5>Elimine solicitudes</h5>
+                    <div *ngIf="grupo.pendientes.length != 0; then thenBlock7 else elseBlock7"></div>
+                    <ng-template #thenBlock7>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nombre de usuario</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let u of grupo.pendientes; let i = index">
+                                    <td>{{u.nombre}}</td>
+                                    <td>
+                                        <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                            Ver
+                                        </a>
+                                        <a (click)="eliminarPendiente(u, i)" class="btn btn-danger">
+                                            Eliminar
+                                        </a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-template>
+                    <ng-template #elseBlock7>
+                        No hay solicitudes pendientes
+                    </ng-template>
+                
+                </div>
                 <div *ngIf="mostrarUsuarios; then thenBlock5 else elseBlock5"></div>
                 <ng-template #thenBlock5>
                     <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-down"></i> Más detalles</button>
@@ -170,7 +202,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr *ngFor="let u of todosLosUsuarios; let i = index">
+                            <tr *ngFor="let u of grupo.miembros; let i = index">
                                 <td>{{u.nombre}}</td>
                                 <td>
                                     <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
@@ -190,6 +222,7 @@
                     <br>
                 </ng-template>
                 </div>
+                
                 <button (click)=importar() class="btn btn-success">Importar</button>
                 <br>
                 <br>
