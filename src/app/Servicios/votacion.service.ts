@@ -15,13 +15,20 @@ export class VotacionService {
 
   URLbase = 'http://localhost:3000/';
 
-  prueba(){
+  prueba() {
     console.log('funciona');
   }
 
   getVotaciones() {
     console.log('get: ', this.URLbase + '/votacion');
     return this.http.get<Votacion[]>(this.URLbase + '/votacion');
+  }
+
+  addVotacion(votacion: any): Observable<Object> {
+    let json = JSON.stringify(votacion);
+    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    console.log(json);
+    return this.http.post<Votacion>(this.URLbase + "votacionAdd", json, { headers: headers });
   }
 
   getVotacion(id: number) {
