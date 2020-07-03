@@ -1,65 +1,71 @@
-<h1>Información personal</h1>
-<form
-  [formGroup]="formulario"
-  (ngSubmit)="actualizar(nombre.value, correo.value)"
->
-  <div class="form-group">
-    <label for="txtNombre">Nombre: </label>
-    <input
-      type="text"
-      class="form-control"
-      id="txtNombre"
-      name="nombre"
-      formControlName="nombre"
-    />
-    <div
-      *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
-      class="alert alert-danger"
-    >
-      <div *ngIf="nombre.errors.required">
-        Nombre requerido
-      </div>
-      <div *ngIf="nombre.errors.minlength">
-        El nombre debe ser de al menos 4 caracteres
-      </div>
-      <div *ngIf="nombre.hasError('alreadyExists')">
-        Nombre en uso
-      </div>
+<div class="container">
+  <h1 class="text-center">Información personal</h1>
+  <div class="row d-flex justify-content-center">
+    <div class="col-sm-6">
+      <form *ngIf="formulario !== undefined" [formGroup]="formulario">
+        <div class="form-group">
+          <label for="txtNombre">Nombre: </label>
+          <input
+            type="text"
+            class="form-control"
+            id="txtNombre"
+            name="nombre"
+            formControlName="nombre"
+          />
+          <div
+            *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="nombre.errors.required">
+              Nombre requerido
+            </div>
+            <div *ngIf="nombre.errors.minlength">
+              El nombre debe ser de al menos 4 caracteres
+            </div>
+            <div *ngIf="nombre.hasError('alreadyExists')">
+              Nombre en uso
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="txtCorreo">Correo: </label>
+          <input
+            type="text"
+            class="form-control"
+            id="txtCorreo"
+            name="correo"
+            formControlName="correo"
+          />
+          <div
+            *ngIf="correo.invalid && (correo.dirty || correo.touched)"
+            class="alert alert-danger"
+          >
+            <div *ngIf="correo.errors.required">
+              Nombre requerido
+            </div>
+            <div *ngIf="correo.hasError('emailFormat')">
+              Formato incorrecto
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group d-flex justify-content-center">
+          <button
+            class="btn btn-primary m-2"
+            [disabled]="!formulario.valid"
+            (click)="actualizar(nombre.value, correo.value)"
+          >
+            Actualizar información
+          </button>
+          <button
+            class="btn btn-secondary m-2"
+            (click)="cancelar(formulario)"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
     </div>
   </div>
-
-  <div class="form-group">
-    <label for="txtCorreo">Correo: </label>
-    <input
-      type="text"
-      class="form-control"
-      id="txtCorreo"
-      name="correo"
-      formControlName="correo"
-    />
-    <div
-      *ngIf="correo.invalid && (correo.dirty || correo.touched)"
-      class="alert alert-danger"
-    >
-      <div *ngIf="correo.errors.required">
-        Nombre requerido
-      </div>
-      <div *ngIf="correo.hasError('emailFormat')">
-        Formato incorrecto
-      </div>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <button
-      type="submit"
-      class="btn btn-primary"
-      [disabled]="!formulario.valid"
-    >
-      Actualizar información
-    </button>
-    <button class="btn btn-secondary" (click)="cancelar(formulario)">
-      Cancelar
-    </button>
-  </div>
-</form>
+</div>

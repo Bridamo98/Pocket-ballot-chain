@@ -1,21 +1,28 @@
-<div class="container-fluid">
-  <h2>Información personal</h2>
-  <p>Correo: {{ usuario.correo }}</p>
-  <button type="button" class="btn btn-primary" (click)="editarPerfil()">Editar perfil</button>
-</div>
-<div class="container-fluid">
-  <img
-    src="assets/perfil.jpg"
-    class="rounded-circle mx-auto d-block w-25 h-25"
-  />
-  <h1>{{ usuario.nombre }}</h1>
-</div>
-<div class="container-fluid">
-  <h2>Información de validador</h2>
-  <p>Bloques revisados: {{ usuario.bloqRevisados }}</p>
-  <p>Bloques validados: {{ usuario.bloqValidados }}</p>
-  <p>Bloques propuestos: {{ usuario.bloqPropuestos }}</p>
-  <p>Bloques aprobados: {{ usuario.bloqAprobados }}</p>
-  <p>Saldo: ${{ usuario.saldo }}</p>
-  <button type="button" class="btn btn-primary" (click)="serValidador()">Ser validador</button>
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h2>Información personal</h2>
+      <p>Correo: {{ usuario.correo }}</p>
+      <button type="button" class="btn btn-primary" (click)="editarPerfil()">
+        Editar perfil
+      </button>
+      <h2>Información de validador</h2>
+      <p>Bloques revisados: {{ usuario.bloqRevisados }}</p>
+      <p>Bloques validados: {{ usuario.bloqValidados }}</p>
+      <p>Bloques propuestos: {{ usuario.bloqPropuestos }}</p>
+      <p>Bloques aprobados: {{ usuario.bloqAprobados }}</p>
+      <p>Saldo: ${{ usuario.saldo }}</p>
+      <button type="button" class="btn btn-primary" (click)="serValidador()">
+        Ser validador
+      </button>
+    </div>
+
+    <div class="col">
+      <img
+        src="assets/perfil.jpg"
+        class="rounded-circle mx-auto d-block img-fluid"
+      />
+      <h1 class="text-center">{{ usuario.nombre }}</h1>
+    </div>
+  </div>
 </div>

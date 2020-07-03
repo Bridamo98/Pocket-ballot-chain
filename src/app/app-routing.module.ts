@@ -32,7 +32,7 @@ const routes: Routes = [
   {path: 'perfil/:nombre', component: UsuarioPerfilComponent},
   {path: 'perfil-editar/:nombre', component: UsuarioEditarComponent},
   {path: 'votacion-lista/:nombre', component: VotacionListaComponent},
-  {path: 'votacion-reporte/:titulo', component: VotacionReporteComponent},
+  {path: 'votacion-reporte/:id', component: VotacionReporteComponent},
   {path: 'validador-postularse/:nombre', component: ValidadorPostularseComponent},
   {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent},
   {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent},

@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Votacion } from '../../../Modelo/Votacion';
 import { Usuario } from 'src/app/Modelo/Usuario';
+import { VotacionService } from 'src/app/Servicios/votacion.service';
 
 @Component({
   selector: 'app-votacion-reporte',
@@ -25,9 +26,10 @@ export class VotacionReporteComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private rutaActiva: ActivatedRoute
+    private rutaActiva: ActivatedRoute,
+    private votacionService: VotacionService
   ) {
-    this.votacion.titulo = this.rutaActiva.snapshot.params.titulo;
+    this.votacion.id = this.rutaActiva.snapshot.params.id;
   }
 
   ngOnInit(): void {
@@ -38,8 +40,12 @@ export class VotacionReporteComponent implements OnInit {
 
   // Solicita al servicio la votación
   getVotacion(): void {
+    //   this.votacionService.getVotacion(this.votacion.id.valueOf()).subscribe(
+    //     result => { this.votacion = result; }
+    //   );
     this.votacion = {
       titulo: 'votacion 1',
+      autor: 'Brandonn',
       id: 0,
       descripcion: 'Votacion de prueba',
       fechaLimite: new Date(),
@@ -70,7 +76,24 @@ export class VotacionReporteComponent implements OnInit {
       }],
       accesosExtra: []
     };
+    // this.votacion.opcionDeVotacion = [{
+    //   descripcion: 'Candidato',
+    //   id: 0,
+    //   nombre: 'Alice'
+    // },
+    // {
+    //   descripcion: 'Candidato',
+    //   id: 1,
+    //   nombre: 'Bob'
+    // },
+    // {
+    //   descripcion: 'Candidato',
+    //   id: 2,
+    //   nombre: 'Carl'
+    // }];
+    // this.votacion.almacena = [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }];
     this.votacion.votos = this.votacion.almacena.length;
+    //this.actualizarParticipantes(this.votacion);
   }
 
   // Seguramente debe ser reemplazada esta función si se hace la correción
@@ -144,4 +167,10 @@ export class VotacionReporteComponent implements OnInit {
     return nCeros;
   }
 
+  actualizarParticipantes(votacion: Votacion): void {
+    this.votacionService.getParticipanteVotacion(votacion.id.valueOf())
+      .subscribe(
+        result => { votacion.participantes = result; }
+      );
+  }
 }
