@@ -17,7 +17,7 @@ import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/vo
 import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
-
+import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
 
 
 const routes: Routes = [
@@ -38,6 +38,7 @@ const routes: Routes = [
   {path: 'VotoRanking', component: VotoRankingComponent},
   {path: 'VotoClasificacion', component: VotoClasificacionComponent},
   {path: 'VotoPopular', component: VotoPopularComponent},
+    {path: 'Credencial', component: CredencialComponent},
 ];
 
 @NgModule({

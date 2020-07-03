@@ -34,8 +34,11 @@ import { ValidadorPostularseComponent } from './Componentes/Validador/validador-
 //servicios
 import { VotacionService } from './Servicios/votacion.service';
 import { OpcionService } from './Servicios/Opcion/opcion.service';
+import { CredencialService } from './Servicios/Credencial/credencial.service';
+import { UsuarioService } from './Servicios/Usuario/usuario.service';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
 
 @NgModule({
   declarations: [
@@ -55,7 +58,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     VotacionListaComponent,
     VotacionReporteComponent,
     ValidadorPostularseComponent,
-    VotacionCrearInformacionComponent
+    VotacionCrearInformacionComponent,
+    CredencialComponent
   ],
   imports: [
     BrowserModule,
@@ -70,7 +74,8 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
   ],
   providers: [
     VotacionService,
-    OpcionService
+    OpcionService,
+    CredencialService,
   ],
   bootstrap: [AppComponent]
 })

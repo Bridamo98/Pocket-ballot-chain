@@ -1,0 +1,11 @@
+<h1>Credenciales de votación</h1>
+<p>Para poder ejercer su voto, primero debe ingresar su clave de voto:</p>
+
+<form>
+
+	<input type="text" required="required" placeholder="Clave" size="20" maxlength="20" name="" [(ngModel)]="clave" name="correo">
+	<div class="one" [innerHtml]="htmlToAdd"></div>
+	<input type="submit" (click)="ingresarClave()" value="Confirmar clave">
+	<br/>
+</form>
+<a href="/">Volver a inicio de sesión </a>
