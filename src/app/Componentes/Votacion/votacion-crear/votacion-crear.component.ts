@@ -19,7 +19,6 @@ export class VotacionCrearComponent implements OnInit {
     {id:1, nombre:"Voto popular", descripcion:"descripcion de voto popular"}, 
     {id:2, nombre:'Voto ranking', descripcion:'descripcion para los votos por ranking'}, 
     {id:3, nombre:'Voto clasificación', descripcion:'descripcion para las votaciones por clasificación'}];
-  
 
   public elemento: HTMLElement;
 

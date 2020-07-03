@@ -11,6 +11,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class VotacionCrearInformacionComponent implements OnInit {
 
+
   //atributos de la opcion
   nombre;
   identificacion;
@@ -23,6 +24,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   cantiVotos: number;
   
   status;
+
 
   constructor(public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal) {
     this.tipo = this.rutaActiva.snapshot.params.tipo;

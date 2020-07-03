@@ -53,17 +53,20 @@ export class VotacionReporteComponent implements OnInit {
       opcionDeVotacion: [{
         descripcion: 'Candidato',
         id: 0,
-        nombre: 'Alice'
+        nombre: 'Alice',
+        votacion: null
       },
       {
         descripcion: 'Candidato',
         id: 1,
-        nombre: 'Bob'
+        nombre: 'Bob',
+        votacion: null
       },
       {
         descripcion: 'Candidato',
         id: 2,
-        nombre: 'Carl'
+        nombre: 'Carl',
+        votacion: null
       }],
       accesosExtra: []
     };
