@@ -1,16 +1,33 @@
+<div class="container">
+	<div class="row">
+		<h1 [innerHtml]="tituloVotacion"> </h1>
+	</div>
+	<div class="row">
+		<p>Rankea a los candidatos o propuestas de la votación, siendo el numero 1 con el que estas mas deacuerdo.</p>
+	</div>
+	<div class="row">
+		<div class="col">
+			<p>ACEPTADO </p>
+			<div class="list-group"  cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="candidatos" [cdkDropListConnectedTo]="segundaLista" #primeraLista="cdkDropList"  >
+				<div class="list-group-item" *ngFor="let candidato of candidatos; let i= index" cdkDrag>
 
-<h1 [innerHtml]="tituloVotacion"> </h1>
-<p>Rankea a los candidatos o propuestas de la votación, siendo el numero 1 con el que estas mas deacuerdo.</p>
-<p>ACEPTADO </p>
-<div class="list-group"  cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="candidatos" [cdkDropListConnectedTo]="segundaLista" #primeraLista="cdkDropList"  >
-	<div class="list-group-item" *ngFor="let candidato of candidatos; let i= index" cdkDrag>
-		{{candidato.nombre}}
+					{{candidato.nombre}}
+
+				</div>
+			</div>
+		</div>
+		<div class="col">
+			<p>RECHAZADO </p>
+			<div  class="list-group" cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]= "otraLista"  [cdkDropListConnectedTo]="primeraLista" #segundaLista="cdkDropList" > 
+				<div class="list-group-item" *ngFor="let candidato2 of otraLista; let i= index" cdkDrag>
+
+					{{candidato2.nombre}}
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<button (click)="votar()"> Votar </button>
 	</div>
 </div>
-<p>RECHAZADO </p>
-<div  class="list-group" cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]= "otraLista"  [cdkDropListConnectedTo]="primeraLista" #segundaLista="cdkDropList" > 
-	<div class="list-group-item" *ngFor="let candidato2 of otraLista; let i= index" cdkDrag>
-		{{candidato2.nombre}}
-	</div>
-</div>
-<button (click)="votar()">Votar</button>

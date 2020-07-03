@@ -1,19 +1,30 @@
-
-<h1 [innerHtml]="tituloVotacion"> </h1>
-<p>¡Reparte los votos asignados a los candidatos que quieras!</p>
-<ul class="list-group" >
-	<style >
+<div class="container">
+	<div class="row">
+		<h1 [innerHtml]="tituloVotacion"> </h1>
+	</div>
+	<div class="row">
+		<p>¡Reparte los votos asignados a los candidatos que quieras!</p>
+	</div>
+	<ul class="list-group" >
+		<style >
 		input{
-        border: none;
-		border-color: transparent;
-    }
+			border: none;
+			border-color: transparent;
+		}
 	</style>
 	<ul class="list-group-item" *ngFor="let opcion of opciones; let index= index" (click)="votar2(index)" >
-		{{opciones[index].nombre}} votos:
-		<input type="text" readonly [(ngModel)]="votos[index]" placeholder="voto">
+		<div class="row">
+			{{opciones[index].nombre}} votos:
+			<input type="text" readonly [(ngModel)]="votos[index]" placeholder="voto">
+		</div>
 	</ul>
 </ul>
-<p>Cantidad de votos: <input type="text" readonly [(ngModel)]="cantVotos" placeholder="cantidad votos"> </p>
+<div class="row justify-content-center">
+	<p>Cantidad de votos: <input type="text" readonly [(ngModel)]="cantVotos" placeholder="cantidad votos"> </p>
+</div>
 
+<div class="row justify-content-center">
+	<button (click)="votar()">Votar</button>
+</div>
 
-<button (click)="votar()">Votar</button>
+</div>

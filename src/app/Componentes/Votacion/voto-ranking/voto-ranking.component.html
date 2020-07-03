@@ -1,12 +1,21 @@
 
-<h1 [innerHtml]="tituloVotacion"> </h1>
-<p>Rankea a los candidatos o propuestas de la votación, siendo el numero 1 con el que estas mas deacuerdo.</p>
-<ul class="list-group" cdkDropList (cdkDropListDropped)="onDropped($event)">
-	<div class="candidatos">
-		<ul class="list-group-item" *ngFor="let opcion of opciones; let i= index" cdkDrag>
-			{{i+1}}. {{opcion.nombre}}
-		</ul>
+<div class="container">
+	<div class="row">
+		<h1 [innerHtml]="tituloVotacion"> </h1>
 	</div>
-</ul>
-
-<button (click)="votar()">Votar</button>
+	<div class="row">
+		<p>Rankea a los candidatos o propuestas de la votación, siendo el numero 1 con el que estas mas deacuerdo.</p>
+	</div>
+	<ul class="list-group" cdkDropList (cdkDropListDropped)="onDropped($event)">
+		<div class="candidatos">
+			<ul class="list-group-item" *ngFor="let opcion of opciones; let i= index" cdkDrag>
+				<div class="row">
+					{{i+1}}. {{opcion.nombre}}
+				</div>
+			</ul>
+		</div>
+	</ul>
+	<div class="row justify-content-center">
+		<button (click)="votar()">Votar</button>
+	</div>
+</div>

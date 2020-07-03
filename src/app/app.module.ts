@@ -76,6 +76,7 @@ import { CredencialComponent } from './Componentes/Autenticacion/credencial/cred
     VotacionService,
     OpcionService,
     CredencialService,
+    UsuarioService,
   ],
   bootstrap: [AppComponent]
 })

@@ -1,11 +1,26 @@
-<h1>Credenciales de votación</h1>
-<p>Para poder ejercer su voto, primero debe ingresar su clave de voto:</p>
+<div class="container">
+	<div class="row justify-content-center">
+		<h1>Credenciales de votación</h1>
+	</div>
+	<div class="row justify-content-center">
+		<p>Para poder ejercer su voto, primero debe ingresar su clave de voto:</p>
+	</div>
 
-<form>
 
-	<input type="text" required="required" placeholder="Clave" size="20" maxlength="20" name="" [(ngModel)]="clave" name="correo">
-	<div class="one" [innerHtml]="htmlToAdd"></div>
-	<input type="submit" (click)="ingresarClave()" value="Confirmar clave">
-	<br/>
-</form>
-<a href="/">Volver a inicio de sesión </a>
+	<form>
+		<div class="row justify-content-center">
+			<input type="text" required="required" placeholder="Clave" size="20" maxlength="20" name="" [(ngModel)]="clave" name="correo">
+		</div>
+		<div class="row justify-content-center">
+			<div class="one" [innerHtml]="htmlToAdd"></div>
+		</div>
+		<br/>
+		<div class="row justify-content-center">
+			<input type="submit" (click)="ingresarClave()" value="Confirmar clave">
+		</div>
+		<br/>
+	</form>
+	<div class="row justify-content-center">
+		<a href="/">Volver a inicio de sesión </a>
+	</div>
+</div>
