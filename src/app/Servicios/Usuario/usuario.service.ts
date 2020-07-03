@@ -14,10 +14,8 @@ export class UsuarioService {
   }
   addUsuario(usuario: Usuario){
     //var json = JSON.stringify(usuario); //Esto jode el post
-    var headers = new HttpHeaders().set('Content-Type', 'application/json');
     //console.log(json);
-    console.log(headers);
-    return this.httpClient.post(this.URLbase+'/usuarioAdd', usuario, headers).toPromise().then(data=> {
+    return this.httpClient.post(this.URLbase+'/usuarioAdd', usuario).toPromise().then(data=> {
 			console.log(data);
 		});;
   }
