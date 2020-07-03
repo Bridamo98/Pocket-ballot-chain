@@ -9,7 +9,7 @@
             {{grupo.descripcion}}
             <br>
             <label for="creador">Creador:</label>
-            {{grupo.creador.nombre}}
+            {{grupo.creador}}
             <br>
             <label for="creacion">Fecha de creación:</label>
             {{grupo.creacion}}
@@ -30,7 +30,30 @@
                 </tbody>
             </table>
             <div [ngSwitch]="origen">
-                <div *ngSwitchCase="'propios'"> 
+                <div *ngSwitchCase="'propios'">
+                    <label for="miembros">Pendientes:</label>
+                    <div *ngIf="grupo.pendientes.length; then thenBlock else elseBlock"></div>
+                    <ng-template #thenBlock>
+                        <table class="table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Correo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let p of grupo.pendientes;">
+                                    <td>{{p.nombre}}</td>
+                                    <td>{{p.correo}}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </ng-template>
+                    <ng-template #elseBlock>
+                        No hay solicitudes pendientes
+                        <br>
+                    </ng-template>
+
                     <a href="{{ruta + '/EditarGrupo/' + grupo.id}}" target="_blank" class="btn btn-primary mr-1">
                         Editar
                     </a>
@@ -39,11 +62,11 @@
                     </a>
                 </div>
                 <div *ngSwitchCase="'pertenecientes'">
-                <button (click)=abandonar() class="btn btn-success">Abandonar</button>
+                    <button (click)=abandonar() class="btn btn-success">Abandonar</button>
                 </div>
                 <div *ngSwitchCase="'invitaciones'">
-                <button (click)=aceptarInvitacion() class="btn btn-success mr-1">Aceptar invitación</button>
-                <button (click)=rechazarInvitacion() class="btn btn-success">Rechazar invitación</button>
+                    <button (click)=aceptarInvitacion() class="btn btn-success mr-1">Aceptar invitación</button>
+                    <button (click)=rechazarInvitacion() class="btn btn-success">Rechazar invitación</button>
                 </div>
                 <div *ngSwitchCase="'otros'">
                 </div>

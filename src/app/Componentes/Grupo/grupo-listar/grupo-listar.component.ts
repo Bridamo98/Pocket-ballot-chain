@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Grupo } from 'src/app/Modelo/Grupo';
 
+import { GrupoService } from './../../../Servicios/grupo.service'
+
+
 @Component({
   selector: 'app-grupo-listar',
   templateUrl: './grupo-listar.component.html',
@@ -15,210 +18,29 @@ export class GrupoListarComponent implements OnInit {
   otros: Grupo[] = [];
   esOtro: boolean;
   ruta:string;
-  date: Date = new Date(); #Quemado
-  iniciado: string = "us4";//QUEMADO - SE DEBE OBTENER CUAL ES EL USUARIO INICIADO
+  iniciado: string = "Usuario1";//QUEMADO - SE DEBE OBTENER CUAL ES EL USUARIO INICIADO
 
   obenerTodos():void{
-    this.todos = [//OBTENER LAS GRUPOS DEL SERVIDOR O SERVICIO
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "1",
-        nombre: "gr1",
-        creador: {
-          nombre: "us6",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us1",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us2",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [],
-        historial: []
-      },
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "2",
-        nombre: "gr2",
-        creador: {
-          nombre: "us4",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us1",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us2",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us3",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [{
-          nombre: "us4",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        }],
-        historial: []
-      },
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "3",
-        nombre: "gr3",
-        creador: {
-          nombre: "us2",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us3",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us4",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [],
-        historial: []
-      },
-      {
-        descripcion: "String",
-        creacion: this.date,
-        id: "4",
-        nombre: "gr4",
-        creador: {
-          nombre: "us4",
-          saldo: 123,
-          correo: "String",
-          idValidador: "String",
-          bloqAprobados: 2,
-          bloqPropuestos: 3,
-          bloqRevisados: 3,
-          bloqValidados: 1,
-          genera: []
-        },
-        miembros: [
-          {
-            nombre: "us5",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          },
-          {
-            nombre: "us6",
-            saldo: 123,
-            correo: "String",
-            idValidador: "String",
-            bloqAprobados: 2,
-            bloqPropuestos: 3,
-            bloqRevisados: 3,
-            bloqValidados: 1,
-            genera: []
-          }
-        ],
-        pendientes: [],
-        historial: []
-      }
-    ];
+
+    this.grupoService.obtenerGrupos().subscribe(res => {
+      this.todos = res
+      console.log(this.todos);
+      this.obtenerPropios();
+      this.todos.forEach(val =>{
+        this.grupoService.obtenerMiembrosDeGrupo(val.id).subscribe(res2 => {
+          val.miembros = res2;
+          this.grupoService.obtenerPendientes(val.id).subscribe(res3 => {
+            val.pendientes = res3;
+            this.obtenerInvitacionesPertenecientesOtros();
+          });
+        });
+      });
+    });
   }
 
   obtenerPropios():void{
     this.propios = this.todos.filter(res =>{
-      return !res.creador.nombre.localeCompare(this.iniciado);
+      return !res.creador.localeCompare(this.iniciado);
     });
     console.log(this.propios);
   }
@@ -247,12 +69,10 @@ export class GrupoListarComponent implements OnInit {
     });
   }
 
-  constructor() { }
+  constructor(public grupoService: GrupoService) { }
 
   ngOnInit(): void {
     this.obenerTodos();
-    this.obtenerPropios();
-    this.obtenerInvitacionesPertenecientesOtros();
     this.ruta = window.location.origin;
   }
 
