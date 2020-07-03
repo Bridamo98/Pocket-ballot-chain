@@ -10,7 +10,7 @@ export class VotacionService {
 
   constructor(private http: HttpClient) { }
 
-  URLbase = 'http://localhost:3000';
+  URLbase = 'http://localhost:3000/';
 
   prueba(){
     console.log('funciona');
@@ -26,14 +26,15 @@ export class VotacionService {
   }
   
   
-
-  /*
-  addVotacion(votacion: any){
+  addVotacion(votacion: any): Observable<Object>{
     let json = JSON.stringify(votacion);
     let headers = new HttpHeaders().set('Content-Type', 'application/json');
-    return this.httpClient.post("localhost:3000/votacionAdd", json, { headers: headers });
+    console.log(json);
+    return this.http.post<Votacion>( this.URLbase + "votacionAdd", json, { headers: headers });
   }
-  */
-
+  
+  addOpcion(){
+    
+  }
 
 }
