@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Votacion } from '../Modelo/Votacion';
 import { environment } from '../../environments/environment';
 import { Usuario } from '../Modelo/Usuario';
+import { identifierModuleUrl } from '@angular/compiler';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,10 @@ export class VotacionService {
   }
   */
 
+ getVotacion(id: number) {
+  return this.http.get<Votacion>(`${environment.serverUrl}/votacion/${id}`);
+}
+
   getVotacionesAutor(nombre: string) {
     return this.http.get<Votacion[]>(`${environment.serverUrl}/votacionAutor/${nombre}`);
   }
@@ -42,5 +47,9 @@ export class VotacionService {
 
   getVotacionesUsuario(nombre: string) {
     return this.http.get<Votacion[]>(`${environment.serverUrl}/participanteUsuario/${nombre}`);
+  }
+
+  deleteUsuarioVotacion(id: number, nombre: string) {
+    return this.http.get(`${environment.serverUrl}/participanteDelete/${id}/${nombre}`);
   }
 }

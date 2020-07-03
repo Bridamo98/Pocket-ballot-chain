@@ -52,6 +52,10 @@ export class VotacionListaComponent implements OnInit {
   eliminar(votacion: Votacion, votaciones: Votacion[]): void {
     if (confirm('¿Está seguro de eliminar esta votación?')) {
       votaciones.splice(votaciones.indexOf(votacion), 1);
+      //this.getVotaciones();
+      this.votacionService.deleteUsuarioVotacion(votacion.id.valueOf(), this.usuario.nombre.toString()).subscribe(
+        result => { console.log(result) }
+      );
     }
   }
 

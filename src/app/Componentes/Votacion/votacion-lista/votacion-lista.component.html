@@ -1,67 +1,108 @@
-<h1>Mis invitaciones</h1>
-<div class="container-fluid">
-  <h2>Propias</h2>
-  <button class="btn btn-primary" (click)="crearVotacion()">Nueva votación</button>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th class="btn btn-secondary" (click)="ordenarPorTitulo(misVotaciones)">Tìtulo</th>
-        <th>Grupo</th>
-        <th class="btn btn-secondary" (click)="ordenarPorParticipantes(misVotaciones)">No. Participantes</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr #row *ngFor="let votacion of misVotaciones" (click)="verVotacion(votacion.titulo)">
-        <td>{{ row.rowIndex }}</td>
-        <td>{{ votacion.titulo }}</td>
-        <td>XD</td>
-        <td *ngIf="votacion.participantes != undefined">{{ votacion.participantes.length }}</td>
-        <td>
-          <button
-            type="button"
-            class="btn btn-danger"
-            (click)="eliminar(votacion, misVotaciones)"
-          >
-            Eliminar
-          </button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-<div class="container-fluid">
-  <h2>Participante</h2>
-  <button class="btn btn-primary" (click)="verInvitaciones()">Ver invitaciones</button>
-  <table class="table">
-    <thead>
-      <tr>
-        <th>No.</th>
-        <th class="btn btn-secondary" (click)="ordenarPorTitulo(votaciones)">Tìtulo</th>
-        <th>Grupo</th>
-        <th class="btn btn-secondary" (click)="ordenarPorParticipantes(votaciones)">No. Participantes</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr #row *ngFor="let votacion of votaciones" (click)="verVotacion(votacion.titulo)">
-        <ng-container *ngIf="votacion.autor.localeCompare(usuario.nombre) !== 0">
-          <td>{{ row.rowIndex }}</td>
-          <td>{{ votacion.titulo }}</td>
-          <td>XD</td>
-          <td *ngIf="votacion.participantes != undefined">{{ votacion.participantes.length }}</td>
+<div class="container">
+  <h1 class="text-center">Mis invitaciones</h1>
+  <div class="row">
+    <div class="col">
+      <h2 class="text-left">Propias</h2>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="crearVotacion()">
+        Nueva votación
+      </button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th (click)="ordenarPorTitulo(misVotaciones)">
+            Tìtulo &#8964;
+          </th>
+          <th>Grupo</th>
+          <th (click)="ordenarPorParticipantes(misVotaciones)">
+            No. Participantes &#8964;
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          #row
+          *ngFor="let votacion of misVotaciones"
+        >
+          <td (click)="verVotacion(votacion.id)">{{ row.rowIndex }}</td>
+          <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
+          <td (click)="verVotacion(votacion.id)">XD</td>
+          <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+            {{ votacion.participantes.length }}
+          </td>
           <td>
             <button
               type="button"
               class="btn btn-danger"
-              (click)="eliminar(votacion, votaciones)"
+              (click)="eliminar(votacion, misVotaciones)"
             >
               Eliminar
             </button>
           </td>
-      </ng-container>
-      </tr>
-    </tbody>
-  </table>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="row">
+    <div class="col">
+      <h2 class="text-left">Participante</h2>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <button class="btn btn-primary" (click)="verInvitaciones()">
+        Ver invitaciones
+      </button>
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover table-bordered">
+      <thead>
+        <tr>
+          <th>No.</th>
+          <th (click)="ordenarPorTitulo(votaciones)">
+            Tìtulo &#8964;
+          </th>
+          <th>Grupo</th>
+          <th (click)="ordenarPorParticipantes(votaciones)">
+            No. Participantes &#8964;
+          </th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          #row
+          *ngFor="let votacion of votaciones"
+        >
+          <ng-container
+            *ngIf="votacion.autor.localeCompare(usuario.nombre) !== 0"
+          >
+            <td (click)="verVotacion(votacion.id)">{{ row.rowIndex }}</td>
+            <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
+            <td (click)="verVotacion(votacion.id)">XD</td>
+            <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+              {{ votacion.participantes.length }}
+            </td>
+            <td>
+              <button
+                type="button"
+                class="btn btn-danger"
+                (click)="eliminar(votacion, votaciones)"
+              >
+                Eliminar
+              </button>
+            </td>
+          </ng-container>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
