@@ -31,6 +31,7 @@ export class RegistrarComponent implements OnInit {
 	{
 		this.htmlToAdd="Registrado";
 		this.usuario= {
+			contrasena: this.contrasenia,
 			nombre: this.nombre,
 			saldo: 0,
 			correo: this.correo,

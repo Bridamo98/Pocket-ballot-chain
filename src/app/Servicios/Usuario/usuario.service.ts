@@ -19,6 +19,14 @@ export class UsuarioService {
   }
   iniciarSesion(usuario: Usuario)
   {
-        return this.http.post<any>('${environment.serverUrl}/iniciarSesion', usuario);
+    console.log(usuario);
+    return this.http.post<any>(this.URLbase+'/iniciarSesion', usuario).toPromise().then(data=> {
+      console.log(data);
+      localStorage.setItem('token', data.token);
+    });
+  }
+  estaLogeado()
+  {
+    return !!localStorage.getItem('token');
   }
 }

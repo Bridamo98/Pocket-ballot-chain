@@ -12,12 +12,12 @@
 			<p>El sistema de votación basado en Blockchain adaptado a tus necesidades.</p>
 		
 			<form>
-				<input type="text" placeholder="Nombre de usuario" size="20" maxlength="20" name="nombre" id="nombre"
-					class="form-control">
+				<input type="text" [(ngModel)]="correo" placeholder="Nombre de usuario" size="20" maxlength="20" name="nombre" id="nombre" [ngModelOptions]="{standalone: true}"
+					class="form-control" placeholder="Correo">
 				<br />
-				<input type="password" placeholder="Contraseña" name="" class="form-control">
+				<input type="password" [(ngModel)]="contrasena" placeholder="Contraseña" name="" class="form-control"placeholder="Contraseña" [ngModelOptions]="{standalone: true}">
 				<br />
-				<input type="button" value="Iniciar sesión" class="btn btn-primary">
+				<input type="button" (click)="iniciarSesion()" value="Iniciar sesión" class="btn btn-primary" >
 				<br />
 			</form>
 			<a href="Registrar">Registrarse </a>

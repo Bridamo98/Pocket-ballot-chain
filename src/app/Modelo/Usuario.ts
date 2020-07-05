@@ -2,6 +2,7 @@ import { Voto } from './Voto';
 
 
 export class Usuario{
+    contrasena: String;
     nombre : String;
     saldo : Number;
     correo : String;
