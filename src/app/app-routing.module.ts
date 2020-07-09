@@ -36,9 +36,9 @@ const routes: Routes = [
   {path: 'validador-postularse/:nombre', component: ValidadorPostularseComponent},
   {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent},
   {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent},
-  {path: 'VotoRanking', component: VotoRankingComponent},
-  {path: 'VotoClasificacion', component: VotoClasificacionComponent},
-  {path: 'VotoPopular', component: VotoPopularComponent},
+  {path: 'VotoRanking/:id', component: VotoRankingComponent},
+  {path: 'VotoClasificacion/:id', component: VotoClasificacionComponent},
+  {path: 'VotoPopular/:id', component: VotoPopularComponent},
     {path: 'Credencial', component: CredencialComponent},
 ];
 

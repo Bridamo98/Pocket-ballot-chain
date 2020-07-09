@@ -2,9 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../Modelo/Usuario';
 import { Votacion } from '../../../Modelo/Votacion';
 import { Opcion } from '../../../Modelo/Opcion';
+import { Credencial} from '../../../Modelo/Credencial';
 
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
+import { CredencialService } from '../../../Servicios/Credencial/credencial.service';
+
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
 	selector: 'app-voto-popular',
 	templateUrl: './voto-popular.component.html',
@@ -14,19 +18,24 @@ export class VotoPopularComponent implements OnInit {
 
 	votacion: Votacion;
 	opciones:Opcion[]=[];
-	constructor(private votacionServicio:VotacionService, private opcionServicio:OpcionService) { 
+	credencial:String;
 
+	constructor(private credencialServicio:CredencialService, private votacionServicio:VotacionService, private opcionServicio:OpcionService, private rutaActiva: ActivatedRoute) { 
+		this.credencial = this.rutaActiva.snapshot.params.id;
 	}
 	cantVotos:number;
 	tituloVotacion: String="Titulo votacion"; //El modelo de votacion aun no tiene titulo
 	//Quemar
-	idVotacion: number= 2;
+	idVotacion: Number= -1;
 	//candidatos: String[]=['Santiago', 'Brandonn', 'Diego', 'Briam'];
 	votos: number[]=[];
 
 	ngOnInit(): void {
-		this.getVotacion()
-		console.log(this.votos);
+		this.credencialServicio.validarCredencial(this.credencial).subscribe(res => {
+			this.idVotacion=res.votacion;
+			this.getVotacion()
+		});
+		
 	}
 	votar()
 	{
@@ -44,18 +53,26 @@ export class VotoPopularComponent implements OnInit {
 	}
 	getVotacion(){
 
-    this.opcionServicio.getOpcion(this.idVotacion).subscribe(res => {
-      this.opciones = res
-      console.log(this.opciones);
-      this.votos=Array(this.opciones.length).fill(0);
-    });
-    this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
-      this.votacion = res
-      console.log(this.votacion);
-      this.tituloVotacion= this.votacion.descripcion;
-      this.cantVotos=this.votacion.votos;
-    });
-  }
+		this.opcionServicio.getOpcion(Number(this.idVotacion)).subscribe(res => {
+			this.opciones = res
+			console.log(this.opciones);
+			this.votos=Array(this.opciones.length).fill(0);
+		});
+		this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
+			this.votacion = res
+			if(this.votacion.tipoDeVotacion=='1')
+			{
+				window.location.href='VotoRanking/'+this.credencial;
+			}
+			if(this.votacion.tipoDeVotacion=='3')
+			{
+				window.location.href='VotoClasificacion/'+this.credencial;
+			}
+			console.log(this.votacion);
+			this.tituloVotacion= this.votacion.descripcion;
+			this.cantVotos=this.votacion.votos;
+		});
+	}
 
 
 }
