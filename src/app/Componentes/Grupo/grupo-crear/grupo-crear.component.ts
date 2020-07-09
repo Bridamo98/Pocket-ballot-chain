@@ -31,6 +31,9 @@ export class GrupoCrearComponent implements OnInit {
   grupos: Grupo[] = [];//todos los grupos del sistema
   gruposCopia: Grupo[] = [];//para los filtros
 
+  usuarioAux:Usuario;
+  indiceAux:number;
+
   nuevosMiembros: Usuario[] = [];//NO SE USA
 
   relacion: Relacion = new Relacion();//la relacion del grupo con el usuario iniciado
@@ -216,6 +219,13 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   confirmacion(modal): boolean {
+    this.modalService.open(modal);
+    return false;
+  }
+
+  confirmacionEliminar(modal, u:Usuario, i:number): boolean {
+    this.usuarioAux = u;
+    this.indiceAux = i;
     this.modalService.open(modal);
     return false;
   }

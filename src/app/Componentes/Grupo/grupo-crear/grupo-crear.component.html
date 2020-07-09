@@ -32,10 +32,10 @@
                             Descripcion requerida
                         </div>
                         <div *ngIf="descripcion.errors.minlength">
-                            El nombre debe ser de al menos 4 caracteres
+                            La descripción debe ser de al menos 10 caracteres
                         </div>
                         <div *ngIf="descripcion.errors.maxlength">
-                            El nombre debe ser de máximo 100 caracteres
+                            La descripción debe ser de máximo 100 caracteres
                         </div>
                     </div>
                 </div>
@@ -191,7 +191,7 @@
                                         </a>
                                     </ng-template>
                                     <ng-template #elseBlock8>
-                                        <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
+                                        <a (click)="confirmacionEliminar(eliminarMiembro, u, i)" class="btn btn-danger">
                                             Eliminar
                                         </a>
                                     </ng-template>
@@ -341,7 +341,7 @@
         </button>
     </div>
     <div class="modal-body">
-        <label>¿Desea confirmar la creación del grupo {{nombre.value}}?</label>
+        <label>¿Desea confirmar la creación del grupo "{{nombre.value}}"?</label>
     </div>
     <div class="modal-footer">
         <button type="button" ngbAutofocus class="btn btn-outline-dark"
@@ -361,12 +361,31 @@
         </button>
     </div>
     <div class="modal-body">
-        <label>¿Desea aplicar los cambios en el grupo {{grupo.nombre}}?</label>
+        <label>¿Desea aplicar los cambios en el grupo "{{grupo.nombre}}"?</label>
     </div>
     <div class="modal-footer">
         <button type="button" ngbAutofocus class="btn btn-outline-dark"
             (click)="modal.close('Save click')">Cancelar</button>
         <button type="button" ngbAutofocus class="btn btn-outline-dark"
             (click)="actualizarGrupo(nombre.value, descripcion.value); modal.close('Save click')">Aceptar</button>
+    </div>
+</ng-template>
+
+<ng-template #eliminarMiembro let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirmación</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label><b>¿Está seguro que desea eliminar el usuario "{{usuarioAux.nombre}}"?</b></label>
+        <label>Si lo elimina será necesario aceptar la solicitud para volver a hacer parte del grupo</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="modal.close('Save click')">Cancelar</button>
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="eliminarUsuario(usuarioAux, indiceAux); modal.close('Save click')">Aceptar</button>
     </div>
 </ng-template>
