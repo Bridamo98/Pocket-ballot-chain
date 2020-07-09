@@ -1,30 +1,60 @@
 <br>
 <div class="container">
-    <div class="card">
-        <div class="card-header">
-            <h3>{{titulo}}</h3>
-        </div>
-        <div class="card-body">
-            <form>
-                <h4>1. Información básica</h4>
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-6">
+            <h2>{{titulo}}</h2>
+            <br>
+            <form *ngIf="formulario !== undefined" [formGroup]="formulario">
+                <h4>Información básica</h4>
                 <div class="form-group">
-                    <label for="nombre">Nombre del grupo</label>
-                    <input [(ngModel)]="grupo.nombre" name="nombre" class="form-control" id="nombre"
+                    <label for="txtNombre">Nombre del grupo</label>
+                    <input name="nombre" class="form-control" id="txtNombre" type="text" formControlName="nombre"
                         placeholder="Ingrese el nombre del grupo">
+                    <div *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)" class="alert alert-danger">
+                        <div *ngIf="nombre.errors.required">
+                            Nombre requerido
+                        </div>
+                        <div *ngIf="nombre.errors.minlength">
+                            El nombre debe ser de al menos 4 caracteres
+                        </div>
+                        <div *ngIf="nombre.hasError('alreadyExists')">
+                            Nombre en uso
+                        </div>
+                    </div>
                 </div>
                 <div class="form-group">
-                    <label for="descripcion">Descripción del grupo</label>
-                    <textarea class="form-control" id="descripcion" [(ngModel)]="grupo.descripcion" name="descripcion"
+                    <label for="txtDescripcion">Descripción del grupo</label>
+                    <textarea class="form-control" id="txtDescripcion" name="descripcion" formControlName="descripcion"
                         placeholder="Ingrese la descripción del grupo"></textarea>
-                </div>
-                <h4>2. Miembros del grupo</h4>
-                <h5>Agregue grupos</h5>
-                <div *ngIf="hayGrupos; then thenBlock1 else elseBlock1"></div>
-                <ng-template #thenBlock1>
-                    <div>
-                        <input [(ngModel)]="buscadorGrupo" name="buscadorGrupo" id="buscadorGrupo"
-                            placeholder="Filtre por nombre de grupo" class="form-control" (input)="filtrarGrupos()">
+                    <div *ngIf="descripcion.invalid && (descripcion.dirty || descripcion.touched)"
+                        class="alert alert-danger">
+                        <div *ngIf="descripcion.errors.required">
+                            Descripcion requerida
+                        </div>
+                        <div *ngIf="descripcion.errors.minlength">
+                            El nombre debe ser de al menos 4 caracteres
+                        </div>
+                        <div *ngIf="descripcion.errors.maxlength">
+                            El nombre debe ser de máximo 100 caracteres
+                        </div>
                     </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <br>
+    <h4>Miembros del grupo</h4>
+    <br>
+    <div class="row">
+        <div class="col-sm-6">
+            <h5>Agregue grupos</h5>
+            <div *ngIf="hayGrupos; then thenBlock1 else elseBlock1"></div>
+            <ng-template #thenBlock1>
+                <div>
+                    <input [(ngModel)]="buscadorGrupo" name="buscadorGrupo" id="buscadorGrupo"
+                        placeholder="Filtre por nombre de grupo" class="form-control" (input)="filtrarGrupos()">
+                </div>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -49,47 +79,20 @@
                             </tr>
                         </tbody>
                     </table>
-                </ng-template>
-                <ng-template #elseBlock1>
+                </div>
+
+            </ng-template>
+            <ng-template #elseBlock1>
+                <div class="align-middle">
                     No hay grupos para agregar
-                </ng-template>
-                <h5>Agregue usuarios</h5>
-                <div *ngIf="hayUsuarios; then thenBlock2 else elseBlock2"></div>
-                <ng-template #thenBlock2>
-                    <div>
-                        <input [(ngModel)]="buscadorUsuario" name="buscadorUsuario" id="buscadorUsuario"
-                            placeholder="Filtre por nombre de usuario" class="form-control" (input)="filtrarUsuarios()">
-                    </div>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nombre de usuario</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let u of usuariosCopia; let i = index">
-                                <td>{{u.nombre}}</td>
-                                <td>
-                                    <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
-                                        Ver
-                                    </a>
-                                    <a (click)="agregarUsuario(u)" class="btn btn-success">
-                                        Agregar
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </ng-template>
-                <ng-template #elseBlock2>
-                    <br>
-                    No hay usuarios para agregar
-                </ng-template>
-                <h4>Miembros agregados</h4>
-                <h5>Elimine grupos</h5>
-                <div *ngIf="hayGruposAgregados; then thenBlock3 else elseBlock3"></div>
-                <ng-template #thenBlock3>
+                </div>
+            </ng-template>
+        </div>
+        <div class="col-sm-6">
+            <h5>Elimine grupos</h5>
+            <div *ngIf="hayGruposAgregados; then thenBlock3 else elseBlock3"></div>
+            <ng-template #thenBlock3>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -114,15 +117,59 @@
                             </tr>
                         </tbody>
                     </table>
-                </ng-template>
-                <ng-template #elseBlock3>
-                    No hay grupos agregados
-                    <br>
-                    <br>
-                </ng-template>
-                <h5>Elimine usuarios</h5>
-                <div *ngIf="hayUsuariosAgregados; then thenBlock4 else elseBlock4"></div>
-                <ng-template #thenBlock4>
+                </div>
+
+            </ng-template>
+            <ng-template #elseBlock3>
+                No hay grupos agregados
+            </ng-template>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <h5>Agregue usuarios</h5>
+
+            <div *ngIf="hayUsuarios; then thenBlock2 else elseBlock2"></div>
+            <ng-template #thenBlock2>
+                <div>
+                    <input [(ngModel)]="buscadorUsuario" name="buscadorUsuario" id="buscadorUsuario"
+                        placeholder="Filtre por nombre de usuario" class="form-control" (input)="filtrarUsuarios()">
+                </div>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Nombre de usuario</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let u of usuariosCopia; let i = index">
+                                <td>{{u.nombre}}</td>
+                                <td>
+                                    <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                        Ver
+                                    </a>
+                                    <a (click)="agregarUsuario(u)" class="btn btn-success">
+                                        Agregar
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </ng-template>
+            <ng-template #elseBlock2>
+                <br>
+                No hay usuarios para agregar
+            </ng-template>
+        </div>
+        <div class="col-sm-6">
+            <h5>Elimine usuarios</h5>
+            <div *ngIf="hayUsuariosAgregados; then thenBlock4 else elseBlock4"></div>
+            <ng-template #thenBlock4>
+                <div class="table-wrapper-scroll-y my-custom-scrollbar">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -137,98 +184,189 @@
                                     <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
                                         Ver
                                     </a>
-                                    <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
-                                        Eliminar
-                                    </a>
+                                    <div *ngIf="esPendiente(u); then thenBlock8 else elseBlock8 "></div>
+                                    <ng-template #thenBlock8>
+                                        <a (click)="eliminarPendiente(u, i)" class="btn btn-danger">
+                                            Eliminar solicitud
+                                        </a>
+                                    </ng-template>
+                                    <ng-template #elseBlock8>
+                                        <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
+                                            Eliminar
+                                        </a>
+                                    </ng-template>
+
+
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                </ng-template>
-                <ng-template #elseBlock4>
-                    No hay usurios agregados
-                    <br>
-                    <br>
-                </ng-template>
+                </div>
+
+            </ng-template>
+            <ng-template #elseBlock4>
+                No hay usurios agregados
+                <br>
+                <br>
+            </ng-template>
+        </div>
+    </div>
+    <br>
+    <br>
+
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-6 text-center">
+            <div *ngIf="mostrarUsuarios; then thenBlock5 else elseBlock5"></div>
+            <ng-template #thenBlock5>
+                <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-down"></i> Más
+                    detalles</button>
+                <br>
+                <br>
+            </ng-template>
+            <ng-template #elseBlock5>
+                <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-up"></i> Menos
+                    detalles</button>
+            </ng-template>
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-6">
+
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-6">
+            <div [hidden]="mostrarUsuarios">
                 <div [hidden]="!camposEditar">
                     <h4>Solicitudes pendientes</h4>
-                    <h5>Elimine solicitudes</h5>
+
                     <div *ngIf="grupo.pendientes.length != 0; then thenBlock7 else elseBlock7"></div>
                     <ng-template #thenBlock7>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Nombre de usuario</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let u of grupo.pendientes; let i = index">
-                                    <td>{{u.nombre}}</td>
-                                    <td>
-                                        <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
-                                            Ver
-                                        </a>
-                                        <a (click)="eliminarPendiente(u, i)" class="btn btn-danger">
-                                            Eliminar
-                                        </a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <h5>Elimine solicitudes</h5>
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let u of grupo.pendientes; let i = index">
+                                        <td>{{u.nombre}}</td>
+                                        <td>
+                                            <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                                Ver
+                                            </a>
+                                            <a (click)="eliminarPendiente(u, i)" class="btn btn-danger">
+                                                Eliminar solicitud
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </ng-template>
                     <ng-template #elseBlock7>
                         No hay solicitudes pendientes
+                        <br>
+                        <br>
                     </ng-template>
-                
+
                 </div>
-                <div *ngIf="mostrarUsuarios; then thenBlock5 else elseBlock5"></div>
-                <ng-template #thenBlock5>
-                    <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-down"></i> Más detalles</button>
-                    <br>
-                    <br>
-                </ng-template>
-                <ng-template #elseBlock5>
-                    <button (click)=mostrar() class="btn btn-success"> <i class="fas fa-arrow-up"></i> Menos detalles</button>
-                </ng-template>
-                <div [hidden]="mostrarUsuarios">
-                <div *ngIf="hayUsuariosAgregados || hayGruposAgregados; then thenBlock6 else elseBlock6"></div>
-                <ng-template #thenBlock6>
-                    <table class="table table-bordered">
-                        <thead>
-                            <tr>
-                                <th>Nombre de usuario</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr *ngFor="let u of grupo.miembros; let i = index">
-                                <td>{{u.nombre}}</td>
-                                <td>
-                                    <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
-                                        Ver
-                                    </a>
-                                    <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
-                                        Eliminar
-                                    </a>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </ng-template>
-                <ng-template #elseBlock6>
-                    No hay usurios agregados
-                    <br>
-                    <br>
-                </ng-template>
+                <div [hidden]="camposEditar">
+                    <div *ngIf="hayUsuariosAgregados || hayGruposAgregados; then thenBlock6 else elseBlock6"></div>
+                    <ng-template #thenBlock6>
+                        <br>
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre de usuario</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let u of grupo.miembros; let i = index">
+                                        <td>{{u.nombre}}</td>
+                                        <td>
+                                            <a (click)="verUsuario(i)" class="btn btn-primary mr-1">
+                                                Ver
+                                            </a>
+                                            <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
+                                                Eliminar
+                                            </a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <br>
+                    </ng-template>
+                    <ng-template #elseBlock6>
+                        <div style="text-align: center;">
+                            No hay usurios agregados
+                        </div>
+                    </ng-template>
                 </div>
-                
-                <button (click)=importar() class="btn btn-success">Importar</button>
-                <br>
-                <br>
-                <button (click)=actualizarGrupo() type="submit" class="btn btn-success" [hidden]="!camposEditar">Actualizar grupo</button>
-                <button (click)=crearGrupo() type="submit" class="btn btn-success" [hidden]="camposEditar">Crear grupo</button>
-            </form>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-6 text-center">
+            <button (click)=importar() class="btn btn-success">Importar</button>
+            <br>
+            <br>
+            <button (click)=confirmacion(editContent) type="submit" class="btn btn-success" [hidden]="!camposEditar"
+                [disabled]="formularioInvalido(formulario)">Actualizar
+                grupo</button>
+            <button (click)=confirmacion(createContent) type="submit" class="btn btn-success" [hidden]="camposEditar"
+                [disabled]="formularioInvalido(formulario)">Crear
+                grupo</button>
         </div>
     </div>
 </div>
+
+
+
+<ng-template #createContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirmación</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label>¿Desea confirmar la creación del grupo {{nombre.value}}?</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="modal.close('Save click')">Cancelar</button>
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="crearGrupo(nombre.value, descripcion.value); modal.close('Save click')">Aceptar</button>
+    </div>
+</ng-template>
+
+
+
+<ng-template #editContent let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirmación</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label>¿Desea aplicar los cambios en el grupo {{grupo.nombre}}?</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="modal.close('Save click')">Cancelar</button>
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="actualizarGrupo(nombre.value, descripcion.value); modal.close('Save click')">Aceptar</button>
+    </div>
+</ng-template>

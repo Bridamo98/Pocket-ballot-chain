@@ -89,6 +89,7 @@ export class GrupoService {
     console.log(res);
     return res;
   }
+
   //----------------------------------PENDIENTES-------------------------------
 
   obtenerPendientes(id):Observable<Usuario[]> {
@@ -106,6 +107,13 @@ export class GrupoService {
   eliminarPendiente(relacion: Relacion): Observable<Respuesta> {
     console.log('delete: ', this.URLbase + '/pendiente/' + relacion.idUsuario + '/' + relacion.idGrupo);
     let res = this.http.delete<Respuesta>(this.URLbase + '/pendiente/' + relacion.idUsuario + '/' + relacion.idGrupo);
+    console.log(res);
+    return res;
+  }
+
+  eliminarPendientes(id): Observable<Respuesta> {
+    console.log('delete: ', this.URLbase + '/pendiente/' + id);
+    let res = this.http.delete<Respuesta>(this.URLbase + '/pendiente/' + id);
     console.log(res);
     return res;
   }

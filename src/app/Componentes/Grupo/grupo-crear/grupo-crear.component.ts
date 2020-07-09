@@ -1,4 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
+import { Router } from '@angular/router';
+
+
 
 import { GrupoService } from './../../../Servicios/grupo.service'
 
@@ -15,37 +20,40 @@ export class GrupoCrearComponent implements OnInit {
   @Input() id: number;//Del grupo, cuando se quiere editar
   titulo: string;//editar o crear
 
+  formulario;
   ruta: string;//Para invocar a verGrupo
 
-  mostrarUsuarios: boolean = true;
+  mostrarUsuarios: boolean = true;//más detalles
   grupo: Grupo = new Grupo();
 
-  usuarios: Usuario[] = [];
-  usuariosCopia: Usuario[] = [];
-  grupos: Grupo[] = [];
-  gruposCopia: Grupo[] = [];
-  nuevosMiembros:Usuario[] = [];
+  usuarios: Usuario[] = [];//todos los usuarios en el sistema
+  usuariosCopia: Usuario[] = [];//para los filtros
+  grupos: Grupo[] = [];//todos los grupos del sistema
+  gruposCopia: Grupo[] = [];//para los filtros
 
-  relacion: Relacion = new Relacion();
+  nuevosMiembros: Usuario[] = [];//NO SE USA
 
-  usuariosSeleccionados: Usuario[] = [];
-  gruposSeleccionados: Grupo[] = [];
+  relacion: Relacion = new Relacion();//la relacion del grupo con el usuario iniciado
 
-  hayGrupos: boolean;
-  hayUsuarios: boolean;
-  hayGruposAgregados: boolean = false;
-  hayUsuariosAgregados: boolean;
-  camposEditar: boolean;
+  usuariosSeleccionados: Usuario[] = [];//usuarios seleccionados para hacer parte del grupo
+  gruposSeleccionados: Grupo[] = [];//grupos seleccionados para hacer parte del grupo
 
-  buscadorGrupo: String = "";
-  buscadorUsuario: String = "";
+  hayGrupos: boolean;//Para mostrar mensajes de inexistencia de listas
+  hayUsuarios: boolean;//.........
+  hayGruposAgregados: boolean = false;//.........
+  hayUsuariosAgregados: boolean;//.........
 
-  iniciado:string = "Usuario1";
+  camposEditar: boolean;//editar o crear
 
-  constructor(public grupoService: GrupoService) {
+  buscadorGrupo: String = "";//para filtro
+  buscadorUsuario: String = "";//para filtro
+
+  iniciado: string = "Usuario1";//QUEMADO
+
+  constructor(public grupoService: GrupoService, private modalService: NgbModal, private formBuilder: FormBuilder, private router: Router) {
     this.grupo.miembros = [];
     this.grupo.pendientes = [];
-   }
+  }
 
   arrayVacio(array: any[]): boolean {
     if (array.length == 0) {
@@ -68,13 +76,26 @@ export class GrupoCrearComponent implements OnInit {
         console.log(usu.nombre + " " + val.nombre);
         return !usu.nombre.localeCompare(val.nombre);
       }));
-      if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(val.nombre))) {
-        this.grupo.miembros.push(Object.assign({}, val));
-        this.usuarios = this.usuarios.filter(
-          res => {
-            return res.nombre.localeCompare(val.nombre);
-          }
-        );
+
+      if(this.camposEditar){
+        if (!this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(val.nombre)) && !this.grupo.miembros.some(usu => !usu.nombre.localeCompare(val.nombre))) {
+          this.grupo.pendientes.push(Object.assign({}, val));
+          //this.usuariosSeleccionados.push(Object.assign({}, val));
+          this.usuarios = this.usuarios.filter(
+            res => {
+              return res.nombre.localeCompare(val.nombre);
+            }
+          );
+        }
+      }else{
+        if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(val.nombre))) {
+          this.grupo.miembros.push(Object.assign({}, val));
+          this.usuarios = this.usuarios.filter(
+            res => {
+              return res.nombre.localeCompare(val.nombre);
+            }
+          );
+        }
       }
     }
     );
@@ -87,13 +108,30 @@ export class GrupoCrearComponent implements OnInit {
   eliminarGrupo(i): void {
     this.grupos.push(this.gruposSeleccionados[i]);
     this.gruposSeleccionados[i].miembros.forEach(val => {
-      if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString()))) {
-        this.usuarios.push(Object.assign({}, val));
-        this.grupo.miembros = this.grupo.miembros.filter(
-          res => {
-            return res.nombre.localeCompare(val.nombre.toString());
-          }
-        );
+      
+      if(this.camposEditar){
+        if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString())) && this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(val.nombre.toString())) ) {
+          this.usuarios.push(Object.assign({}, val));
+          this.grupo.pendientes = this.grupo.pendientes.filter(
+            res => {
+              return res.nombre.localeCompare(val.nombre.toString());
+            }
+          );
+          this.usuariosSeleccionados = this.usuariosSeleccionados.filter(
+            res =>{
+              return res.nombre.localeCompare(val.nombre.toString());
+            }
+          )
+        }
+      }else{
+        if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString()))) {
+          this.usuarios.push(Object.assign({}, val));
+          this.grupo.miembros = this.grupo.miembros.filter(
+            res => {
+              return res.nombre.localeCompare(val.nombre.toString());
+            }
+          );
+        }
       }
     });
     this.filtrarGrupos();
@@ -109,15 +147,31 @@ export class GrupoCrearComponent implements OnInit {
 
   agregarUsuario(u): void {
     this.usuariosSeleccionados.push(u);
-    if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(u.nombre))) {
-      this.grupo.miembros.push(Object.assign({}, u));
-      this.usuarios = this.usuarios.filter(
-        res => {
-          return res.nombre.localeCompare(u.nombre);
-        }
-      );
+    if(this.camposEditar){
+      if(this.grupo.pendientes){
+        if (!this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(u.nombre))) {
+          this.grupo.pendientes.push(Object.assign({}, u));
+          this.usuarios = this.usuarios.filter(
+            res => {
+              return res.nombre.localeCompare(u.nombre);
+            }
+          );
 
+        }
+      }
+      
+    }else{
+      if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(u.nombre))) {
+        this.grupo.miembros.push(Object.assign({}, u));
+        this.usuarios = this.usuarios.filter(
+          res => {
+            return res.nombre.localeCompare(u.nombre);
+          }
+        );
+
+      }
     }
+    
     this.filtrarUsuarios();
     this.hayUsuarios = this.arrayVacio(this.usuarios);
     this.hayUsuariosAgregados = this.arrayVacio(this.usuariosSeleccionados);
@@ -138,42 +192,88 @@ export class GrupoCrearComponent implements OnInit {
     this.hayUsuariosAgregados = this.arrayVacio(this.usuariosSeleccionados);
   }
 
-  eliminarPendiente(u, i):void{
-
+  eliminarPendiente(u, i): void {
+    this.usuariosSeleccionados = this.usuariosSeleccionados.filter(
+      res =>{
+        return res.nombre.localeCompare(u.nombre.toString());
+      }
+    )
+    if (!this.usuarios.some(usu => !usu.nombre.localeCompare(u.nombre.toString()))) {
+      this.usuarios.push(Object.assign({}, u));
+      this.grupo.pendientes = this.grupo.pendientes.filter(
+        res => {
+          return res.nombre.localeCompare(u.nombre.toString());
+        }
+      );
+    }
+    this.filtrarUsuarios();
+    this.hayUsuarios = this.arrayVacio(this.usuarios);
+    this.hayUsuariosAgregados = this.arrayVacio(this.usuariosSeleccionados);
   }
 
   importar(): void {
 
   }
 
-  crearGrupo(): boolean {
-    this.grupo.creador = this.iniciado;
-    this.grupoService.agregarGrupo(this.grupo).subscribe(res=>{
-      console.log(res);     
-      this.grupo.miembros.forEach(val=>{
-        this.relacion.idUsuario = val.nombre.toString();
-        this.relacion.idGrupo = res.id;
-        this.grupoService.agregarPendiente(this.relacion).subscribe(res=>{
-          console.log(res);
-        })
-      });
-    });
+  confirmacion(modal): boolean {
+    this.modalService.open(modal);
     return false;
   }
 
-  actualizarGrupo(): boolean {
-    this.grupoService.actualizarGrupo(this.grupo).subscribe(res=>{
+  crearGrupo(nombre: string, descripcion: string): boolean {
+    this.grupo.creador = this.iniciado;
+    this.grupo.nombre = nombre;
+    this.grupo.descripcion = descripcion;
+    this.grupoService.agregarGrupo(this.grupo).subscribe(res => {
       console.log(res);
-      this.grupoService.eliminarMiembros(this.grupo.id).subscribe(res=>{
+      this.grupo.miembros.forEach(val => {
+        this.relacion.idUsuario = val.nombre.toString();
+        this.relacion.idGrupo = res.id;
+        this.grupoService.agregarPendiente(this.relacion).subscribe(res => {
+          console.log(res);
+        })
+      });
+      this.router.navigate(['VerGrupo/propios/' + res.id]);
+
+    });
+
+    return false;
+  }
+
+  actualizarGrupo(nombre: string, descripcion: string): boolean {
+    this.grupo.nombre = nombre;
+    this.grupo.descripcion = descripcion;
+
+    this.grupoService.actualizarGrupo(this.grupo).subscribe(res => {
+      console.log(res);
+      this.grupoService.eliminarMiembros(this.grupo.id).subscribe(res => {
         console.log(res);
         this.grupo.miembros.forEach(val => {
-          this.relacion.idUsuario = val.nombre.toString();
-          this.relacion.idGrupo = this.grupo.id;
-          this.grupoService.agregarMiembro(this.relacion).subscribe(res => {
+          let relacion = new Relacion();
+          relacion.idUsuario = val.nombre.toString();
+          relacion.idGrupo = this.grupo.id;
+          this.grupoService.agregarMiembro(relacion).subscribe(res => {
             console.log(res);
           });
         });
       });
+
+      this.grupoService.eliminarPendientes(this.grupo.id).subscribe(res => {
+        console.log(res);
+        this.grupo.pendientes.forEach(val => {
+          let relacion = new Relacion();
+          relacion.idUsuario = val.nombre.toString();
+          relacion.idGrupo = this.grupo.id;
+          this.grupoService.agregarPendiente(relacion).subscribe(res => {
+            console.log(res);
+          });
+        });
+      });
+      console.log("res "+res.id);
+      
+      this.router.navigate(['VerGrupo/propios/' + this.grupo.id]);
+
+      
     });
     return false;
   }
@@ -212,6 +312,61 @@ export class GrupoCrearComponent implements OnInit {
     this.mostrarUsuarios = !this.mostrarUsuarios;
   }
 
+
+
+
+
+  alreadyExists(): ValidatorFn {//listo
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (this.camposEditar) {
+        if (this.grupos.some(res => !res.nombre.localeCompare(control.value)) && control.value.localeCompare(this.grupo.nombre) !== 0) {
+          return { 'alreadyExists': true };
+        } else {
+          return null;
+        }
+      } else {
+        if (this.grupos.some(res => !res.nombre.localeCompare(control.value))) {
+          return { 'alreadyExists': true };
+        } else {
+          return null;
+        }
+      }
+
+    };
+  }
+
+  iniciarVista(): void {//luego de obtener el grupo en EDITAR, en cualquier momento en CREAR //listo
+    this.formulario = this.formBuilder.group({
+      nombre: new FormControl(this.grupo.nombre, [
+        Validators.required,
+        Validators.minLength(4),
+        this.alreadyExists()
+      ]),
+      descripcion: new FormControl(this.grupo.descripcion, [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(100)
+      ])
+    });
+  }
+
+  cancelar(formulario: NgForm): void {
+    formulario.setValue({ nombre: this.grupo.nombre, descripcion: this.grupo.descripcion });
+    //resetear los nuevos usuarios agregados -> los cuales se traducen en solicitudes
+  }
+
+  get nombre() { return this.formulario.get('nombre'); }
+
+  get descripcion() { return this.formulario.get('descripcion'); }
+
+  formularioInvalido(formulario: NgForm): boolean {
+    return formulario.invalid.valueOf() || (this.grupo.miembros.length == 0 && this.grupo.pendientes.length == 0);
+  }
+
+  esPendiente(u: Usuario):boolean{
+    return this.grupo.pendientes.some(res=> !res.nombre.localeCompare(u.nombre.toString()));
+  }
+
   ngOnInit(): void {
 
     this.grupoService.obtenerGrupos().subscribe(res => {
@@ -235,9 +390,10 @@ export class GrupoCrearComponent implements OnInit {
       if (this.id != undefined) {
         this.grupoService.obtenerGrupo(this.id).subscribe(res => {
           this.grupo = res;
+          this.titulo = "Editar grupo: " + this.grupo.nombre;
           this.grupoService.obtenerMiembrosDeGrupo(res.id).subscribe(res2 => {
             this.grupo.miembros = res2;
-            console.log("res2");   
+            console.log("res2");
             console.log(res2);
             this.grupo.miembros.forEach(val => {
               console.log(val);
@@ -246,18 +402,33 @@ export class GrupoCrearComponent implements OnInit {
                 res => {
                   return res.nombre.localeCompare(val.nombre.toString());
                 }
-              );  
-            });
-            this.filtrarUsuarios();
-          });
-          this.grupoService.obtenerPendientes(res.id).subscribe(res2 => {
-            this.grupo.pendientes = res2;
+              );
+              this.filtrarUsuarios();
 
+            });
+
+            this.grupoService.obtenerPendientes(res.id).subscribe(res2 => {
+              this.grupo.pendientes = res2;
+              this.grupo.pendientes.forEach(val => {
+                console.log(val);
+                this.agregarUsuario(val);
+                this.usuarios = this.usuarios.filter(
+                  res => {
+                    return res.nombre.localeCompare(val.nombre.toString());
+                  }
+                );
+                this.filtrarUsuarios();
+              });
+              
+            });
+            this.iniciarVista();
           });
+          
         });
         this.camposEditar = true;
-        this.titulo = "Editar grupo: " + this.grupo.nombre;
+
       } else {
+        this.iniciarVista();
         this.hayUsuariosAgregados = false;
         this.camposEditar = false;
         this.titulo = "Crear grupo";
