@@ -12,8 +12,9 @@ import { VotacionService } from '../../../Servicios/votacion.service';
 export class VotacionListaComponent implements OnInit {
 
   usuario: Usuario = new Usuario('', 0, '', '');
-  misVotaciones: Votacion[];
   votaciones: Votacion[];
+  misVotaciones: Votacion[] = [];
+  votacionesInscrito: Votacion[] = [];
 
   constructor(
     private router: Router,
@@ -33,26 +34,19 @@ export class VotacionListaComponent implements OnInit {
 
   // Solicita al servicio las votaciones
   getVotaciones(): void {
-    this.votacionService.getVotacionesAutor(this.usuario.nombre.toString())
-      .subscribe(
-        result => {
-          this.misVotaciones = result;
-          this.actualizarParticipantes(this.misVotaciones);
-        }
-      );
     this.votacionService.getVotacionesUsuario(this.usuario.nombre.toString())
       .subscribe(
         result => {
           this.votaciones = result;
           this.actualizarParticipantes(this.votaciones);
+          this.actualizarVotaciones(this.votaciones);
         }
       );
   }
 
-  eliminar(votacion: Votacion, votaciones: Votacion[]): void {
-    if (confirm('¿Está seguro de eliminar esta votación?')) {
+  salir(votacion: Votacion, votaciones: Votacion[]): void {
+    if (confirm('¿Está seguro de salir de esta votación?')) {
       votaciones.splice(votaciones.indexOf(votacion), 1);
-      //this.getVotaciones();
       this.votacionService.deleteUsuarioVotacion(votacion.id.valueOf(), this.usuario.nombre.toString()).subscribe(
         result => { console.log(result) }
       );
@@ -95,12 +89,21 @@ export class VotacionListaComponent implements OnInit {
   }
 
   actualizarParticipantes(votaciones: Votacion[]): void {
-    for (let i = 0; i < votaciones.length; i++) {
-      const votacion = votaciones[i];
+    for (const votacion of votaciones) {
       this.votacionService.getParticipanteVotacion(votacion.id.valueOf())
         .subscribe(
           result => { votacion.participantes = result; }
         );
+    }
+  }
+
+  actualizarVotaciones(votaciones: Votacion[]): void {
+    for (const votacion of votaciones) {
+      if (votacion.autor.toString().localeCompare(this.usuario.nombre.toString()) === 0) {
+        this.misVotaciones.push(votacion);
+      } else {
+        this.votacionesInscrito.push(votacion);
+      }
     }
   }
 }

@@ -9,7 +9,7 @@ export class Votacion{
     id : Number;
     fechaLimite : Date;
     plantillaAsociada : String;
-    tipoDeVotacion : String;
+    tipoDeVotacion : Number;
     descripcion : String;
     votos : number;
     participantes : Usuario[];

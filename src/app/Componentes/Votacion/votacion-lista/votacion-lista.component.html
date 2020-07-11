@@ -1,5 +1,5 @@
 <div class="container">
-  <h1 class="text-center">Mis invitaciones</h1>
+  <h1 class="text-center">Mis votaciones</h1>
   <div class="row">
     <div class="col">
       <h2 class="text-left">Propias</h2>
@@ -19,7 +19,7 @@
           <th (click)="ordenarPorTitulo(misVotaciones)">
             Tìtulo &#8964;
           </th>
-          <th>Grupo</th>
+          <th>Autor</th>
           <th (click)="ordenarPorParticipantes(misVotaciones)">
             No. Participantes &#8964;
           </th>
@@ -27,23 +27,23 @@
         </tr>
       </thead>
       <tbody>
-        <tr
-          #row
-          *ngFor="let votacion of misVotaciones"
-        >
-          <td (click)="verVotacion(votacion.id)">{{ row.rowIndex }}</td>
+        <tr #row *ngFor="let votacion of misVotaciones">
+          <td (click)="verVotacion(votacion.id)">{{ misVotaciones.indexOf(votacion)+1 }}</td>
           <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
-          <td (click)="verVotacion(votacion.id)">XD</td>
-          <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+          <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
+          <td
+            *ngIf="votacion.participantes != undefined"
+            (click)="verVotacion(votacion.id)"
+          >
             {{ votacion.participantes.length }}
           </td>
           <td>
             <button
               type="button"
               class="btn btn-danger"
-              (click)="eliminar(votacion, misVotaciones)"
+              (click)="salir(votacion, misVotaciones)"
             >
-              Eliminar
+              Salir
             </button>
           </td>
         </tr>
@@ -67,40 +67,36 @@
       <thead>
         <tr>
           <th>No.</th>
-          <th (click)="ordenarPorTitulo(votaciones)">
+          <th (click)="ordenarPorTitulo(votacionesInscrito)">
             Tìtulo &#8964;
           </th>
-          <th>Grupo</th>
-          <th (click)="ordenarPorParticipantes(votaciones)">
+          <th>Autor</th>
+          <th (click)="ordenarPorParticipantes(votacionesInscrito)">
             No. Participantes &#8964;
           </th>
           <th>Acciones</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          #row
-          *ngFor="let votacion of votaciones"
-        >
-          <ng-container
-            *ngIf="votacion.autor.localeCompare(usuario.nombre) !== 0"
+        <tr #row *ngFor="let votacion of votacionesInscrito">
+          <td (click)="verVotacion(votacion.id)">{{ votacionesInscrito.indexOf(votacion)+1 }}</td>
+          <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
+          <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
+          <td
+            *ngIf="votacion.participantes != undefined"
+            (click)="verVotacion(votacion.id)"
           >
-            <td (click)="verVotacion(votacion.id)">{{ row.rowIndex }}</td>
-            <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
-            <td (click)="verVotacion(votacion.id)">XD</td>
-            <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
-              {{ votacion.participantes.length }}
-            </td>
-            <td>
-              <button
-                type="button"
-                class="btn btn-danger"
-                (click)="eliminar(votacion, votaciones)"
-              >
-                Eliminar
-              </button>
-            </td>
-          </ng-container>
+            {{ votacion.participantes.length }}
+          </td>
+          <td>
+            <button
+              type="button"
+              class="btn btn-danger"
+              (click)="salir(votacion, votacionesInscrito)"
+            >
+              Salir
+            </button>
+          </td>
         </tr>
       </tbody>
     </table>
