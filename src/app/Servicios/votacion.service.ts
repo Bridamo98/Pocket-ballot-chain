@@ -5,6 +5,7 @@ import { Votacion } from '../Modelo/Votacion';
 import { environment } from '../../environments/environment';
 import { Usuario } from '../Modelo/Usuario';
 import { identifierModuleUrl } from '@angular/compiler';
+import { TipoVotacion } from '../Modelo/TipoVotacion';
 
 @Injectable({
   providedIn: 'root'
@@ -49,5 +50,9 @@ export class VotacionService {
 
   deleteUsuarioVotacion(id: number, nombre: string) {
     return this.http.get(`${environment.serverUrl}/participanteDelete/${id}/${nombre}`);
+  }
+
+  getTipoVotacion(id: number) {
+    return this.http.get<TipoVotacion>(`${environment.serverUrl}/tipoVotacion/${id}`);
   }
 }

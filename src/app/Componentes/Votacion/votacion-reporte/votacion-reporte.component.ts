@@ -3,6 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Votacion } from '../../../Modelo/Votacion';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { VotacionService } from 'src/app/Servicios/votacion.service';
+import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
+import { TipoVotacion } from '../../../Modelo/TipoVotacion';
 
 @Component({
   selector: 'app-votacion-reporte',
@@ -23,88 +25,58 @@ export class VotacionReporteComponent implements OnInit {
   maxY: number = 300;
   votos: number[] = [];
   maxVal: number = -1;
+  tipoVotacion: TipoVotacion = new TipoVotacion();
 
   constructor(
     private router: Router,
     private rutaActiva: ActivatedRoute,
-    private votacionService: VotacionService
+    private votacionService: VotacionService,
+    private opcionService: OpcionService
   ) {
     this.votacion.id = this.rutaActiva.snapshot.params.id;
   }
 
   ngOnInit(): void {
+    this.votacion = {
+      titulo: '',
+      autor: '',
+      id: this.votacion.id,
+      fechaLimite: new Date(),
+      plantillaAsociada: '',
+      tipoDeVotacion: -1,
+      descripcion: '',
+      votos: 0,
+      participantes: [],
+      almacena: [],
+      opcionDeVotacion: [],
+      accesosExtra: []
+    };
+    this.tipoVotacion = { id: -1, nombre: '', descripcion: '' }
     this.getVotacion();
-    this.contarVotos();
-    this.dibujar();
   }
 
   // Solicita al servicio la votación
   getVotacion(): void {
-    //   this.votacionService.getVotacion(this.votacion.id.valueOf()).subscribe(
-    //     result => { this.votacion = result; }
-    //   );
-    this.votacion = {
-      titulo: 'votacion 1',
-      autor: 'Brandonn',
-      id: 0,
-      descripcion: 'Votacion de prueba',
-      fechaLimite: new Date(),
-      plantillaAsociada: 'plantilla-1',
-      tipoDeVotacion: 'popular',
-      participantes: [new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456'),
-      new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456'),
-      new Usuario('Brandonn', 0, 'bra@', '123'), new Usuario('Alice', 0, 'ali@', '456')],
-      almacena: [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }],
-      votos: 0,
-      opcionDeVotacion: [{
-        descripcion: 'Candidato',
-        id: 0,
-        nombre: 'Alice',
-        votacion: null
-      },
-      {
-        descripcion: 'Candidato',
-        id: 1,
-        nombre: 'Bob',
-        votacion: null
-      },
-      {
-        descripcion: 'Candidato',
-        id: 2,
-        nombre: 'Carl',
-        votacion: null
-      }],
-      accesosExtra: []
-    };
-    // this.votacion.opcionDeVotacion = [{
-    //   descripcion: 'Candidato',
-    //   id: 0,
-    //   nombre: 'Alice'
-    // },
-    // {
-    //   descripcion: 'Candidato',
-    //   id: 1,
-    //   nombre: 'Bob'
-    // },
-    // {
-    //   descripcion: 'Candidato',
-    //   id: 2,
-    //   nombre: 'Carl'
-    // }];
-    // this.votacion.almacena = [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }];
-    this.votacion.votos = this.votacion.almacena.length;
-    //this.actualizarParticipantes(this.votacion);
+    this.votacionService.getVotacion(this.votacion.id.valueOf()).subscribe(
+      result => {
+        this.votacion = result;
+        this.actualizarTipo(this.votacion);
+        this.actualizarParticipantes(this.votacion);
+        this.actualizarVotos(this.votacion);
+        this.actualizarOpciones(this.votacion);
+      }
+    );
   }
 
   // Seguramente debe ser reemplazada esta función si se hace la correción
   contarVotos(): void {
-    for (let i = 0; i < this.votacion.opcionDeVotacion.length; i++) {
+    for (let i = 0; i<this.votacion.opcionDeVotacion.length; i++) {
       this.votos.push(0);
     }
-    for (let i = 0; i < this.votacion.almacena.length; i++) {
-      const v = this.votacion.almacena[i];
+    for (const v of this.votacion.almacena) {
       this.votos[v.infoVoto.valueOf()]++;
     }
+    this.dibujar();
   }
 
   dibujar(): void {
@@ -167,10 +139,31 @@ export class VotacionReporteComponent implements OnInit {
     return nCeros;
   }
 
+  actualizarTipo(votacion: Votacion): void {
+    this.votacionService.getTipoVotacion(votacion.tipoDeVotacion.valueOf()).subscribe(
+      result => { this.tipoVotacion = result; }
+    );
+  }
+
   actualizarParticipantes(votacion: Votacion): void {
     this.votacionService.getParticipanteVotacion(votacion.id.valueOf())
       .subscribe(
-        result => { votacion.participantes = result; }
+        result => {
+          votacion.participantes = result;
+        }
       );
+  }
+
+  // Llama al servicio para leer los votos
+  actualizarVotos(votacion: Votacion): void {
+    votacion.almacena = [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }];
+    //votacion.almacena = [];
+    votacion.votos = votacion.almacena.length;
+  }
+
+  actualizarOpciones(votacion: Votacion): void {
+    this.opcionService.getOpcion(this.votacion.id.valueOf()).subscribe(
+      result => { votacion.opcionDeVotacion = result; this.contarVotos(); }
+    );
   }
 }

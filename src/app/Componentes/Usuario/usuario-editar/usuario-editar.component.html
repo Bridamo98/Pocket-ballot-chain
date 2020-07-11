@@ -11,6 +11,11 @@
             id="txtNombre"
             name="nombre"
             formControlName="nombre"
+            [ngClass]="{'is-invalid': formulario.get('nombre').touched && formulario.get('nombre').invalid}"
+            data-toggle="popover"
+            data-placement="left"
+            data-trigger="manual"
+            (change)="ocultarPopover()"
           />
           <div
             *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)"
@@ -20,7 +25,7 @@
               Nombre requerido
             </div>
             <div *ngIf="nombre.errors.minlength">
-              El nombre debe ser de al menos 4 caracteres
+              El nombre debe tener al menos 4 caracteres
             </div>
             <div *ngIf="nombre.hasError('alreadyExists')">
               Nombre en uso
@@ -36,6 +41,7 @@
             id="txtCorreo"
             name="correo"
             formControlName="correo"
+            [ngClass]="{'is-invalid': formulario.get('correo').touched && formulario.get('correo').invalid}"
           />
           <div
             *ngIf="correo.invalid && (correo.dirty || correo.touched)"
@@ -58,10 +64,7 @@
           >
             Actualizar información
           </button>
-          <button
-            class="btn btn-secondary m-2"
-            (click)="cancelar(formulario)"
-          >
+          <button class="btn btn-secondary m-2" (click)="cancelar(formulario)">
             Cancelar
           </button>
         </div>
