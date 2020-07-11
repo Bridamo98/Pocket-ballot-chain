@@ -39,6 +39,7 @@ export class VotacionCrearComponent implements OnInit {
           this.classList.add("bg-secondary");
           this.classList.remove("bg-light");
           this.classList.add("text-white");
+          this.style.cursor = "pointer";
         });
         cuadro[i].addEventListener("mouseout",function() {
           this.classList.remove("bg-secondary");
