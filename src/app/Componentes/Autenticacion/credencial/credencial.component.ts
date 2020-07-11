@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CredencialService } from '../../../Servicios/Credencial/credencial.service';
+import { VotacionService } from '../../../Servicios/votacion.service';
 import { Credencial} from '../../../Modelo/Credencial';
+import { Votacion} from '../../../Modelo/Votacion';
 @Component({
 	selector: 'app-credencial',
 	templateUrl: './credencial.component.html',
@@ -12,9 +14,9 @@ export class CredencialComponent implements OnInit {
 	clave: string="";
 	htmlToAdd: string ="";
 	credencial: Credencial;
+	votacion: Votacion;
 
-
-	constructor(private credencialServicio:CredencialService) { }
+	constructor(private credencialServicio:CredencialService, private votacionService:VotacionService) { }
 
 	ngOnInit(): void {
 
@@ -42,7 +44,23 @@ export class CredencialComponent implements OnInit {
 					console.log(this.credencial);
 					console.log("aceptado");
 					this.htmlToAdd=""
-					window.location.href='Credencial';
+					this.votacionService.getVotacion(this.credencial.votacion).subscribe(res=>{
+						this.votacion=res;
+						if(this.votacion.tipoDeVotacion=='1')
+						{
+							window.location.href='VotoRanking/'+this.credencial.clave;
+						}
+						if(this.votacion.tipoDeVotacion=='2')
+						{
+							window.location.href='VotoPopular/'+this.credencial.clave;
+						}
+						if(this.votacion.tipoDeVotacion=='3')
+						{
+							window.location.href='VotoClasificacion/'+this.credencial.clave;
+						}
+
+					});
+					//window.location.href='Credencial';
 				}
 			});
 		}

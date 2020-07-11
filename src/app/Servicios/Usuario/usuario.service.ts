@@ -9,14 +9,32 @@ export class UsuarioService {
 	URLbase = 'http://localhost:3000';
 	private _httpHandler: HttpHandler;
 	httpClient: HttpClient;
-  constructor( http: HttpClient) { 
+  constructor(private http: HttpClient) { 
   	this.httpClient= http
   }
   addUsuario(usuario: Usuario){
-    //var json = JSON.stringify(usuario); //Esto jode el post
-    //console.log(json);
-    return this.httpClient.post(this.URLbase+'/usuarioAdd', usuario).toPromise().then(data=> {
+    return this.httpClient.post<any>(this.URLbase+'/usuarioAdd', usuario).toPromise().then(data=> {
 			console.log(data);
+      if(data.token!=null && data.token!=undefined) 
+      {
+        localStorage.setItem('token', data.token);
+      }
 		});;
+  }
+  iniciarSesion(usuario: Usuario)
+  {
+    console.log(usuario);
+    return this.http.post<any>(this.URLbase+'/iniciarSesion', usuario).toPromise().then(data=> {
+      console.log(data);
+      if(data.token!=null && data.token!=undefined) 
+      {
+        localStorage.setItem('token', data.token);
+      }
+
+    });
+  }
+  estaLogeado()
+  {
+    return !!localStorage.getItem('token');
   }
 }

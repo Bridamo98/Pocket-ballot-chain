@@ -1,49 +1,44 @@
 
-<div class="container">
+<div class="row justify-content-sm-center">
 
-    <div class="row">
-        <h1>Registro</h1> 
-    </div>
+    <div class="col-sm-4">
+
+        <div class="row justify-content-sm-center">
+            <h1>Registro</h1> 
+        </div>
 
 
-
-    <div class="row">
         <p>Para poder registrarse en el sistema por favor diligenciar el siguiente formulario:</p>
-    </div>
 
-    <div class="row">
-    </div>
+        <form>
 
-    <form>
-        <div class="row">
-            <input type="email" required="required" placeholder="Correo electronico" size="20" maxlength="20" name="" [(ngModel)]="correo" name="correo">
-        </div>
-        <br/>
-        <div class="row">
-            <input type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre">
-        </div>
+            <input id='correo' class="form-control " type="email" required="required" placeholder="Correo electronico" size="20" maxlength="50" name="" [(ngModel)]="correo" name="correo"
 
-        
-        <br/>
-        <div class="row">
-            <input type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia">
-        </div>
-        
-        <br/>
-        <div class="row">
-           <input type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar">
-       </div>
-       <br/>
-       <div class="row">
-        <div class="one" [innerHtml]="htmlToAdd"></div>
-    </div>
-    <div class="row">
-        <input type="submit" (click)="registrarse()" value="Registrarse">
-    </div>
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popCorreo="ngbPopover"   placement="right">
 
-    <br/>
-</form>
-<div class="row">
-    <a href="/">Volver a inicio de sesión </a>
-</div>
+
+            <input id='nombre' class="form-control" type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre"
+
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popName="ngbPopover"   placement="right">
+
+            <input id='contrasenia' class="form-control" type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia"
+
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popContra="ngbPopover"   placement="right">
+
+
+            <input id='verificar' class="form-control" type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar"
+
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popConfirm="ngbPopover"   placement="right">
+
+
+            <div class="one" [innerHtml]="htmlToAdd"></div>
+
+
+            <input class="btn btn-primary" type="submit" (click)="registrarse(popCorreo, popName, popContra, popConfirm  )" value="Registrarse">
+
+        </form>
+
+        <a href="/">Volver a inicio de sesión </a>
+
+    </div>
 </div>

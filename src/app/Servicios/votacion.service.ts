@@ -31,7 +31,7 @@ export class VotacionService {
     return this.http.post<Votacion>(this.URLbase + "votacionAdd", json, { headers: headers });
   }
 
-  getVotacion(id: number) {
+  getVotacion(id: Number) {
     return this.http.get<Votacion>(`${environment.serverUrl}/votacion/${id}`);
   }
 

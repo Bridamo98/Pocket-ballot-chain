@@ -2,10 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../Modelo/Usuario';
 import { Votacion } from '../../../Modelo/Votacion';
 import { Opcion } from '../../../Modelo/Opcion';
+import { Credencial} from '../../../Modelo/Credencial';
 
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
+import { CredencialService } from '../../../Servicios/Credencial/credencial.service';
+
 import {CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
+import { Router, ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-voto-clasificacion',
   templateUrl: './voto-clasificacion.component.html',
@@ -15,10 +19,11 @@ export class VotoClasificacionComponent implements OnInit {
   votacion: Votacion;
   opciones:Opcion[]=[];
   candidatos:Opcion[]=[];
-  idVotacion: number= 3;
+  idVotacion: Number= -1;
   auxiliar: Opcion;
-  constructor(private votacionServicio:VotacionService, private opcionServicio:OpcionService) {
-
+  credencial:String;
+  constructor(private credencialServicio:CredencialService, private votacionServicio:VotacionService, private opcionServicio:OpcionService, private rutaActiva: ActivatedRoute) { 
+    this.credencial = this.rutaActiva.snapshot.params.id;
   }
   tituloVotacion: String="Titulo votacion"; //El modelo de votacion aun no tiene titulo
   //Quemar
@@ -27,14 +32,18 @@ export class VotoClasificacionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.getVotacion();
-     this.auxiliar={
-        descripcion : null,
-        id : null,
-        nombre :"Arrastre los elementos que desaprueba aqui",
-        votacion : null
-      }
-      this.otraLista.push(this.auxiliar);
+
+    this.credencialServicio.validarCredencial(this.credencial).subscribe(res => {
+      this.idVotacion=res.votacion;
+      this.getVotacion()
+    });
+    this.auxiliar={
+      descripcion : null,
+      id : null,
+      nombre :"Arrastre los elementos que desaprueba aqui",
+      votacion : null
+    }
+    this.otraLista.push(this.auxiliar);
     //this.otraLista.push("Arrastre los elementos que desaprueba aqui");
   }
   onDropped(event: CdkDragDrop<any>){
@@ -61,7 +70,7 @@ export class VotoClasificacionComponent implements OnInit {
 
   getVotacion(){
 
-    this.opcionServicio.getOpcion(this.idVotacion).subscribe(res => {
+    this.opcionServicio.getOpcion(Number(this.idVotacion)).subscribe(res => {
       this.opciones = res
       
       this.auxiliar={
@@ -77,6 +86,14 @@ export class VotoClasificacionComponent implements OnInit {
     });
     this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
       this.votacion = res
+      if(this.votacion.tipoDeVotacion=='1')
+      {
+        window.location.href='VotoRanking/'+this.credencial;
+      }
+      if(this.votacion.tipoDeVotacion=='2')
+      {
+        window.location.href='VotoPopular/'+this.credencial;
+      }
       console.log(this.votacion);
       this.tituloVotacion= this.votacion.descripcion;
       
