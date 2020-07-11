@@ -18,7 +18,7 @@ import { VotacionReporteComponent } from './Componentes/Votacion/votacion-report
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
-
+import {AuthGuard} from './auth.guard'
 
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
@@ -36,7 +36,7 @@ const routes: Routes = [
   {path: 'validador-postularse/:nombre', component: ValidadorPostularseComponent},
   {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent},
   {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent},
-  {path: 'VotoRanking/:id', component: VotoRankingComponent},
+  {path: 'VotoRanking/:id', component: VotoRankingComponent, canActivate:[AuthGuard]},
   {path: 'VotoClasificacion/:id', component: VotoClasificacionComponent},
   {path: 'VotoPopular/:id', component: VotoPopularComponent},
     {path: 'Credencial', component: CredencialComponent},

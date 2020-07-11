@@ -1,6 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import {AuthGuard} from './auth.guard';
 
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -77,6 +78,7 @@ import { CredencialComponent } from './Componentes/Autenticacion/credencial/cred
     OpcionService,
     CredencialService,
     UsuarioService,
+    AuthGuard
   ],
   bootstrap: [AppComponent]
 })

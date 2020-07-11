@@ -22,7 +22,11 @@ export class UsuarioService {
     console.log(usuario);
     return this.http.post<any>(this.URLbase+'/iniciarSesion', usuario).toPromise().then(data=> {
       console.log(data);
-      localStorage.setItem('token', data.token);
+      if(data.token!=null && data.token!=undefined) 
+      {
+        localStorage.setItem('token', data.token);
+      }
+
     });
   }
   estaLogeado()
