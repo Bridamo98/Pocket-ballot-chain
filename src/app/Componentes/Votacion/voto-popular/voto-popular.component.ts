@@ -60,11 +60,11 @@ export class VotoPopularComponent implements OnInit {
 		});
 		this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
 			this.votacion = res
-			if(this.votacion.tipoDeVotacion=='1')
+			if(this.votacion.tipoDeVotacion==1)
 			{
 				window.location.href='VotoRanking/'+this.credencial;
 			}
-			if(this.votacion.tipoDeVotacion=='3')
+			if(this.votacion.tipoDeVotacion==3)
 			{
 				window.location.href='VotoClasificacion/'+this.credencial;
 			}

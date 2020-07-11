@@ -46,15 +46,15 @@ export class CredencialComponent implements OnInit {
 					this.htmlToAdd=""
 					this.votacionService.getVotacion(this.credencial.votacion).subscribe(res=>{
 						this.votacion=res;
-						if(this.votacion.tipoDeVotacion=='1')
+						if(this.votacion.tipoDeVotacion==1)
 						{
 							window.location.href='VotoRanking/'+this.credencial.clave;
 						}
-						if(this.votacion.tipoDeVotacion=='2')
+						if(this.votacion.tipoDeVotacion==2)
 						{
 							window.location.href='VotoPopular/'+this.credencial.clave;
 						}
-						if(this.votacion.tipoDeVotacion=='3')
+						if(this.votacion.tipoDeVotacion==3)
 						{
 							window.location.href='VotoClasificacion/'+this.credencial.clave;
 						}

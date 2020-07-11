@@ -61,11 +61,11 @@ export class VotoRankingComponent implements OnInit {
     });
     this.votacionServicio.getVotacion(this.idVotacion).subscribe(res => {
       this.votacion = res
-      if(this.votacion.tipoDeVotacion=='2')
+      if(this.votacion.tipoDeVotacion==2)
       {
         window.location.href='VotoPopular/'+this.credencial;
       }
-      if(this.votacion.tipoDeVotacion=='3')
+      if(this.votacion.tipoDeVotacion==3)
       {
         window.location.href='VotoClasificacion/'+this.credencial;
       }

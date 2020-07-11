@@ -18,7 +18,7 @@ import { VotacionReporteComponent } from './Componentes/Votacion/votacion-report
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
-import {AuthGuard} from './auth.guard'
+import { AuthGuard } from './auth.guard'
 
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
