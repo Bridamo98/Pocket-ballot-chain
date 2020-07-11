@@ -85,7 +85,7 @@ export class VotacionListaComponent implements OnInit {
 
   verVotacion(titulo: string): void {
     console.log('verVotacion ' + titulo);
-    this.router.navigate(['votacion-reporte/' + titulo]);
+    this.router.navigate(['VotacionReporte/' + titulo]);
   }
 
   actualizarParticipantes(votaciones: Votacion[]): void {

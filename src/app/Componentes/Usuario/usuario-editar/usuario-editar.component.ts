@@ -6,6 +6,8 @@ import { UsuarioService } from 'src/app/Servicios/usuario.service';
 import { element } from 'protractor';
 import { resourceUsage } from 'process';
 
+declare var $: any;
+
 @Component({
   selector: 'app-usuario-editar',
   templateUrl: './usuario-editar.component.html',
@@ -28,6 +30,9 @@ export class UsuarioEditarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    $(document).ready(function () {
+      $('[data-toggle="popover"]').popover();
+    });
     this.getUsuario();
     this.obtenerNombres();
   }
@@ -110,5 +115,17 @@ export class UsuarioEditarComponent implements OnInit {
         return null;
       }
     };
+  }
+
+  mostrarPopover(contenido: string): void {
+    console.log("popover");
+    $('#txtNombre').popover({
+      content: contenido
+    });
+    $('#txtNombre').popover('show');
+  }
+
+  ocultarPopover(): void {
+    $('#txtNombre').popover('hide');
   }
 }
