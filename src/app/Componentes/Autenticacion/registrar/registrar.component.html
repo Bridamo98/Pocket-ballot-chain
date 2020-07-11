@@ -12,21 +12,29 @@
 
         <form>
 
-            <input class="form-control" type="email" required="required" placeholder="Correo electronico" size="20" maxlength="50" name="" [(ngModel)]="correo" name="correo">
+            <input id='correo' class="form-control " type="email" required="required" placeholder="Correo electronico" size="20" maxlength="50" name="" [(ngModel)]="correo" name="correo"
+
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popCorreo="ngbPopover"   placement="right">
 
 
-            <input class="form-control" type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre">
+            <input id='nombre' class="form-control" type="text" required="required" placeholder="Nombre de usuario" size="20" maxlength="20" name="" [(ngModel)]="nombre" name="nombre"
 
-            <input class="form-control" type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia">
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popName="ngbPopover"   placement="right">
+
+            <input id='contrasenia' class="form-control" type="password" required="required" placeholder="Escribir contraseña" name="" [(ngModel)]="contrasenia" name="contrasenia"
+
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popContra="ngbPopover"   placement="right">
 
 
-            <input class="form-control" type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar">
+            <input id='verificar' class="form-control" type="password" required="required" placeholder="Confirmar contraseña" name="" [(ngModel)]="verificar" name="verificar"
+
+            popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popConfirm="ngbPopover"   placement="right">
 
 
             <div class="one" [innerHtml]="htmlToAdd"></div>
 
 
-            <input class="btn btn-primary" type="submit" (click)="registrarse()" value="Registrarse">
+            <input class="btn btn-primary" type="submit" (click)="registrarse(popCorreo, popName, popContra, popConfirm  )" value="Registrarse">
 
         </form>
 
