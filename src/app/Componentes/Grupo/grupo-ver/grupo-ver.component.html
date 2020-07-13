@@ -1,53 +1,55 @@
 <br>
 <div class="container">
-    <div class="card">
-        <div class="card-header">
+    <div class="row justify-content-sm-center">
+        <div class="col-sm-6">
             <h3>{{grupo.nombre}}</h3>
-        </div>
-        <div class="card-body">
-            <label for="descripcion">Descripción:</label>
+            <label for="descripcion"><b>Descripción:</b></label>
             {{grupo.descripcion}}
             <br>
-            <label for="creador">Creador:</label>
+            <label for="creador"><b>Creador:</b></label>
             {{grupo.creador}}
             <br>
-            <label for="creacion">Fecha de creación:</label>
+            <label for="creacion"><b>Fecha de creación:</b></label>
             {{grupo.creacion}}
             <br>
-            <label for="miembros">Miembros:</label>
-            <table class="table table-bordered">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let m of grupo.miembros;">
-                        <td>{{m.nombre}}</td>
-                        <td>{{m.correo}}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <label for="miembros"><b>Miembros:</b></label>
+            <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Correo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let m of grupo.miembros;">
+                            <td>{{m.nombre}}</td>
+                            <td>{{m.correo}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
             <div [ngSwitch]="origen">
                 <div *ngSwitchCase="'propios'">
-                    <label for="miembros">Pendientes:</label>
+                    <label for="miembros"><b>Pendientes:</b></label>
                     <div *ngIf="grupo.pendientes.length; then thenBlock else elseBlock"></div>
                     <ng-template #thenBlock>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Nombre</th>
-                                    <th>Correo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr *ngFor="let p of grupo.pendientes;">
-                                    <td>{{p.nombre}}</td>
-                                    <td>{{p.correo}}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                            <table class="table table-bordered">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Correo</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let p of grupo.pendientes;">
+                                        <td>{{p.nombre}}</td>
+                                        <td>{{p.correo}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </ng-template>
                     <ng-template #elseBlock>
                         No hay solicitudes pendientes
@@ -74,4 +76,5 @@
             </div>
         </div>
     </div>
+
 </div>
