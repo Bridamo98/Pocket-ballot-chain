@@ -1,0 +1,11 @@
+#custom-scroll {
+  overflow: scroll;
+  max-height: 300px;
+  margin-bottom: 10px;
+  -webkit-overflow-scrolling: touch;
+}
+
+th {
+  position: sticky;
+  top: 0;
+}

@@ -1,28 +1,39 @@
+<!-- Información de perfil -->
+<div class="container-fluid pt-3" id="perfil-encabezado">
+  <img src="assets/perfil.jpg" class="rounded-circle mx-auto d-block" style="width: 25%;"/>
+  <h3 class="text-center text-light">{{ usuario.nombre }}</h3>
+  <div class="btn-group btn-block">
+    <button class="btn btn-outline-primary text-white" (click)="serValidador()">Ser validador</button>
+    <button class="btn btn-outline-primary text-white" (click)="editarPerfil()">Editar perfil</button>
+  </div>
+</div>
+
+<!-- Información de validador -->
 <div class="container">
   <div class="row">
-    <div class="col">
-      <h2>Información personal</h2>
-      <p>Correo: {{ usuario.correo }}</p>
-      <button type="button" class="btn btn-primary" (click)="editarPerfil()">
-        Editar perfil
-      </button>
-      <h2>Información de validador</h2>
-      <p>Bloques revisados: {{ usuario.bloqRevisados }}</p>
-      <p>Bloques validados: {{ usuario.bloqValidados }}</p>
-      <p>Bloques propuestos: {{ usuario.bloqPropuestos }}</p>
-      <p>Bloques aprobados: {{ usuario.bloqAprobados }}</p>
-      <p>Saldo: ${{ usuario.saldo }}</p>
-      <button type="button" class="btn btn-primary" (click)="serValidador()">
-        Ser validador
-      </button>
+    <div class="col-sm-6">
+      <h5 class="text-left">Información de validador</h5>
     </div>
-
-    <div class="col">
-      <img
-        src="assets/perfil.jpg"
-        class="rounded-circle mx-auto d-block img-fluid"
-      />
-      <h1 class="text-center">{{ usuario.nombre }}</h1>
+    <div class="col-sm-6">
+      <h5 class="text-right">Saldo: ${{ usuario.saldo }}</h5>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-sm m-2 p-3 text-center text-white rounded" id="red-info">
+      <p>Bloques revisados</p>
+      <h5>{{ usuario.bloqRevisados }}</h5>
+    </div>
+    <div class="col-sm m-2 p-3 text-center text-white rounded" id="blue-info">
+      <p>Bloques validados</p>
+      <h5>{{ usuario.bloqValidados }}</h5>
+    </div>
+    <div class="col-sm m-2 p-3 text-center text-white rounded" id="green-info">
+      <p>Bloques propuestos</p>
+      <h5>{{ usuario.bloqPropuestos }}</h5>
+    </div>
+    <div class="col-sm m-2 p-3 text-center text-white rounded" id="yellow-info">
+      <p>Bloques aprobados</p>
+      <h5>{{ usuario.bloqAprobados }}</h5>
     </div>
   </div>
 </div>

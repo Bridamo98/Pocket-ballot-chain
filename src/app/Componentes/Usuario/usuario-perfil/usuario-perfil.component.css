@@ -1,0 +1,25 @@
+#perfil-encabezado {
+  background:
+    linear-gradient(
+      rgba(41, 120, 238, 0.25),
+      rgba(41, 120, 238, 0.25)
+    ),
+    url("../../../../assets/bitcoin_wp2.jpeg");
+  background-blend-mode: color;
+}
+
+#red-info {
+  background-image: linear-gradient(#EB0C50, #952044)
+}
+
+#blue-info {
+  background-image: linear-gradient(#0C0DF5, #202078)
+}
+
+#green-info {
+  background-image: linear-gradient(#00DE8D, #217154)
+}
+
+#yellow-info {
+  background-image: linear-gradient(#F2F50C, #787928)
+}

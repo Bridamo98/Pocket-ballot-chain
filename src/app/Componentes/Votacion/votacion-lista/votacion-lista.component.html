@@ -1,104 +1,108 @@
 <div class="container">
   <h1 class="text-center">Mis votaciones</h1>
-  <div class="row">
-    <div class="col">
+
+  <!-- Barra de navegación del tarjetero -->
+  <ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="own-tab" data-toggle="tab" href="#own" role="tab" aria-controls="own"
+        aria-selected="true">Propias</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="other-tab" data-toggle="tab" href="#other" role="tab" aria-controls="other"
+        aria-selected="false">Participante</a>
+    </li>
+  </ul>
+
+  <!-- Tarjetero -->
+  <div class="tab-content" id="myTabContent">
+    <div class="tab-pane fade show active" id="own" role="tabpanel" aria-labelledby="own-tab">
+
       <h2 class="text-left">Propias</h2>
-    </div>
-    <div class="col d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="crearVotacion()">
+
+      <div class="table-responsive" id="custom-scroll">
+        <table class="table table-hover table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th>No.</th>
+              <th (click)="ordenarPorTitulo(misVotaciones)">
+                Tìtulo
+                <i class="fa fa-fw fa-sort"></i>
+              </th>
+              <th>Autor</th>
+              <th (click)="ordenarPorParticipantes(misVotaciones)">
+                No. Participantes
+                <i class="fa fa-fw fa-sort"></i>
+              </th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr #row *ngFor="let votacion of misVotaciones">
+              <td (click)="verVotacion(votacion.id)">{{ misVotaciones.indexOf(votacion)+1 }}</td>
+              <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
+              <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
+              <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+                {{ votacion.participantes.length }}
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger" (click)="salir(votacion, misVotaciones)">
+                  Salir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <button class="btn btn-primary float-right" (click)="crearVotacion()">
         Nueva votación
       </button>
     </div>
-  </div>
 
-  <div class="table-responsive">
-    <table class="table table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>No.</th>
-          <th (click)="ordenarPorTitulo(misVotaciones)">
-            Tìtulo &#8964;
-          </th>
-          <th>Autor</th>
-          <th (click)="ordenarPorParticipantes(misVotaciones)">
-            No. Participantes &#8964;
-          </th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr #row *ngFor="let votacion of misVotaciones">
-          <td (click)="verVotacion(votacion.id)">{{ misVotaciones.indexOf(votacion)+1 }}</td>
-          <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
-          <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
-          <td
-            *ngIf="votacion.participantes != undefined"
-            (click)="verVotacion(votacion.id)"
-          >
-            {{ votacion.participantes.length }}
-          </td>
-          <td>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="salir(votacion, misVotaciones)"
-            >
-              Salir
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
+    <div class="tab-pane fade" id="other" role="tabpanel" aria-labelledby="other-tab">
 
-  <div class="row">
-    <div class="col">
       <h2 class="text-left">Participante</h2>
-    </div>
-    <div class="col d-flex justify-content-end">
-      <button class="btn btn-primary" (click)="verInvitaciones()">
+
+      <div class="table-responsive" id="custom-scroll">
+        <table class="table table-hover table-bordered">
+          <thead class="thead-dark">
+            <tr>
+              <th>No.</th>
+              <th (click)="ordenarPorTitulo(votacionesInscrito)">
+                Tìtulo
+                <i class="fa fa-fw fa-sort"></i>
+              </th>
+              <th>Autor</th>
+              <th (click)="ordenarPorParticipantes(votacionesInscrito)">
+                No. Participantes
+                <i class="fa fa-fw fa-sort"></i>
+              </th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr #row *ngFor="let votacion of votacionesInscrito">
+              <td (click)="verVotacion(votacion.id)">{{ votacionesInscrito.indexOf(votacion)+1 }}</td>
+              <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
+              <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
+              <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+                {{ votacion.participantes.length }}
+              </td>
+              <td>
+                <button type="button" class="btn btn-danger" (click)="salir(votacion, votacionesInscrito)">
+                  Salir
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+      <button class="btn btn-primary float-right" (click)="verInvitaciones()">
         Ver invitaciones
       </button>
     </div>
   </div>
 
-  <div class="table-responsive">
-    <table class="table table-hover table-bordered">
-      <thead>
-        <tr>
-          <th>No.</th>
-          <th (click)="ordenarPorTitulo(votacionesInscrito)">
-            Tìtulo &#8964;
-          </th>
-          <th>Autor</th>
-          <th (click)="ordenarPorParticipantes(votacionesInscrito)">
-            No. Participantes &#8964;
-          </th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr #row *ngFor="let votacion of votacionesInscrito">
-          <td (click)="verVotacion(votacion.id)">{{ votacionesInscrito.indexOf(votacion)+1 }}</td>
-          <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
-          <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
-          <td
-            *ngIf="votacion.participantes != undefined"
-            (click)="verVotacion(votacion.id)"
-          >
-            {{ votacion.participantes.length }}
-          </td>
-          <td>
-            <button
-              type="button"
-              class="btn btn-danger"
-              (click)="salir(votacion, votacionesInscrito)"
-            >
-              Salir
-            </button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
 </div>

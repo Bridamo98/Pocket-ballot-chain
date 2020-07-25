@@ -3,8 +3,6 @@ import { Usuario } from 'src/app/Modelo/Usuario';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
-import { element } from 'protractor';
-import { resourceUsage } from 'process';
 
 declare var $: any;
 
@@ -19,6 +17,7 @@ export class UsuarioEditarComponent implements OnInit {
   existeNombre = false;
   formulario;
   usuarios: string[] = [];
+  msgActualizacion: string;
 
   constructor(
     private router: Router,
@@ -70,12 +69,16 @@ export class UsuarioEditarComponent implements OnInit {
     this.usuarioService.putUsuario(this.usuario, nombreViejo).subscribe(
       result => {
         this.obtenerNombres();
+        this.msgActualizacion = "Información actualizada!";
+        $('#confirmModal').modal('show');
       }
     );
   }
 
   cancelar(formulario: NgForm): void {
     formulario.setValue({ nombre: this.usuario.nombre, correo: this.usuario.correo });
+    $('#txtNombre').popover('dispose');
+    $('#txtCorreo').popover('dispose');
   }
 
   verificarNombre(nombre: string): boolean {
@@ -117,15 +120,30 @@ export class UsuarioEditarComponent implements OnInit {
     };
   }
 
-  mostrarPopover(contenido: string): void {
-    console.log("popover");
-    $('#txtNombre').popover({
-      content: contenido
-    });
-    $('#txtNombre').popover('show');
+  mostrarPopover(campo: string, nombre: string): void {
+    let error: string;
+    $(campo).popover('dispose');
+    if(this.formulario.get(nombre).errors != undefined) {
+      error = this.obtenerMsgPopover(Object.keys(this.formulario.get(nombre).errors)[0]);
+      $(campo).popover({
+        content: error
+      });
+      $(campo).popover('toggle');
+    }
   }
 
-  ocultarPopover(): void {
-    $('#txtNombre').popover('hide');
+  obtenerMsgPopover(error: string): string {
+    if(error === 'required') {
+      return 'Campo requerido';
+    }
+    if(error === 'minlength') {
+      return 'El nombre debe tener al menos 4 caracteres';
+    }
+    if(error === 'alreadyExists') {
+      return 'Nombre en uso';
+    }
+    if(error === 'emailFormat') {
+      return 'Formato incorrecto';
+    }
   }
 }
