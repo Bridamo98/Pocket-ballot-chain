@@ -28,8 +28,7 @@ export class GrupoVerComponent implements OnInit {
       this.id = params['id'];
       this.origen = params['origen'];
     });
-    this.relacion.idGrupo = this.id;
-    this.relacion.idUsuario = this.iniciado;
+    
     
   };
 
@@ -75,36 +74,43 @@ export class GrupoVerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.grupoService.obtenerGrupo(this.id).subscribe(res => {
-      this.grupo = res;
-      this.grupoService.obtenerMiembrosDeGrupo(this.id).subscribe(res2 => {
-        this.grupo.miembros = res2;
-        this.grupoService.obtenerPendientes(this.id).subscribe(res3 => {
-          this.grupo.pendientes = res3;
-          switch (this.origen) {
-            case "propios":
-              //
-              break;
-            case "invitaciones":
-              //
-              break;
-            case "pertenecientes":
-              //
-              break;
-            case "otros":
-              //
-              break;
-            case "todos":
-              //
-              this.origen = this.obtenerRelacion();
-              break;
-            default:
-              //
-              break;
-          }
-          console.log(this.grupo);
+    this.grupoService.obtenerUsuarioLogueado().subscribe(res => {
+      console.log(res.status);
+      this.iniciado = res.status;
+      this.relacion.idGrupo = this.id;
+      this.relacion.idUsuario = this.iniciado;
+      this.grupoService.obtenerGrupo(this.id).subscribe(res => {
+        this.grupo = res;
+        this.grupoService.obtenerMiembrosDeGrupo(this.id).subscribe(res2 => {
+          this.grupo.miembros = res2;
+          this.grupoService.obtenerPendientes(this.id).subscribe(res3 => {
+            this.grupo.pendientes = res3;
+            switch (this.origen) {
+              case "propios":
+                //
+                break;
+              case "invitaciones":
+                //
+                break;
+              case "pertenecientes":
+                //
+                break;
+              case "otros":
+                //
+                break;
+              case "todos":
+                //
+                this.origen = this.obtenerRelacion();
+                break;
+              default:
+                //
+                break;
+            }
+            console.log(this.grupo);
+          });
         });
       });
     });
+    
   }
 }

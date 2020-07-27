@@ -77,7 +77,12 @@ export class GrupoListarComponent implements OnInit {
   constructor(public grupoService: GrupoService) { }
 
   ngOnInit(): void {
-    this.obenerTodos();
+    this.grupoService.obtenerUsuarioLogueado().subscribe(res => {
+      console.log(res.status);
+      this.iniciado = res.status
+      this.obenerTodos();
+    });
+    
     this.ruta = window.location.origin;
   }
 

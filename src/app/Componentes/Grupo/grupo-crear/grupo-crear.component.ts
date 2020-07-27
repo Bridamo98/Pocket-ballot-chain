@@ -378,6 +378,10 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.grupoService.obtenerUsuarioLogueado().subscribe(res=>{
+      console.log(res.status); 
+      this.iniciado = res.status
+    });
 
     this.grupoService.obtenerGrupos().subscribe(res => {
       this.grupos = res

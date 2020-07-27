@@ -14,6 +14,13 @@ export class GrupoService {
 
   URLbase = 'http://localhost:3000';
 
+  obtenerUsuarioLogueado():Observable<Respuesta>{
+    console.log(localStorage.getItem('token'));
+    let headers = new HttpHeaders().set('Authorization', 'Bearer '+localStorage.getItem('token'));
+    console.log('get: ', this.URLbase + '/log');
+    return this.http.get<Respuesta>(this.URLbase + '/log', { headers: headers });
+  }
+
   //----------------------------------GRUPOS-------------------------------
 
   obtenerGrupos():Observable<Grupo[]> {
@@ -117,10 +124,4 @@ export class GrupoService {
     console.log(res);
     return res;
   }
-
-  
-
-  
-
-  
 }
