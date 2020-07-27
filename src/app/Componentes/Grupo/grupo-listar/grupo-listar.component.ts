@@ -18,7 +18,7 @@ export class GrupoListarComponent implements OnInit {
   otros: Grupo[] = [];
   esOtro: boolean;
   ruta: string;
-  iniciado: string = "Usuario1";//QUEMADO - SE DEBE OBTENER CUAL ES EL USUARIO INICIADO
+  iniciado: string;
 
   obenerTodos(): void {
 

@@ -31,10 +31,8 @@ export class GrupoCrearComponent implements OnInit {
   grupos: Grupo[] = [];//todos los grupos del sistema
   gruposCopia: Grupo[] = [];//para los filtros
 
-  usuarioAux:Usuario;
-  indiceAux:number;
-
-  nuevosMiembros: Usuario[] = [];//NO SE USA
+  usuarioAux: Usuario;//Para guardar info de operaciones que requieren confirmacion
+  indiceAux: number;//...
 
   relacion: Relacion = new Relacion();//la relacion del grupo con el usuario iniciado
 
@@ -51,7 +49,7 @@ export class GrupoCrearComponent implements OnInit {
   buscadorGrupo: String = "";//para filtro
   buscadorUsuario: String = "";//para filtro
 
-  iniciado: string = "Usuario1";//QUEMADO
+  iniciado: string;//Usuario loguado
 
   constructor(public grupoService: GrupoService, private modalService: NgbModal, private formBuilder: FormBuilder, private router: Router) {
     this.grupo.miembros = [];
@@ -59,6 +57,9 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   arrayVacio(array: any[]): boolean {
+    /**
+     * Valida si un array es vacio o no
+     */
     if (array.length == 0) {
       return false;
     } else {
@@ -67,6 +68,10 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   agregarGrupo(g): void {
+    /**
+     * Agrega un grupo a grupos seleccionados (agrega cada uno de sus usuarios)
+     * actualizando todas las listas de seleccion
+     */
     this.gruposSeleccionados.push(g);
     this.grupos = this.grupos.filter(
       res => {
@@ -80,17 +85,16 @@ export class GrupoCrearComponent implements OnInit {
         return !usu.nombre.localeCompare(val.nombre);
       }));
 
-      if(this.camposEditar){
+      if (this.camposEditar) {
         if (!this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(val.nombre)) && !this.grupo.miembros.some(usu => !usu.nombre.localeCompare(val.nombre))) {
           this.grupo.pendientes.push(Object.assign({}, val));
-          //this.usuariosSeleccionados.push(Object.assign({}, val));
           this.usuarios = this.usuarios.filter(
             res => {
               return res.nombre.localeCompare(val.nombre);
             }
           );
         }
-      }else{
+      } else {
         if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(val.nombre))) {
           this.grupo.miembros.push(Object.assign({}, val));
           this.usuarios = this.usuarios.filter(
@@ -109,11 +113,15 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   eliminarGrupo(i): void {
+    /**
+     * Elimina un grupo a grupos seleccionados (elimina cada uno de sus usuarios)
+     * actualizando todas las listas de seleccion
+     */
     this.grupos.push(this.gruposSeleccionados[i]);
     this.gruposSeleccionados[i].miembros.forEach(val => {
-      
-      if(this.camposEditar){
-        if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString())) && this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(val.nombre.toString())) ) {
+
+      if (this.camposEditar) {
+        if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString())) && this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(val.nombre.toString()))) {
           this.usuarios.push(Object.assign({}, val));
           this.grupo.pendientes = this.grupo.pendientes.filter(
             res => {
@@ -121,12 +129,12 @@ export class GrupoCrearComponent implements OnInit {
             }
           );
           this.usuariosSeleccionados = this.usuariosSeleccionados.filter(
-            res =>{
+            res => {
               return res.nombre.localeCompare(val.nombre.toString());
             }
           )
         }
-      }else{
+      } else {
         if (!this.usuarios.some(usu => !usu.nombre.localeCompare(val.nombre.toString()))) {
           this.usuarios.push(Object.assign({}, val));
           this.grupo.miembros = this.grupo.miembros.filter(
@@ -149,9 +157,13 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   agregarUsuario(u): void {
+  /**
+   * Agrega un usuario de usuarios seleccionados
+   * actualizando todas las listas de seleccion
+   */
     this.usuariosSeleccionados.push(u);
-    if(this.camposEditar){
-      if(this.grupo.pendientes){
+    if (this.camposEditar) {
+      if (this.grupo.pendientes) {
         if (!this.grupo.pendientes.some(usu => !usu.nombre.localeCompare(u.nombre))) {
           this.grupo.pendientes.push(Object.assign({}, u));
           this.usuarios = this.usuarios.filter(
@@ -162,8 +174,8 @@ export class GrupoCrearComponent implements OnInit {
 
         }
       }
-      
-    }else{
+
+    } else {
       if (!this.grupo.miembros.some(usu => !usu.nombre.localeCompare(u.nombre))) {
         this.grupo.miembros.push(Object.assign({}, u));
         this.usuarios = this.usuarios.filter(
@@ -174,13 +186,17 @@ export class GrupoCrearComponent implements OnInit {
 
       }
     }
-    
+
     this.filtrarUsuarios();
     this.hayUsuarios = this.arrayVacio(this.usuarios);
     this.hayUsuariosAgregados = this.arrayVacio(this.usuariosSeleccionados);
   }
 
   eliminarUsuario(u, i): void {
+  /**
+ * Elimina un usuario de usuarios seleccionados
+ * actualizando todas las listas de seleccion
+ */
     this.usuariosSeleccionados.splice(i, 1);
     if (!this.usuarios.some(usu => !usu.nombre.localeCompare(u.nombre.toString()))) {
       this.usuarios.push(Object.assign({}, u));
@@ -196,8 +212,12 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   eliminarPendiente(u, i): void {
+  /**
+* Elimina un usuario de la lista de pendientes(usuarios que no han aceptado la solicitud)
+* actualizando todas las listas de seleccion
+*/
     this.usuariosSeleccionados = this.usuariosSeleccionados.filter(
-      res =>{
+      res => {
         return res.nombre.localeCompare(u.nombre.toString());
       }
     )
@@ -214,16 +234,22 @@ export class GrupoCrearComponent implements OnInit {
     this.hayUsuariosAgregados = this.arrayVacio(this.usuariosSeleccionados);
   }
 
-  importar(): void {
+  importar(): void {//Esto va a estar feo
 
   }
 
   confirmacion(modal): boolean {
+    /**
+     * Abre la ventana para confirmar la creacion del nuevo grupo
+     */
     this.modalService.open(modal);
     return false;
   }
 
-  confirmacionEliminar(modal, u:Usuario, i:number): boolean {
+  confirmacionEliminar(modal, u: Usuario, i: number): boolean {
+    /**
+     * Abre la ventana para confirmar la eliminacion de un usuario de la lista de miembros(PARA EDITAR)
+     */
     this.usuarioAux = u;
     this.indiceAux = i;
     this.modalService.open(modal);
@@ -231,6 +257,9 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   crearGrupo(nombre: string, descripcion: string): boolean {
+    /**
+     * Crea el grupo y lo guarda en la BD
+     */
     this.grupo.creador = this.iniciado;
     this.grupo.nombre = nombre;
     this.grupo.descripcion = descripcion;
@@ -251,9 +280,11 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   actualizarGrupo(nombre: string, descripcion: string): boolean {
+    /**
+     * Actualiza el grupo en la BD
+     */
     this.grupo.nombre = nombre;
     this.grupo.descripcion = descripcion;
-
     this.grupoService.actualizarGrupo(this.grupo).subscribe(res => {
       console.log(res);
       this.grupoService.eliminarMiembros(this.grupo.id).subscribe(res => {
@@ -267,7 +298,6 @@ export class GrupoCrearComponent implements OnInit {
           });
         });
       });
-
       this.grupoService.eliminarPendientes(this.grupo.id).subscribe(res => {
         console.log(res);
         this.grupo.pendientes.forEach(val => {
@@ -279,16 +309,16 @@ export class GrupoCrearComponent implements OnInit {
           });
         });
       });
-      console.log("res "+res.id);
-      
+      console.log("res " + res.id);
       this.router.navigate(['VerGrupo/propios/' + this.grupo.id]);
-
-      
     });
     return false;
   }
 
   filtrarGrupos(): void {
+    /**
+     * Filtra los grupos con base en la barra de filtrado
+     */
     if (this.buscadorGrupo != "") {
       this.gruposCopia = this.grupos.filter(
         res => {
@@ -302,6 +332,9 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   filtrarUsuarios(): void {
+  /**
+   * Filtra los usuarios con base en la barra de filtrado
+   */
     if (this.buscadorUsuario != "") {
       this.usuariosCopia = this.usuarios.filter(
         res => {
@@ -319,6 +352,9 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   mostrar(): void {
+    /**
+     * Oculta y muesta en detalle los usuarios seleccionados hasta el momento
+     */
     this.mostrarUsuarios = !this.mostrarUsuarios;
   }
 
@@ -326,7 +362,10 @@ export class GrupoCrearComponent implements OnInit {
 
 
 
-  alreadyExists(): ValidatorFn {//listo
+  alreadyExists(): ValidatorFn {
+    /**
+     * Valida si el nombre de grupo introducido ya se encuentra en el sistema
+     */
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (this.camposEditar) {
         if (this.grupos.some(res => !res.nombre.localeCompare(control.value)) && control.value.localeCompare(this.grupo.nombre) !== 0) {
@@ -345,7 +384,10 @@ export class GrupoCrearComponent implements OnInit {
     };
   }
 
-  iniciarVista(): void {//luego de obtener el grupo en EDITAR, en cualquier momento en CREAR //listo
+  iniciarVista(): void {//luego de obtener el grupo en EDITAR, en cualquier momento en CREAR 
+    /**
+     * Crea el formulario con las restricciones de cada uno de sus campos
+     */
     this.formulario = this.formBuilder.group({
       nombre: new FormControl(this.grupo.nombre, [
         Validators.required,
@@ -361,6 +403,9 @@ export class GrupoCrearComponent implements OnInit {
   }
 
   cancelar(formulario: NgForm): void {
+    /** 
+     * Resetea los valores cuando se está editando el grupo (PARA EDITAR)
+     */
     formulario.setValue({ nombre: this.grupo.nombre, descripcion: this.grupo.descripcion });
     //resetear los nuevos usuarios agregados -> los cuales se traducen en solicitudes
   }
@@ -370,16 +415,23 @@ export class GrupoCrearComponent implements OnInit {
   get descripcion() { return this.formulario.get('descripcion'); }
 
   formularioInvalido(formulario: NgForm): boolean {
+    /**
+     * Valida si el formulario es invalido(no cumple con las restricciones)
+     */
     return formulario.invalid.valueOf() || (this.grupo.miembros.length == 0 && this.grupo.pendientes.length == 0);
   }
 
-  esPendiente(u: Usuario):boolean{
-    return this.grupo.pendientes.some(res=> !res.nombre.localeCompare(u.nombre.toString()));
+  esPendiente(u: Usuario): boolean {
+    /**
+     * Determina si un usuario tiene pendiente una solicitud del grupo actual(PARA EDITAR)
+     */
+    return this.grupo.pendientes.some(res => !res.nombre.localeCompare(u.nombre.toString()));
   }
 
   ngOnInit(): void {
-    this.grupoService.obtenerUsuarioLogueado().subscribe(res=>{
-      console.log(res.status); 
+    
+    this.grupoService.obtenerUsuarioLogueado().subscribe(res => {
+      console.log(res.status);
       this.iniciado = res.status
     });
 
@@ -433,11 +485,11 @@ export class GrupoCrearComponent implements OnInit {
                 );
                 this.filtrarUsuarios();
               });
-              
+
             });
             this.iniciarVista();
           });
-          
+
         });
         this.camposEditar = true;
 
