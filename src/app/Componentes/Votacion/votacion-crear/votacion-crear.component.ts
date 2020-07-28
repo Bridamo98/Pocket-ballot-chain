@@ -15,6 +15,8 @@ import { Route } from '@angular/compiler/src/core';
 export class VotacionCrearComponent implements OnInit {
 
   cantiVotos = 1;
+  msgErrorFecha: string;
+  msgErrorCredenciales: string;
   opciones = [
     {id:1, nombre:"Voto popular", descripcion:"descripcion de voto popular"}, 
     {id:2, nombre:'Voto ranking', descripcion:'descripcion para los votos por ranking'}, 
@@ -49,6 +51,10 @@ export class VotacionCrearComponent implements OnInit {
     }
   }
 
+  fechaError(){
+      let expresionRegular = /[0-9]/
+      
+  }
 
   popular(modal){
     this.modalService.open(modal);
