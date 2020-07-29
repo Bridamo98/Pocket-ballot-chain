@@ -191,9 +191,17 @@
                                         </a>
                                     </ng-template>
                                     <ng-template #elseBlock8>
-                                        <a (click)="confirmacionEliminar(eliminarMiembro, u, i)" class="btn btn-danger">
-                                            Eliminar
-                                        </a>
+                                        <div *ngIf="camposEditar; then thenBlock9 else elseBlock9 "></div>
+                                        <ng-template #thenBlock9>
+                                            <a (click)="confirmacionEliminar(eliminarMiembro, u, i)" class="btn btn-danger">
+                                                Eliminar
+                                            </a>
+                                        </ng-template>
+                                        <ng-template #elseBlock9>
+                                            <a (click)="eliminarUsuario(u, i)" class="btn btn-danger">
+                                                Eliminar
+                                            </a>
+                                        </ng-template>
                                     </ng-template>
 
 

@@ -22,7 +22,7 @@
                                     <td>{{g.nombre}}</td>
                                     <td>{{g.miembros?.length || '0'}}</td>
                                     <td>
-                                        <a href="{{ruta + '/VerGrupo/propios/' + g.id}}" target="_blank"
+                                        <a (click)="verGrupo(g, 'propios')"
                                             class="btn btn-primary mr-1">
                                             Ver
                                         </a>
@@ -58,8 +58,7 @@
                                     <td>{{g.nombre}}</td>
                                     <td>{{g.miembros?.length || '0'}}</td>
                                     <td>
-                                        <a href="{{ruta + '/VerGrupo/pertenecientes/' + g.id}}" target="_blank"
-                                            class="btn btn-primary mr-1">
+                                        <a (click)="verGrupo(g, 'pertenecientes')" class="btn btn-primary mr-1">
                                             Ver
                                         </a>
                                     </td>
@@ -94,8 +93,7 @@
                                     <td>{{g.nombre}}</td>
                                     <td>{{g.miembros?.length || '0'}}</td>
                                     <td>
-                                        <a href="{{ruta + '/VerGrupo/invitaciones/' + g.id}}" target="_blank"
-                                            class="btn btn-primary mr-1">
+                                        <a (click)="verGrupo(g, 'invitaciones')" class="btn btn-primary mr-1">
                                             Ver
                                         </a>
                                     </td>

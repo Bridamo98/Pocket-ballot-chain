@@ -56,19 +56,19 @@
                         <br>
                     </ng-template>
 
-                    <a href="{{ruta + '/EditarGrupo/' + grupo.id}}" target="_blank" class="btn btn-primary mr-1">
+                    <a (click)="editar()" target="_blank" class="btn btn-primary mr-1">
                         Editar
                     </a>
-                    <a (click)="eliminar()" class="btn btn-danger">
+                    <a (click)="confirmacion(confirmationModel, 1)" class="btn btn-danger">
                         Eliminar
                     </a>
                 </div>
                 <div *ngSwitchCase="'pertenecientes'">
-                    <button (click)=abandonar() class="btn btn-success">Abandonar</button>
+                    <button (click)=confirmacion(confirmationModel,2) class="btn btn-success">Abandonar</button>
                 </div>
                 <div *ngSwitchCase="'invitaciones'">
-                    <button (click)=aceptarInvitacion() class="btn btn-success mr-1">Aceptar invitación</button>
-                    <button (click)=rechazarInvitacion() class="btn btn-success">Rechazar invitación</button>
+                    <button (click)=confirmacion(confirmationModel,3) class="btn btn-success mr-1">Rechazar invitación</button>
+                    <button (click)=confirmacion(confirmationModel,4) class="btn btn-success">Aceptar invitación</button>
                 </div>
                 <div *ngSwitchCase="'otros'">
                 </div>
@@ -78,3 +78,21 @@
     </div>
 
 </div>
+
+<ng-template #confirmationModel let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">Confirmación</h4>
+        <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <div class="modal-body">
+        <label>{{confirmationText}}</label>
+    </div>
+    <div class="modal-footer">
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="modal.close('Save click')">Cancelar</button>
+        <button type="button" ngbAutofocus class="btn btn-outline-dark"
+            (click)="action(); modal.close('Save click')">Aceptar</button>
+    </div>
+</ng-template>

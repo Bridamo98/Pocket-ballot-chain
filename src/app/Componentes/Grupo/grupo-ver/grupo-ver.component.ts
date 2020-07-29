@@ -1,5 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Router } from '@angular/router';
+
+
 import { Grupo, Relacion } from 'src/app/Modelo/Grupo';
 
 import { GrupoService } from './../../../Servicios/grupo.service'
@@ -18,9 +22,13 @@ export class GrupoVerComponent implements OnInit {
   relacion:Relacion= new Relacion();
   grupos:Grupo[]=[];
   ruta: string;
-  iniciado:string;//QUEMADO - SE DEBE OBTENER CUAL ES EL USUARIO INICIADO
+  iniciado:string;
 
-  constructor(private routeParams: ActivatedRoute, public grupoService: GrupoService) {
+  confirmationText: string;
+  act:number;
+
+  constructor(private routeParams: ActivatedRoute, public grupoService: GrupoService, 
+    private modalService: NgbModal, private router: Router) {
 
     this.ruta = window.location.origin;
     this.grupo = new Grupo();
@@ -67,6 +75,10 @@ export class GrupoVerComponent implements OnInit {
     });
   };
 
+  editar():void{
+    this.router.navigate(['EditarGrupo/' + this.grupo.id]);
+  }
+
 
 
   obtenerRelacion():string{
@@ -80,6 +92,57 @@ export class GrupoVerComponent implements OnInit {
     }else{
       return "otros";
     }
+  }
+
+  confirmacion(modal, act:number): boolean {
+
+    this.act = act;
+    
+    switch(this.act){
+      case 1:
+        this.confirmationText = '¿Está seguro que desea eliminar este grupo?'
+        break;
+      case 2:
+        this.confirmationText = '¿Está seguro que desea abandonar este grupo?'
+        break;
+      case 3:
+        this.confirmationText = '¿Está seguro que desea rechazar esta invitación?'
+        break;
+      case 4:
+        this.confirmationText = '¿Está seguro que desea aceptar esta invitación?'
+        break;
+      default:
+        break;
+    }
+    
+    this.modalService.open(modal);
+    
+    return false;
+  }
+
+  action(): boolean {
+
+    switch (this.act) {
+      case 1:
+        this.eliminar();
+        break;
+      case 2:
+        this.abandonar();
+        break;
+      case 3:
+        this.rechazarInvitacion();
+        break;
+      case 4:
+        this.aceptarInvitacion();
+        break;
+      default:
+        break;
+    }
+
+    this.router.navigate(['ListarGrupos/']);
+    
+    return false;
+  
   }
 
   ngOnInit(): void {

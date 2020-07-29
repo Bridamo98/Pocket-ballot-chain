@@ -51,7 +51,8 @@ export class GrupoCrearComponent implements OnInit {
 
   iniciado: string;//Usuario loguado
 
-  constructor(public grupoService: GrupoService, private modalService: NgbModal, private formBuilder: FormBuilder, private router: Router) {
+  constructor(public grupoService: GrupoService, private modalService: NgbModal, 
+    private formBuilder: FormBuilder, private router: Router) {
     this.grupo.miembros = [];
     this.grupo.pendientes = [];
   }

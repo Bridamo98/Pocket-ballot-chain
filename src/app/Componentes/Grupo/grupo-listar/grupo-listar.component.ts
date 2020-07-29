@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Grupo } from 'src/app/Modelo/Grupo';
+import { Router } from '@angular/router';
 
 import { GrupoService } from './../../../Servicios/grupo.service'
 
@@ -97,7 +98,11 @@ export class GrupoListarComponent implements OnInit {
     });
   }
 
-  constructor(public grupoService: GrupoService) { }
+  verGrupo(g: Grupo, origen:string):void{
+    this.router.navigate(['VerGrupo/' + origen + '/' + g.id]);
+  }
+
+  constructor(public grupoService: GrupoService, private router: Router) { }
 
   ngOnInit(): void {
 
