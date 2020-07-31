@@ -29,7 +29,7 @@ const routes: Routes = [
   {path: 'ListarGrupos', component: GrupoListarComponent},
   {path: 'EditarGrupo/:id', component: GrupoEditarComponent},
   {path: 'CrearVotacion', component: VotacionCrearComponent},
-  {path: 'Perfil/:nombre', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
+  {path: 'Perfil', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
   {path: 'PerfilEditar/:nombre', component: UsuarioEditarComponent, canActivate: [AuthGuard]},
   {path: 'VotacionLista/:nombre', component: VotacionListaComponent, canActivate: [AuthGuard]},
   {path: 'VotacionReporte/:id', component: VotacionReporteComponent},

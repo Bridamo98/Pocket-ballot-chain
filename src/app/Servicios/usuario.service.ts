@@ -11,7 +11,7 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
-  getUsuario(nombre: string) {
+  getUsuario() {
     return this.http.get<Usuario>(`${environment.serverUrl}/usuario/${nombre}`);
   }
 
