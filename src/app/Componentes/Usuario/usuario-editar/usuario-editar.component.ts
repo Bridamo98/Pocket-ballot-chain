@@ -52,7 +52,7 @@ export class UsuarioEditarComponent implements OnInit {
 
   // Solicita al servicio el usuario
   getUsuario(): void {
-    this.usuarioService.getUsuario(this.usuario.nombre.toString())
+    this.usuarioService.getUsuario()
       .subscribe(
         result => {
           this.usuario = result;

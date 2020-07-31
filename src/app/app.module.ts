@@ -5,7 +5,7 @@ import {AuthGuard} from './auth.guard';
 
 
 import { ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 
 
 import { AppRoutingModule } from './app-routing.module';
@@ -40,6 +40,7 @@ import { UsuarioService } from './Servicios/Usuario/usuario.service';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
+import { TokenInterceptorService } from './Servicios/token-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -78,7 +79,12 @@ import { CredencialComponent } from './Componentes/Autenticacion/credencial/cred
     OpcionService,
     CredencialService,
     UsuarioService,
-    AuthGuard
+    AuthGuard,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptorService,
+      multi: true
+    }
   ],
   bootstrap: [AppComponent]
 })

@@ -12,7 +12,7 @@ export class UsuarioService {
   constructor(private http: HttpClient) { }
 
   getUsuario() {
-    return this.http.get<Usuario>(`${environment.serverUrl}/usuario/${nombre}`);
+    return this.http.get<Usuario>(`${environment.serverUrl}/usuarioId`);
   }
 
   getUsuarios() {
