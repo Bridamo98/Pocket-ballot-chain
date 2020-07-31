@@ -63,11 +63,17 @@ export class UsuarioEditarComponent implements OnInit {
 
   // Actualiza la información en la base de datos
   actualizar(nombre: string, correo: string): void {
-    let nombreViejo = this.usuario.nombre.toString();
     this.usuario.nombre = nombre;
     this.usuario.correo = correo;
-    this.usuarioService.putUsuario(this.usuario, nombreViejo).subscribe(
+    this.usuarioService.putUsuario(this.usuario).subscribe(
       result => {
+        console.log(result);
+        const token = result['token'];
+        if(token != null && token != undefined)
+        {
+          localStorage.removeItem('token');
+          localStorage.setItem('token', token);
+        }
         this.obtenerNombres();
         this.msgActualizacion = "Información actualizada!";
         $('#confirmModal').modal('show');
