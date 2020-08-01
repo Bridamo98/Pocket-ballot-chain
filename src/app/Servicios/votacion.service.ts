@@ -44,8 +44,8 @@ export class VotacionService {
     return this.http.get<Usuario[]>(`${environment.serverUrl}/participanteVotacion/${id}`);
   }
 
-  getVotacionesUsuario(nombre: string) {
-    return this.http.get<Votacion[]>(`${environment.serverUrl}/participanteUsuario/${nombre}`);
+  getVotacionesUsuario() {
+    return this.http.get<Votacion[]>(`${environment.serverUrl}/participanteUsuario`);
   }
 
   deleteUsuarioVotacion(id: number, nombre: string) {

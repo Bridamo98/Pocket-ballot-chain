@@ -16,9 +16,7 @@ export class ValidadorPostularseComponent implements OnInit {
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder
-  ) {
-    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
-   }
+  ) {  }
 
   ngOnInit(): void {
   }

@@ -16,9 +16,7 @@ export class UsuarioPerfilComponent implements OnInit {
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private usuarioService: UsuarioService
-  ) {
-    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
-  }
+  ) {  }
 
   ngOnInit(): void {
     this.iniciarVista();
@@ -32,7 +30,12 @@ export class UsuarioPerfilComponent implements OnInit {
   getUsuario(): void {
     this.usuarioService.getUsuario()
       .subscribe(
-        result => { this.usuario = result; }
+        result => {
+          this.usuario = result;
+          if (this.usuario === null || this.usuario === undefined) {
+            this.router.navigate(['/']);
+          }
+        }
       );
   }
 
@@ -41,7 +44,7 @@ export class UsuarioPerfilComponent implements OnInit {
   }
 
   serValidador(): void {
-    this.router.navigate(['ValidadorPostularse/' + this.usuario.nombre]);
+    this.router.navigate(['ValidadorPostularse']);
   }
 
 }

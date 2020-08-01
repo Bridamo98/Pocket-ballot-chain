@@ -24,9 +24,7 @@ export class UsuarioEditarComponent implements OnInit {
     private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder,
     private usuarioService: UsuarioService
-  ) {
-    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
-  }
+  ) {  }
 
   ngOnInit(): void {
     $(document).ready(function () {
@@ -56,7 +54,11 @@ export class UsuarioEditarComponent implements OnInit {
       .subscribe(
         result => {
           this.usuario = result;
-          this.iniciarVista();
+          if (this.usuario === null || this.usuario === undefined) {
+            this.router.navigate(['/']);
+          } else {
+            this.iniciarVista();
+          }
         }
       );
   }
@@ -65,20 +67,22 @@ export class UsuarioEditarComponent implements OnInit {
   actualizar(nombre: string, correo: string): void {
     this.usuario.nombre = nombre;
     this.usuario.correo = correo;
-    this.usuarioService.putUsuario(this.usuario).subscribe(
-      result => {
-        console.log(result);
-        const token = result['token'];
-        if(token != null && token != undefined)
-        {
-          localStorage.removeItem('token');
-          localStorage.setItem('token', token);
+    if (this.formulario.valid) {
+      this.usuarioService.putUsuario(this.usuario).subscribe(
+        result => {
+          console.log(result);
+          const token = result['token'];
+          if(token != null && token != undefined)
+          {
+            localStorage.removeItem('token');
+            localStorage.setItem('token', token);
+          }
+          this.obtenerNombres();
+          this.msgActualizacion = "Información actualizada!";
+          $('#confirmModal').modal('show');
         }
-        this.obtenerNombres();
-        this.msgActualizacion = "Información actualizada!";
-        $('#confirmModal').modal('show');
-      }
-    );
+      );
+    }
   }
 
   cancelar(formulario: NgForm): void {

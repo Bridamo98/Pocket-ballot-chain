@@ -7,7 +7,7 @@
           <label for="txtNombre">Nombre: </label>
           <input type="text" class="form-control" id="txtNombre" name="nombre" formControlName="nombre"
             [ngClass]="{'is-invalid': formulario.get('nombre').touched && formulario.get('nombre').invalid}"
-            data-toggle="popover" data-placement="left" data-trigger="manual"
+            data-toggle="popover" data-placement="right" data-trigger="manual"
             (change)="mostrarPopover('#txtNombre', 'nombre')" />
         </div>
 
