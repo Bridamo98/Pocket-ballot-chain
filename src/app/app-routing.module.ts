@@ -23,7 +23,7 @@ import { AuthGuard } from './auth.guard'
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
   {path: 'Registrar', component: RegistrarComponent},
-  {path: 'CrearVotacion', component: VotacionCrearComponent},
+  {path: 'CrearVotacion', component: VotacionCrearComponent, canActivate: [AuthGuard]},
   {path: 'CrearGrupo', component: GrupoCrearComponent},
   {path: 'VerGrupo/:origen/:id', component: GrupoVerComponent},
   {path: 'ListarGrupos', component: GrupoListarComponent},
