@@ -8,14 +8,14 @@
           <input type="text" class="form-control" id="txtNombre" name="nombre" formControlName="nombre"
             [ngClass]="{'is-invalid': formulario.get('nombre').touched && formulario.get('nombre').invalid}"
             data-toggle="popover" data-placement="right" data-trigger="manual"
-            (change)="mostrarPopover('#txtNombre', 'nombre')" />
+            (ngModelChange)="mostrarPopover('#txtNombre', 'nombre')" />
         </div>
 
         <div class="form-group">
           <label for="txtCorreo">Correo: </label>
           <input type="text" class="form-control" id="txtCorreo" name="correo" formControlName="correo"
             [ngClass]="{'is-invalid': formulario.get('correo').touched && formulario.get('correo').invalid}"
-            (change)="mostrarPopover('#txtCorreo', 'correo')" />
+            (ngModelChange)="mostrarPopover('#txtCorreo', 'correo')" />
         </div>
 
         <div class="form-group d-flex justify-content-center">
