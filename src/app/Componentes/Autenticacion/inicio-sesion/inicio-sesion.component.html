@@ -12,30 +12,29 @@
 			</div>
 			<p>El sistema de votación basado en Blockchain adaptado a tus necesidades.</p>
 
-			<form>
-				<input  type="text" [(ngModel)]="correo"  size="20" maxlength="20" name="nombre" id="nombre" [ngModelOptions]="{standalone: true}"
+			<form *ngIf="formulario !== undefined" [formGroup]="formulario">
+				<input  type="text" [(ngModel)]="correo"  size="50" maxlength="50" name="nombre" id="nombre"
 				class="form-control" placeholder="Nombre de usuario"
+
+				formControlName="correo"
+            	[ngClass]="{'is-invalid': formulario.get('correo').touched && formulario.get('correo').invalid}"
 
 				popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popUsuario="ngbPopover"   placement="right"
 				>
 
 
-				<input id='contrasena' type="password" [(ngModel)]="contrasena" placeholder="Contraseña" name="" class="form-control"placeholder="Contraseña" [ngModelOptions]="{standalone: true}"
+				<input id='contrasena' type="password" [(ngModel)]="contrasena" placeholder="Contraseña" name="" class="form-control"placeholder="Contraseña" 
 
+				formControlName="contrasena"
+            	[ngClass]="{'is-invalid': formulario.get('contrasena').touched && formulario.get('contrasena').invalid}"
+            	
 				 popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popContra="ngbPopover"  placement="right"
 				>
 
-				<input type="button" (click)="iniciarSesion(popContra, popUsuario)" value="Iniciar sesión" class="btn btn-primary" >
+				<input [disabled]="!formulario.valid" type="button" (click)="iniciarSesion(popContra, popUsuario)" value="Iniciar sesión" class="btn btn-primary" >
 			</form>
 			<a href="Registrar">Registrarse </a>
 			<a href="Credencial">Votar con credenciales </a>
 		</div>
 	</div>
 </div>
-
-<button type="button" class="btn btn-outline-secondary mr-2" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #pop="ngbPopover" (click)="pop.open()" popoverTitle="Pop title">
-  Click me to open a popover
-</button>
-<button type="button" class="btn btn-outline-secondary mr-2" (click)="pop.close()">
-  Click me to close a popover
-</button>
