@@ -8,12 +8,15 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./grupo-editar.component.css']
 })
 export class GrupoEditarComponent implements OnInit {
+
   id:string;
   constructor(private routeParams: ActivatedRoute) { }
+
   ngOnInit(): void {
+
     this.routeParams.params.subscribe(params => {
       this.id = params['id'];
+      
     });
   }
-
 }
