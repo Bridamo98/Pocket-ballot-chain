@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario }from'../../../Modelo/Usuario';
 import {UsuarioService} from '../../../Servicios/Usuario/usuario.service';
 import {NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
+import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
 
 @Component({
 	selector: 'app-inicio-sesion',
@@ -10,18 +11,27 @@ import {NgbPopover } from '@ng-bootstrap/ng-bootstrap/popover/popover';
 })
 export class InicioSesionComponent implements OnInit {
 
-	constructor(usuarioService:UsuarioService) {
+	constructor(private formBuilder: FormBuilder, usuarioService:UsuarioService) {
 		this.usuarioService= usuarioService; 
 	}
-	usuario: Usuario;
 	correo: String;
 	contrasena: String;
 	usuarioService:UsuarioService;
+	usuario: Usuario  = new Usuario("", 0, '', '');
+	formulario;
 	ngOnInit(): void {
-		
+		this.formulario = this.formBuilder.group({
+			correo: new FormControl(this.usuario.correo, [
+				Validators.required,
+				]),
+			contrasena: new FormControl(this.usuario.nombre, [
+				Validators.required,
+				]),
+
+		});
 	}
 
-	  element: HTMLElement;
+	element: HTMLElement;
 
 	iniciarSesion(popContra, popUsuario)
 	{
@@ -45,6 +55,15 @@ export class InicioSesionComponent implements OnInit {
 				genera : null
 			};
 			this.usuarioService.iniciarSesion(this.usuario);
+			if(!this.usuarioService.estaLogeado()){
+				popUsuario.popoverTitle = ''
+				popUsuario.ngbPopover='Usuario o contraseña no existe'
+				popUsuario.open();
+			}else
+			{
+				popUsuario.close();
+				//redirigir
+			}
 		}
 		else
 		{
@@ -62,17 +81,28 @@ export class InicioSesionComponent implements OnInit {
 	
 	
 }
-	alertDanger(id:string)
-	{
-		this.element = document.getElementById(id) as HTMLElement;
-		this.element.classList.add("alert");
-		this.element.classList.add("alert-danger");
-	}
-	disMissAlertDanger(id:string)
-	{
-		this.element = document.getElementById(id) as HTMLElement;
-		this.element.classList.remove("alert");
-		this.element.classList.remove("alert-danger");
-	}
+alertDanger(id:string)
+{
+	this.element = document.getElementById(id) as HTMLElement;
+	this.element.classList.add("alert");
+	this.element.classList.add("alert-danger");
+}
+disMissAlertDanger(id:string)
+{
+	this.element = document.getElementById(id) as HTMLElement;
+	this.element.classList.remove("alert");
+	this.element.classList.remove("alert-danger");
+}
+emailFormat(): ValidatorFn {
+	let rExp = RegExp('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}');
+	return (control: AbstractControl): { [key: string]: any } | null => {
+		if (!rExp.test(control.value)) {
+			return { 'emailFormat': true };
+		} else {
+			return null;
+		}
+	};
+}
+
 
 }

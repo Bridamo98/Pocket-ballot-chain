@@ -28,18 +28,23 @@ const routes: Routes = [
   {path: 'VerGrupo/:origen/:id', component: GrupoVerComponent, canActivate: [AuthGuard]},
   {path: 'ListarGrupos', component: GrupoListarComponent, canActivate: [AuthGuard]},
   {path: 'EditarGrupo/:id', component: GrupoEditarComponent, canActivate: [AuthGuard]},
+  {path: 'CrearVotacion', component: VotacionCrearComponent, canActivate: [AuthGuard]},
+  {path: 'CrearGrupo', component: GrupoCrearComponent},
+  {path: 'VerGrupo/:origen/:id', component: GrupoVerComponent},
+  {path: 'ListarGrupos', component: GrupoListarComponent},
+  {path: 'EditarGrupo/:id', component: GrupoEditarComponent},
   {path: 'CrearVotacion', component: VotacionCrearComponent},
-  {path: 'Perfil/:nombre', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
-  {path: 'PerfilEditar/:nombre', component: UsuarioEditarComponent, canActivate: [AuthGuard]},
-  {path: 'VotacionLista/:nombre', component: VotacionListaComponent, canActivate: [AuthGuard]},
+  {path: 'Perfil', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
+  {path: 'PerfilEditar', component: UsuarioEditarComponent, canActivate: [AuthGuard]},
+  {path: 'VotacionLista', component: VotacionListaComponent, canActivate: [AuthGuard]},
   {path: 'VotacionReporte/:id', component: VotacionReporteComponent},
-  {path: 'ValidadorPostularse/:nombre', component: ValidadorPostularseComponent, canActivate: [AuthGuard]},
+  {path: 'ValidadorPostularse', component: ValidadorPostularseComponent, canActivate: [AuthGuard]},
   {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent},
   {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent},
   {path: 'VotoRanking/:id', component: VotoRankingComponent, canActivate:[AuthGuard]},
   {path: 'VotoClasificacion/:id', component: VotoClasificacionComponent},
   {path: 'VotoPopular/:id', component: VotoPopularComponent},
-    {path: 'Credencial', component: CredencialComponent},
+  {path: 'Credencial', component: CredencialComponent}
 ];
 
 @NgModule({

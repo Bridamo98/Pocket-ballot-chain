@@ -11,16 +11,16 @@ export class UsuarioService {
 
   constructor(private http: HttpClient) { }
 
-  getUsuario(nombre: string) {
-    return this.http.get<Usuario>(`${environment.serverUrl}/usuario/${nombre}`);
+  getUsuario() {
+    return this.http.get<Usuario>(`${environment.serverUrl}/usuarioId`);
   }
 
   getUsuarios() {
     return this.http.get<Usuario[]>(`${environment.serverUrl}/usuario`);
   }
 
-  putUsuario(usuario: Usuario, nombreViejo: string) {
-    return this.http.put(`${environment.serverUrl}/usuarioPut/${nombreViejo}`, {
+  putUsuario(usuario: Usuario) {
+    return this.http.put(`${environment.serverUrl}/usuarioPut`, {
       nombre: usuario.nombre.toString(),
       saldo: usuario.saldo.valueOf(),
       correo: usuario.correo.toString()
