@@ -3,6 +3,8 @@ import { CredencialService } from '../../../Servicios/Credencial/credencial.serv
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { Credencial} from '../../../Modelo/Credencial';
 import { Votacion} from '../../../Modelo/Votacion';
+import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
+
 @Component({
 	selector: 'app-credencial',
 	templateUrl: './credencial.component.html',
@@ -15,11 +17,15 @@ export class CredencialComponent implements OnInit {
 	htmlToAdd: string ="";
 	credencial: Credencial;
 	votacion: Votacion;
-
-	constructor(private credencialServicio:CredencialService, private votacionService:VotacionService) { }
+	formulario;
+	constructor(private formBuilder: FormBuilder, private credencialServicio:CredencialService, private votacionService:VotacionService) { }
 
 	ngOnInit(): void {
-
+			this.formulario = this.formBuilder.group({
+			correo: new FormControl([
+				Validators.required,
+				]),
+		});
 	}
 	ingresarClave(){
 		this.getCredencial();

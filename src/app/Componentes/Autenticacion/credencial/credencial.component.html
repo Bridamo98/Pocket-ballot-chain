@@ -5,9 +5,7 @@
 	<div class="row justify-content-center">
 		<p>Para poder ejercer su voto, primero debe ingresar su clave de voto:</p>
 	</div>
-
-
-	<form>
+	<form >
 		<div class="row justify-content-center">
 			<input class="form-control col-sm-3" type="text" required="required" placeholder="Clave" name="" [(ngModel)]="clave" name="correo">
 		</div>
@@ -16,7 +14,7 @@
 		</div>
 		<br/>
 		<div class="row justify-content-center">
-			<input type="submit" (click)="ingresarClave()" value="Confirmar clave">
+			<input class="btn btn-primary" type="submit" (click)="ingresarClave()" value="Confirmar clave">
 		</div>
 		<br/>
 	</form>

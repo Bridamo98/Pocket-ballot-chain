@@ -3,6 +3,8 @@ import { Usuario } from '../../../Modelo/Usuario';
 import {UsuarioService} from '../../../Servicios/Usuario/usuario.service'
 import { Inject }  from '@angular/core';
 import { DOCUMENT } from '@angular/common'; 
+import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
+
 @Component({
 	selector: 'app-registrar',
 	templateUrl: './registrar.component.html',
@@ -15,14 +17,14 @@ export class RegistrarComponent implements OnInit {
 	contrasenia: string;
 	verificar: string;
 	htmlToAdd: string ;
+	formulario;
 	usuario: Usuario  = new Usuario("", 0, '', '');
 	usuarioService:UsuarioService;
-	constructor(  usuarioService2:UsuarioService, @Inject(DOCUMENT) document) {
-
+	constructor(  private formBuilder: FormBuilder, usuarioService2:UsuarioService, @Inject(DOCUMENT) document) {
 		this.usuarioService= usuarioService2; 
 	}
 
-	  element: HTMLElement;
+	element: HTMLElement;
 
 
 
@@ -37,74 +39,52 @@ export class RegistrarComponent implements OnInit {
 		this.disMissAlertDanger('contrasenia');
 		this.disMissAlertDanger('verificar');
 		console.log("hola mundo");
-		if(this.correo!= null && this.correo!=""&& this.correo!=undefined )
+		if(this.verificar==this.contrasenia)
 		{
-			if(this.nombre!=null && this.nombre!="" && this.nombre!=undefined){
-				if(this.contrasenia!=null && this.contrasenia!="" && this.contrasenia!=undefined)
-				{
-					if(this.verificar!=null && this.verificar!="" && this.verificar!=undefined)
-					{
-
-						if(this.verificar==this.contrasenia)
-						{
-							this.htmlToAdd="Registrado";
-							this.usuario= {
-								contrasena: this.contrasenia,
-								nombre: this.nombre,
-								saldo: 0,
-								correo: this.correo,
-								idValidador: null,
-								bloqAprobados : null,
-								bloqPropuestos : null,
-								bloqRevisados : null,
-								bloqValidados : null,
-								genera : null
-							};
-							this.usuarioService.addUsuario(this.usuario);
-						}
-						else
-						{
-							popConfirm.popoverTitle = 'Error'
-							popConfirm.ngbPopover='Esta contraseña debe coincidir con la de arriba'
-							popConfirm.open();
-							this.alertDanger('verificar')
-						}
-					}
-					else
-					{
-						popConfirm.open();
-						this.alertDanger('verificar')
-					}
-				}
-				else
-				{
-					this.alertDanger('contrasenia');
-					popContra.open();
-				}	
-			}
-			else
-			{
-				popName.open();
-				this.alertDanger('nombre');
-			}
+			this.htmlToAdd="Registrado";
+			this.usuario= {
+				contrasena: this.contrasenia,
+				nombre: this.nombre,
+				saldo: 0,
+				correo: this.correo,
+				idValidador: null,
+				bloqAprobados : null,
+				bloqPropuestos : null,
+				bloqRevisados : null,
+				bloqValidados : null,
+				genera : null
+			};
+			this.usuarioService.addUsuario(this.usuario);
 		}
 		else
 		{
-
-			popCorreo.open();
-			this.alertDanger('correo')
-			//this.element = document.getElementById('correo') as HTMLElement;
-			//console.log(this.element);
-			//this.element.classList.remove("form-control");
-			//this.element.classList.add("alert");
-			//this.element.classList.add("alert-danger");
-			//this.htmlToAdd="Ingrese los datos correctamente";
+			popConfirm.popoverTitle = ''
+			popConfirm.ngbPopover='Esta contraseña debe coincidir con la de arriba'
+			popConfirm.open();
+			this.alertDanger('verificar')
 		}
-
 		console.log(this.usuario);
 
 	}
 	ngOnInit(): void {
+		this.formulario = this.formBuilder.group({
+			nombre: new FormControl(this.usuario.nombre, [
+				Validators.required,
+				Validators.minLength(4),
+				]),
+			correo: new FormControl(this.usuario.correo, [
+				Validators.required,
+				this.emailFormat(),
+				]),
+			contrasenia: new FormControl(this.usuario.nombre, [
+				Validators.required,
+				Validators.minLength(4),
+				]),
+			contrasenia2: new FormControl(this.usuario.nombre, [
+				Validators.required,
+				Validators.minLength(4),
+				]),
+		});
 	}
 
 	alertDanger(id:string)
@@ -119,6 +99,17 @@ export class RegistrarComponent implements OnInit {
 		this.element.classList.remove("alert");
 		this.element.classList.remove("alert-danger");
 	}
+	emailFormat(): ValidatorFn {
+		let rExp = RegExp('[A-Za-z0-9._%-]+@[A-Za-z0-9._%-]+\\.[a-z]{2,3}');
+		return (control: AbstractControl): { [key: string]: any } | null => {
+			if (!rExp.test(control.value)) {
+				return { 'emailFormat': true };
+			} else {
+				return null;
+			}
+		};
+	}
+
 
 
 

@@ -3,6 +3,7 @@ import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Router, ActivatedRoute } from '@angular/router';
 import { VotacionService } from '../../../Servicios/votacion.service';
+import { UsuarioService } from '../../../Servicios/usuario.service';
 
 @Component({
   selector: 'app-votacion-lista',
@@ -19,22 +20,35 @@ export class VotacionListaComponent implements OnInit {
   constructor(
     private router: Router,
     private rutaActiva: ActivatedRoute,
-    private votacionService: VotacionService
-  ) {
-    this.usuario.nombre = this.rutaActiva.snapshot.params.nombre;
-  }
+    private votacionService: VotacionService,
+    private usuarioService: UsuarioService
+  ) {  }
 
   ngOnInit(): void {
     this.iniciarVista();
   }
 
   iniciarVista(): void {
+    this.getUsuario();
     this.getVotaciones();
+  }
+
+  // Solicita al servicio el usuario
+  getUsuario(): void {
+    this.usuarioService.getUsuario()
+      .subscribe(
+        result => {
+          this.usuario = result;
+          if (this.usuario === null || this.usuario === undefined) {
+            this.router.navigate(['/']);
+          }
+        }
+      );
   }
 
   // Solicita al servicio las votaciones
   getVotaciones(): void {
-    this.votacionService.getVotacionesUsuario(this.usuario.nombre.toString())
+    this.votacionService.getVotacionesUsuario()
       .subscribe(
         result => {
           this.votaciones = result;

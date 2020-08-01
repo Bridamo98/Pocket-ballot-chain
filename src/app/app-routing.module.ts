@@ -29,17 +29,17 @@ const routes: Routes = [
   {path: 'ListarGrupos', component: GrupoListarComponent},
   {path: 'EditarGrupo/:id', component: GrupoEditarComponent},
   {path: 'CrearVotacion', component: VotacionCrearComponent},
-  {path: 'Perfil/:nombre', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
-  {path: 'PerfilEditar/:nombre', component: UsuarioEditarComponent, canActivate: [AuthGuard]},
-  {path: 'VotacionLista/:nombre', component: VotacionListaComponent, canActivate: [AuthGuard]},
+  {path: 'Perfil', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
+  {path: 'PerfilEditar', component: UsuarioEditarComponent, canActivate: [AuthGuard]},
+  {path: 'VotacionLista', component: VotacionListaComponent, canActivate: [AuthGuard]},
   {path: 'VotacionReporte/:id', component: VotacionReporteComponent},
-  {path: 'ValidadorPostularse/:nombre', component: ValidadorPostularseComponent, canActivate: [AuthGuard]},
+  {path: 'ValidadorPostularse', component: ValidadorPostularseComponent, canActivate: [AuthGuard]},
   {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent},
   {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent},
   {path: 'VotoRanking/:id', component: VotoRankingComponent, canActivate:[AuthGuard]},
   {path: 'VotoClasificacion/:id', component: VotoClasificacionComponent},
   {path: 'VotoPopular/:id', component: VotoPopularComponent},
-  {path: 'Credencial', component: CredencialComponent},
+  {path: 'Credencial', component: CredencialComponent}
 ];
 
 @NgModule({
