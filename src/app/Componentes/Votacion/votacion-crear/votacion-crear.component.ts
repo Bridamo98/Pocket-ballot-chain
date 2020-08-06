@@ -6,6 +6,8 @@ import { Votacion } from 'src/app/Modelo/Votacion';
 import { Opcion } from 'src/app/Modelo/Opcion';
 import { $ } from 'protractor';
 import { Route } from '@angular/compiler/src/core';
+import { UsuarioService } from 'src/app/Servicios/usuario.service';
+import { Usuario } from 'src/app/Modelo/Usuario';
 
 @Component({
   selector: 'app-votacion-crear',
@@ -14,6 +16,7 @@ import { Route } from '@angular/compiler/src/core';
 })
 export class VotacionCrearComponent implements OnInit {
 
+  usuario: Usuario;
   cantiVotos = 1;
   msgErrorFecha: string;
   msgErrorCredenciales: string;
@@ -24,12 +27,25 @@ export class VotacionCrearComponent implements OnInit {
 
   public elemento: HTMLElement;
 
-  constructor(public votacionService: VotacionService, private modalService: NgbModal, private router: Router) { 
+  constructor(public votacionService: VotacionService, private modalService: NgbModal, private router: Router, private usuarioService: UsuarioService) { 
     
   }
 
   ngOnInit() {    
+    this.getUsuario();
     this.activateSelectedListener();
+  }
+
+  getUsuario(): void {
+    this.usuarioService.getUsuario()
+      .subscribe(
+        result => {
+          this.usuario = result;
+          if (this.usuario === null || this.usuario === undefined) {
+            this.router.navigate(['/']);
+          }
+        }
+      );
   }
 
   activateSelectedListener(){
@@ -50,6 +66,7 @@ export class VotacionCrearComponent implements OnInit {
         });
     }
   }
+
 
   fechaError(){
       let expresionRegular = /[0-9]/

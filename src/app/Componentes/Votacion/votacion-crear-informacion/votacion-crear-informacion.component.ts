@@ -4,6 +4,8 @@ import { VotacionService } from './../../../Servicios/votacion.service';
 import { NgbInputDatepicker, NgbDatepicker, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ActivatedRoute, Router } from '@angular/router';
 import { trigger } from '@angular/animations';
+import { UsuarioService } from 'src/app/Servicios/usuario.service';
+import { Usuario } from 'src/app/Modelo/Usuario';
 
 declare var $: any;
 
@@ -15,6 +17,7 @@ declare var $: any;
 })
 export class VotacionCrearInformacionComponent implements OnInit {
 
+  usuario: Usuario;
   //atributos de validacion
   msgErrorFecha: string;
   msgErrorCredenciales: string;
@@ -34,13 +37,14 @@ export class VotacionCrearInformacionComponent implements OnInit {
   status;
 
 
-  constructor(public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal) {
+  constructor(public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal, private usuarioService: UsuarioService) {
     this.tipo = this.rutaActiva.snapshot.params.tipo;
     this.cantiVotos = this.rutaActiva.snapshot.params.cantiVotos;
   }
 
   ngOnInit(): void {
 
+    this.getUsuario();
     $(function () {
       $('[data-toggle="popover"]').popover({
         html: true,
@@ -59,6 +63,18 @@ export class VotacionCrearInformacionComponent implements OnInit {
     if(this.tipo !== "Popular" && this.tipo !== "Ranking" && this.tipo !== "Clasificacion"){
       this.router.navigate(['CrearVotacion']);
     }
+  }
+
+  getUsuario(): void {
+    this.usuarioService.getUsuario()
+      .subscribe(
+        result => {
+          this.usuario = result;
+          if (this.usuario === null || this.usuario === undefined) {
+            this.router.navigate(['/']);
+          }
+        }
+      );
   }
 
   showModal(modal){
