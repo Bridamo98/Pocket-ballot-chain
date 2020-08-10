@@ -1,5 +1,6 @@
 #lista-participantes{
-    height: 250px;
+    height: 300px;
+    max-height: 300px;
     margin-bottom: 10px;
     overflow:scroll;
     -webkit-overflow-scrolling: touch;
@@ -7,7 +8,12 @@
 
 #tabla-opciones{
     overflow:scroll;
+    height: 300px;
     max-height: 300px;
     margin-bottom: 10px;  
     -webkit-overflow-scrolling: touch;
+}
+
+.opcion-tabla{
+    width: 100px;
 }
