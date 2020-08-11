@@ -44,3 +44,11 @@
   </div>
 
   <button class="btn btn-primary float-right m-3" (click)="serValidador()">Quiero ser validador</button>
+
+  <h4>Mi id es: {{peer_id}}</h4>
+  <input type="text" [(ngModel)]="otro_peer_id" placeholder="Intrese el id">
+  <button type="button" class="btn btn-outline-dark" (click)="establecerConexion()">Conectar</button>
+  <br>
+  <input type="text" [(ngModel)]="msj" placeholder="Intrese el mensaje">
+  <button type="button" class="btn btn-outline-dark" (click)="enviarMensaje()">Enviar</button>
+</div>
