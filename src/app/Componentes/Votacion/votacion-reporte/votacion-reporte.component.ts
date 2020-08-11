@@ -34,9 +34,6 @@ export class VotacionReporteComponent implements OnInit {
     private opcionService: OpcionService
   ) {
     this.votacion.id = this.rutaActiva.snapshot.params.id;
-  }
-
-  ngOnInit(): void {
     this.votacion = {
       titulo: '',
       autor: '',
@@ -51,7 +48,10 @@ export class VotacionReporteComponent implements OnInit {
       opcionDeVotacion: [],
       accesosExtra: []
     };
-    this.tipoVotacion = { id: -1, nombre: '', descripcion: '' }
+    this.tipoVotacion = { id: -1, nombre: '', descripcion: '' };
+  }
+
+  ngOnInit(): void {
     this.getVotacion();
   }
 

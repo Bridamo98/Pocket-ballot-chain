@@ -89,7 +89,7 @@ export class VotacionListaComponent implements OnInit {
 
   crearVotacion(): void {
     console.log('crearVotacion');
-    //this.router.navigate(['*/'+this.usuario.nombre]);
+    this.router.navigate(['/CrearVotacion']);
   }
 
   verInvitaciones(): void {
