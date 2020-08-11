@@ -12,7 +12,7 @@ import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, Validato
 export class InicioSesionComponent implements OnInit {
 
 	constructor(private formBuilder: FormBuilder, usuarioService:UsuarioService) {
-		this.usuarioService= usuarioService; 
+		this.usuarioService= usuarioService;
 	}
 	correo: String;
 	contrasena: String;
@@ -38,7 +38,7 @@ export class InicioSesionComponent implements OnInit {
 		this.disMissAlertDanger('contrasena')
 		this.disMissAlertDanger('nombre');
 		if(this.correo!=null && this.correo!="" && this.correo!=undefined){
-			if(this.contrasena!= null && this.contrasena!=""&& this.contrasena!=undefined 
+			if(this.contrasena!= null && this.contrasena!=""&& this.contrasena!=undefined
 				){
 				popUsuario.close();
 			popContra.close();
@@ -78,8 +78,8 @@ export class InicioSesionComponent implements OnInit {
 		popContra.close();
 		this.alertDanger('nombre');
 	}
-	
-	
+
+
 }
 alertDanger(id:string)
 {

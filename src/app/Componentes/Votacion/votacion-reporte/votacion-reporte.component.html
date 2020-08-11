@@ -7,9 +7,9 @@
       <p>Nombre de la votación: {{ votacion.titulo }}</p>
       <p>Autor: {{ votacion.autor }}</p>
       <p>Tipo de votación: {{ tipoVotacion.nombre.toString() }}</p>
-      <p>Número de votantes: {{ votacion.participantes.length }}</p>
-      <p>Número de candidatos: {{ votacion.opcionDeVotacion.length }}</p>
-      <p>Total de votos: {{ votacion.almacena.length }}</p>
+      <p *ngIf="votacion.participantes != undefined">Número de votantes: {{ votacion.participantes.length }}</p>
+      <p *ngIf="votacion.opcionDeVotacion != undefined">Número de candidatos: {{ votacion.opcionDeVotacion.length }}</p>
+      <p *ngIf="votacion.almacena != undefined">Total de votos: {{ votacion.almacena.length }}</p>
     </div>
 
     <div class="col-sm-4">
