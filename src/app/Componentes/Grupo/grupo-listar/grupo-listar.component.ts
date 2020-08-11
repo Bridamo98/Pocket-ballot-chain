@@ -113,7 +113,11 @@ export class GrupoListarComponent implements OnInit {
       this.obenerTodos();
 
     });
-    
+
     this.ruta = window.location.origin;
+  }
+
+  crearGrupo(): void {
+    this.router.navigate(['/CrearGrupo']);
   }
 }
