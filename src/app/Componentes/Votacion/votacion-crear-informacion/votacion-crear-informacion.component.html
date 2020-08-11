@@ -3,39 +3,66 @@
     <div class="row">
         <div class="col-lg-6 container">
             <div class="justify-content-center"><h4 class="text-center">Candidatos/Opciones</h4></div>
+
+            <div class="form-group">
+                <div class="input-group">
+                    <input id="titulo" class="form-control" [(ngModel)]="tituloVotacion" (ngModelChange)="errorTitulo()" placeholder="Titulo de la votación">  
+                </div>
+            </div>
+
             <div id="tabla-opciones"><table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
                         <th scope="col">Nombre</th>
-                        <th scope="col">Id</th>
                         <th scope="col">Descripción</th>
+                        <th scope="col">Opcion</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr *ngFor="let opcion of opciones; let i = index" [attr.data-index]="i">
                         <th scope="row">{{i+1}}</th>
                         <td>{{opcion.nombre}}</td>
-                        <td>{{opcion.id}}</td>
                         <td>{{opcion.descripcion}}</td>
+                        <td class="opcion-tabla"><button class="btn btn-danger" (click)="eliminarOpcion(i)">Eliminar</button></td>
                     </tr>
                 </tbody>
             </table></div>
 
             <div class="row">
-                <div class="form-group col-lg-6">
-                    <div class="input-group">
-                        <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
-                        data-toggle="popover" data-placement="top">
-                        <div class="input-group-append">
-                            <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 text-center">
+                <div class="col-lg-12 text-center">
                     <button class="btn btn-primary justify-content-center" (click)="showModal(opcion)">Nuevo candidato</button>
                 </div>
             </div>
+
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <div class="form-group">
+                        <label for="dateIni">Fecha inicio</label>
+                        <div class="input-group">
+                            <input id="dateIni" [(ngModel)]="fechaInicio" (ngModelChange)="fechaInicioError()" class="form-control" placeholder="yyyy-mm-dd" name="dp2" ngbDatepicker #dp2="ngbDatepicker" 
+                            data-toggle="popover" data-placement="top">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="dp2.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6">
+                    <div class="form-group">
+                        <label for="date">Fecha limite</label>
+                        <div class="input-group">
+                            <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
+                            data-toggle="popover" data-placement="top">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
 
             <!--div class="row">
                 <div class="col-lg-12 text-center">
@@ -53,25 +80,35 @@
                     <button class="btn btn-primary col-sm-4">Invitar por Credencial</button>
                     <button class="btn btn-primary col-sm-4">Importar datos</button>
                 </div-->
+                
+
                 <div class="form-group row">
-                    <input type="file">
-                </div>
-                <div class="form-group row">
-                    <input placeholder="Agregar persona o grupo" type="text" class="form-control col-sm-8">
-                    <button class="btn btn-primary col-sm-4">Agregar</button>
+                    <input placeholder="Agregar persona o grupo" type="text" class="form-control col-sm-8" id="inputPersona" [(ngModel)]="participanteParaAgregar" [ngModelOptions]="{standalone: true}">
+                    <button (click)="agregarParticipante()" class="btn btn-primary col-sm-4">Agregar</button>
                 </div>
             </form>
 
             <div>
-                <ul class="list-group" id="lista-participantes">
-                    <li class="list-group-item">Cras justo odio</li>
-                </ul>
+                <div id="lista-participantes"><table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">Nombre</th>
+                            <th class="opcion-tabla" scope="col">Opción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let participante of participantes; let i = index">
+                            <td>{{participante}}</td>
+                            <td><button class="btn btn-danger" (click)="eliminarParticipante(i)">Eliminar</button></td>
+                        </tr>
+                    </tbody>
+                </table></div>
             </div>
 
             <div class = row>
                 <input id="credencial" [(ngModel)]="cantidadCredenciales" (ngModelChange)="credencialesError()" placeholder="cantidad de credenciales" type="text" class="form-control col-sm-8"
                 data-toggle="popover">
-                <button type="submit" class="btn btn-success col-sm-4" (click)="crearVotacion()">Crear votacion</button>
+                <button id="formularioEnviar" type="submit" class="btn btn-success col-sm-4" (click)="crearVotacion()" disabled>Crear votación</button>
             </div>
 
         </div>
@@ -79,6 +116,8 @@
 </div>
 
 
+
+<!-- Modal -->
 
 <ng-template #opcion let-modalOpcion>
     <div class="modal-header">
@@ -94,16 +133,13 @@
               <input class="form-control" name="nombre" [(ngModel)] = "nombre">
             </div>
             <div class="form-group">
-              <label>Identificacion del candidato</label>
-              <input class="form-control" name="identificacion" [(ngModel)] = "identificacion">
-            </div>
-            <div class="form-group">
                 <label>Descripción</label>
                 <input class="form-control" name="descripcion" [(ngModel)] = "descripcion">
             </div>
           </form>
     </div>
     <div class="modal-footer">
+        <input [(ngModel)]="formularioValidado" (ngModelChange)="validarFormulario()">
         <button ngbAutofocus class="btn btn-success" (click)="crearOpcion(); modalOpcion.close('Save click')">Crear opción</button>
     </div>
 </ng-template>
