@@ -109,11 +109,25 @@ export class VotacionCrearInformacionComponent implements OnInit {
   }
 
   crearVotacion(){
+    let tipoDeVotacionID;
+    if(this.tipo == 'Popular'){
+      tipoDeVotacionID = 1;
+    } else if(this.tipo == 'Ranking'){
+      tipoDeVotacionID = 2;
+    } else if(this.tipo == 'Clasificacion'){
+      tipoDeVotacionID = 3;
+    }
     let votacion = {
-      fecha: "2020-10-10",
-      tipoVotacion: this.tipo,
+      titulo: this.tituloVotacion,
+      autor: this.usuario.nombre,
+      fechaInicio: this.fechaInicio,
+      fechaLimite: this.fechaLimite,
+      tipoDeVotacion: tipoDeVotacionID,
       descripcion: this.votacionDescripcion,
-      votos: this.cantiVotos
+      //cantCredenciales: 0,
+      votos: this.cantiVotos,
+      participantes: this.participantes,
+      opciones: this.opciones
     };
     
     this.votacionService.addVotacion(votacion).subscribe(status => console.log(status));
