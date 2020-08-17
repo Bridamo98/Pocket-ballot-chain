@@ -3,6 +3,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Usuario } from 'src/app/Modelo/Usuario';
 
+declare var inicializar: any;
+declare var establecerConexion: any;
+declare var enviarMensaje: any;
+
 @Component({
   selector: 'app-validador-postularse',
   templateUrl: './validador-postularse.component.html',
@@ -12,6 +16,10 @@ export class ValidadorPostularseComponent implements OnInit {
 
   usuario: Usuario = new Usuario('', 0, '', '');
 
+  #peer;
+  otro_peer_id;
+  msj;
+
   constructor(
     private router: Router,
     private rutaActiva: ActivatedRoute,
@@ -19,11 +27,19 @@ export class ValidadorPostularseComponent implements OnInit {
   ) {  }
 
   ngOnInit(): void {
+    inicializar();
   }
 
   serValidador(): void {
     console.log('serValidador');
-    //this.router.navigate(['*/'+this.usuario.nombre]);
+  }
+
+  establecerConexion():void {
+    establecerConexion(this.otro_peer_id);
+  }
+
+  enviarMensaje():void{
+    enviarMensaje(this.msj);
   }
 
 }
