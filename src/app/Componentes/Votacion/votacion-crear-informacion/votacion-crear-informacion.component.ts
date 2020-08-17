@@ -124,7 +124,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
       fechaLimite: this.fechaLimite,
       tipoDeVotacion: tipoDeVotacionID,
       descripcion: this.votacionDescripcion,
-      //cantCredenciales: 0,
+      cantCredenciales: this.cantidadCredenciales,
       votos: this.cantiVotos,
       participantes: this.participantes,
       opciones: this.opciones

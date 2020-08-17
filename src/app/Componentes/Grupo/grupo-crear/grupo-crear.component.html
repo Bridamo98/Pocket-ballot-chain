@@ -54,7 +54,7 @@
                     <input [(ngModel)]="buscadorGrupo" name="buscadorGrupo" id="buscadorGrupo"
                         placeholder="Filtre por nombre de grupo" class="form-control" (input)="filtrarGrupos()">
                 </div>
-                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -79,7 +79,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div></div>
 
             </ng-template>
             <ng-template #elseBlock1>
@@ -92,7 +92,7 @@
             <h5>Elimine grupos</h5>
             <div *ngIf="hayGruposAgregados; then thenBlock3 else elseBlock3"></div>
             <ng-template #thenBlock3>
-                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -117,7 +117,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div></div>
 
             </ng-template>
             <ng-template #elseBlock3>
@@ -135,7 +135,7 @@
                     <input [(ngModel)]="buscadorUsuario" name="buscadorUsuario" id="buscadorUsuario"
                         placeholder="Filtre por nombre de usuario" class="form-control" (input)="filtrarUsuarios()">
                 </div>
-                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -157,7 +157,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div></div>
 
             </ng-template>
             <ng-template #elseBlock2>
@@ -169,7 +169,7 @@
             <h5>Elimine usuarios</h5>
             <div *ngIf="hayUsuariosAgregados; then thenBlock4 else elseBlock4"></div>
             <ng-template #thenBlock4>
-                <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow">
                     <table class="table table-bordered">
                         <thead>
                             <tr>
@@ -209,7 +209,7 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
+                </div></div>
 
             </ng-template>
             <ng-template #elseBlock4>
@@ -253,7 +253,7 @@
                     <div *ngIf="grupo.pendientes.length != 0; then thenBlock7 else elseBlock7"></div>
                     <ng-template #thenBlock7>
                         <h5>Elimine solicitudes</h5>
-                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -275,7 +275,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div></div>
                     </ng-template>
                     <ng-template #elseBlock7>
                         No hay solicitudes pendientes
@@ -288,7 +288,7 @@
                     <div *ngIf="hayUsuariosAgregados || hayGruposAgregados; then thenBlock6 else elseBlock6"></div>
                     <ng-template #thenBlock6>
                         <br>
-                        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+                        <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow">
                             <table class="table table-bordered">
                                 <thead>
                                     <tr>
@@ -310,7 +310,7 @@
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
+                        </div></div>    
                         <br>
                     </ng-template>
                     <ng-template #elseBlock6>

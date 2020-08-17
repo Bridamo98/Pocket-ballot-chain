@@ -10,7 +10,7 @@
                 </div>
             </div>
 
-            <div id="tabla-opciones"><table class="table table-bordered table-striped">
+            <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow"><table class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th scope="col">#</th>
@@ -24,10 +24,10 @@
                         <th scope="row">{{i+1}}</th>
                         <td>{{opcion.nombre}}</td>
                         <td>{{opcion.descripcion}}</td>
-                        <td class="opcion-tabla"><button class="btn btn-danger" (click)="eliminarOpcion(i)">Eliminar</button></td>
+                        <td class="opcion-tabla"><button class="btn btn-danger" (click)="eliminarOpcion(i)"><i class='far fa-trash-alt'></i></button></td>
                     </tr>
                 </tbody>
-            </table></div>
+            </table></div></div>
 
             <div class="row">
                 <div class="col-lg-12 text-center">
@@ -43,7 +43,7 @@
                             <input id="dateIni" [(ngModel)]="fechaInicio" (ngModelChange)="fechaInicioError()" class="form-control" placeholder="yyyy-mm-dd" name="dp2" ngbDatepicker #dp2="ngbDatepicker" 
                             data-toggle="popover" data-placement="top">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar" (click)="dp2.toggle()" type="button"></button>
+                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp2.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
                             </div>
                         </div>
                     </div>
@@ -56,7 +56,7 @@
                             <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
                             data-toggle="popover" data-placement="top">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar" (click)="dp.toggle()" type="button"></button>
+                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
                             </div>
                         </div>
                     </div>
@@ -89,7 +89,7 @@
             </form>
 
             <div>
-                <div id="lista-participantes"><table class="table table-bordered table-striped">
+                <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow"><table class="table table-bordered table-striped">
                     <thead>
                         <tr>
                             <th scope="col">Nombre</th>
@@ -99,10 +99,10 @@
                     <tbody>
                         <tr *ngFor="let participante of participantes; let i = index">
                             <td>{{participante}}</td>
-                            <td><button class="btn btn-danger" (click)="eliminarParticipante(i)">Eliminar</button></td>
+                            <td><button class="btn btn-danger" (click)="eliminarParticipante(i)"><i class='far fa-trash-alt'></i></button></td>
                         </tr>
                     </tbody>
-                </table></div>
+                </table></div></div>
             </div>
 
             <div class = row>
