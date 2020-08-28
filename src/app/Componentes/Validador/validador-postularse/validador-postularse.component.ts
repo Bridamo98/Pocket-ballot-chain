@@ -2,10 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Usuario } from 'src/app/Modelo/Usuario';
-
+//peer handler
 declare var inicializar: any;
 declare var establecerConexion: any;
 declare var enviarMensaje: any;
+//blockchain
+declare var imprimir: any;
 
 @Component({
   selector: 'app-validador-postularse',
@@ -28,6 +30,7 @@ export class ValidadorPostularseComponent implements OnInit {
 
   ngOnInit(): void {
     inicializar();
+    imprimir();
   }
 
   serValidador(): void {
