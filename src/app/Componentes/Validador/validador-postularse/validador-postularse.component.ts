@@ -1,3 +1,4 @@
+import { Transaccion } from './../../../Modelo/Blockchain/transaccion';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
@@ -9,6 +10,7 @@ declare var enviarMensaje: any;
 //blockchain
 declare var imprimir: any;
 
+
 @Component({
   selector: 'app-validador-postularse',
   templateUrl: './validador-postularse.component.html',
@@ -17,6 +19,8 @@ declare var imprimir: any;
 export class ValidadorPostularseComponent implements OnInit {
 
   usuario: Usuario = new Usuario('', 0, '', '');
+  transaccion: Transaccion = new Transaccion(3, 2 , 'init' , ['brandonn', 'diegonnn'] );
+
 
   #peer;
   otro_peer_id;
@@ -31,6 +35,7 @@ export class ValidadorPostularseComponent implements OnInit {
   ngOnInit(): void {
     inicializar();
     imprimir();
+    console.log(this.transaccion);
   }
 
   serValidador(): void {
