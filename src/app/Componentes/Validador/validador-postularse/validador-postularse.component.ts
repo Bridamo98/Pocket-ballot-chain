@@ -1,3 +1,4 @@
+import { ManejadorMensajesService } from './../../../Controladores/manejador-mensajes.service';
 import { Transaccion } from './../../../Modelo/Blockchain/transaccion';
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,8 +8,7 @@ import { Usuario } from 'src/app/Modelo/Usuario';
 declare var inicializar: any;
 declare var establecerConexion: any;
 declare var enviarMensaje: any;
-//blockchain
-declare var imprimir: any;
+declare var mensajesServicio: any;
 
 
 @Component({
@@ -29,12 +29,13 @@ export class ValidadorPostularseComponent implements OnInit {
   constructor(
     private router: Router,
     private rutaActiva: ActivatedRoute,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private mensajeServicio: ManejadorMensajesService
   ) {  }
 
   ngOnInit(): void {
     inicializar();
-    imprimir();
+    mensajesServicio = this.mensajeServicio;
     console.log(this.transaccion);
   }
 

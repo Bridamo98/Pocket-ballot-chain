@@ -8,6 +8,6 @@ export class Bloque {
   constructor(hashBloqueAnterior: string, transacciones: Transaccion[]) {
     this.hashBloqueAnterior = hashBloqueAnterior;
     this.transacciones = transacciones;
-    this.hash = sha512.create().update(this.transacciones+ this.hashBloqueAnterior).hex();
+    this.hash = sha512.create().update(this.transacciones + this.hashBloqueAnterior).hex();
   }
 }

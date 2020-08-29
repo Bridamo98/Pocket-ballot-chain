@@ -4,7 +4,15 @@
 
 export const environment = {
   production: false,
-  serverUrl: 'http://localhost:3000'
+  serverUrl: 'http://localhost:3000',
+
+  //Constantes de Blockchain
+  votar: 1,
+  obtenerResultados: 2,
+  syncBlockchain: 3,
+  ofrecerBloque: 4,
+  aprobarBloque: 5
+
 };
 
 /*
