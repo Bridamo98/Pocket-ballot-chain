@@ -11,7 +11,13 @@ export const environment = {
   obtenerResultados: 2,
   syncBlockchain: 3,
   ofrecerBloque: 4,
-  aprobarBloque: 5
+  aprobarBloque: 5,
+  inicializarVotacion: 6,
+
+  //tipos de votacion
+  ranking: 1,
+  popular: 2,
+  clasificacion: 3,
 
 };
 

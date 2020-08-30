@@ -13,6 +13,9 @@ export class Transaccion {
     this.idVotacion = idVotacion;
     this.hashIn = hashIn;
     this.mensaje = mensaje;
-    this.hash = sha512.create().update(this.tipoTransaccion + this.idVotacion + this.hashIn + this.mensaje).hex();
+    if (hashIn != null && hashIn !== undefined){
+      this.hash = sha512.create().update(this.tipoTransaccion + this.idVotacion + this.hashIn + this.mensaje).hex();
+    }
   }
+
 }

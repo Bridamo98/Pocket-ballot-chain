@@ -4,6 +4,9 @@ import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { Usuario } from 'src/app/Modelo/Usuario';
+import { Votacion } from 'src/app/Modelo/Votacion';
+import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
+import { environment } from 'src/environments/environment';
 //peer handler
 declare var inicializar: any;
 declare var establecerConexion: any;
@@ -35,7 +38,16 @@ export class ValidadorPostularseComponent implements OnInit {
 
   ngOnInit(): void {
     inicializar();
+
     mensajesServicio = this.mensajeServicio;
+
+
+    /*let votacion: Votacion = new Votacion();
+    votacion.id = 1;
+    votacion.votos = 2;*/
+    let transaccion: Transaccion= new Transaccion(1, 2, null,["Voto SantiagO", "Voto Hernando"]);
+    let mensaje: Mensaje = new Mensaje(environment.votar, transaccion);
+    this.mensajeServicio.redirigirMensaje(mensaje);
     console.log(this.transaccion);
   }
 

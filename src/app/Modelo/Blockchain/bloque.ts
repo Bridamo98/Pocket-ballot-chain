@@ -8,6 +8,17 @@ export class Bloque {
   constructor(hashBloqueAnterior: string, transacciones: Transaccion[]) {
     this.hashBloqueAnterior = hashBloqueAnterior;
     this.transacciones = transacciones;
-    this.hash = sha512.create().update(this.transacciones + this.hashBloqueAnterior).hex();
+    this.hash = sha512
+      .create()
+      .update(this.transacciones + this.hashBloqueAnterior)
+      .hex();
+  }
+  buscarTxInicioVotacion(idVotacion: number): Transaccion {
+    this.transacciones.forEach((element) => {
+      if (element.idVotacion === idVotacion && element.tipoTransaccion === 0) {
+        return element;
+      }
+    });
+    return null;
   }
 }
