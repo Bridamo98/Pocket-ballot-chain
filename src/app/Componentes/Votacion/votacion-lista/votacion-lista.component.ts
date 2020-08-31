@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
+import { Validador } from 'src/app/Modelo/Validador';//Para probar envio de transacciones
 import { Router, ActivatedRoute } from '@angular/router';
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
+import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
 
 @Component({
   selector: 'app-votacion-lista',
@@ -21,7 +23,8 @@ export class VotacionListaComponent implements OnInit {
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private votacionService: VotacionService,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private votarService: VotarService//Para probar envio de transacciones
   ) {  }
 
   ngOnInit(): void {
@@ -119,5 +122,18 @@ export class VotacionListaComponent implements OnInit {
         this.votacionesInscrito.push(votacion);
       }
     }
+  }
+
+
+  //Para probar envio de transacciones
+  enviarTransaccion():void{
+    this.votarService.obtenerValidadores()
+      .subscribe(
+        result => {
+          result.forEach(element => {
+            console.log(element);
+          });
+        }
+      );
   }
 }
