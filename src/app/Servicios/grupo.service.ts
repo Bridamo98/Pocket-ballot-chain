@@ -12,6 +12,7 @@ export class GrupoService {
   constructor(private http: HttpClient) { }
 
   URLbase = 'http://localhost:3000';
+  //pequeño cambio
 
   obtenerUsuarioLogueado():Observable<Respuesta>{
     console.log(localStorage.getItem('token'));
