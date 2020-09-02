@@ -8,6 +8,8 @@ import { $ } from 'protractor';
 import { Route } from '@angular/compiler/src/core';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
 import { Usuario } from 'src/app/Modelo/Usuario';
+import rsa from 'js-crypto-rsa';
+import * as nodeRSA from 'node-rsa';
 
 @Component({
   selector: 'app-votacion-crear',
@@ -15,7 +17,7 @@ import { Usuario } from 'src/app/Modelo/Usuario';
   styleUrls: ['./votacion-crear.component.css']
 })
 export class VotacionCrearComponent implements OnInit {
-
+  key:any;
   usuario: Usuario;
   cantiVotos = 1;
   msgErrorFecha: string;
@@ -32,6 +34,19 @@ export class VotacionCrearComponent implements OnInit {
   }
 
   ngOnInit() {    
+
+    rsa.generateKey(2048).then( (key) => {
+      // now you get the JWK public and private keys
+      const publicKey = key.publicKey;
+      const privateKey = key.privateKey;
+
+      console.log(publicKey);
+    });
+
+    this.key = new nodeRSA({b: 1024});
+
+    console.log(this.key.exportKey('public'));
+
     this.getUsuario();
     this.activateSelectedListener();
   }
