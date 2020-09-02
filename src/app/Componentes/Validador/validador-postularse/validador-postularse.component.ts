@@ -40,13 +40,14 @@ export class ValidadorPostularseComponent implements OnInit {
     inicializar();
 
     mensajesServicio = this.mensajeServicio;
+    let votacion: Votacion = new Votacion();
+    votacion.id = 3;
+    votacion.votos = 2;
+    let mensaje: Mensaje = new Mensaje(environment.inicializarVotacion, votacion);
+    this.mensajeServicio.redirigirMensaje(mensaje);
 
-
-    /*let votacion: Votacion = new Votacion();
-    votacion.id = 1;
-    votacion.votos = 2;*/
-    let transaccion: Transaccion= new Transaccion(1, 2, null,["Voto SantiagO", "Voto Hernando"]);
-    let mensaje: Mensaje = new Mensaje(environment.votar, transaccion);
+    let transaccion: Transaccion = new Transaccion(1, 3, null,["Diego", "Santiago"]);
+    mensaje = new Mensaje(environment.votar, transaccion);
     this.mensajeServicio.redirigirMensaje(mensaje);
     console.log(this.transaccion);
   }
