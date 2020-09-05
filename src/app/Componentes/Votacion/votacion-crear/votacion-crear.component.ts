@@ -4,12 +4,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Router } from '@angular/router';
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Opcion } from 'src/app/Modelo/Opcion';
-import { $ } from 'protractor';
-import { Route } from '@angular/compiler/src/core';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
 import { Usuario } from 'src/app/Modelo/Usuario';
-import rsa from 'js-crypto-rsa';
-import * as nodeRSA from 'node-rsa';
+import { CifradoService } from './../../../Servicios/Cifrado-Firma/cifrado.service'
 
 @Component({
   selector: 'app-votacion-crear',
@@ -17,7 +14,6 @@ import * as nodeRSA from 'node-rsa';
   styleUrls: ['./votacion-crear.component.css']
 })
 export class VotacionCrearComponent implements OnInit {
-  key:any;
   usuario: Usuario;
   cantiVotos = 1;
   msgErrorFecha: string;
@@ -29,23 +25,19 @@ export class VotacionCrearComponent implements OnInit {
 
   public elemento: HTMLElement;
 
-  constructor(public votacionService: VotacionService, private modalService: NgbModal, private router: Router, private usuarioService: UsuarioService) { 
-    
+  constructor(public cifradoService:CifradoService, public votacionService: VotacionService, private modalService: NgbModal, private router: Router, private usuarioService: UsuarioService) { 
   }
 
   ngOnInit() {    
 
-    rsa.generateKey(2048).then( (key) => {
-      // now you get the JWK public and private keys
-      const publicKey = key.publicKey;
-      const privateKey = key.privateKey;
+    let hola1 = this.cifradoService.encrypt('hola');
+    let hola2 = this.cifradoService.encrypt('hola');
+    console.log('Primero: ' + hola1);
+    console.log('Segundo: ' + hola2);
+    console.log(this.cifradoService.decrypt(this.cifradoService.encrypt('hola')));
+    console.log(this.cifradoService.decrypt(hola1));
+    console.log(this.cifradoService.decrypt(hola2));
 
-      console.log(publicKey);
-    });
-
-    this.key = new nodeRSA({b: 1024});
-
-    console.log(this.key.exportKey('public'));
 
     this.getUsuario();
     this.activateSelectedListener();
@@ -84,8 +76,7 @@ export class VotacionCrearComponent implements OnInit {
 
 
   fechaError(){
-      let expresionRegular = /[0-9]/
-      
+      let expresionRegular = /[0-9]/;    
   }
 
   popular(modal){
