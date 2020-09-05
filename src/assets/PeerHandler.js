@@ -2,6 +2,7 @@
 var peer;
 var conn;
 var peer_id;
+var mensajesServicio;
 var inicializar = function() {
 
     peer = new Peer({
@@ -21,6 +22,7 @@ var inicializar = function() {
         console.log('conexion establecida');
         conn.on('data', function (data) {
             // Will print 'this is a test'
+            mensajesServicio.redirigirMensaje(data);
             console.log(data);
         });
     });
@@ -41,6 +43,7 @@ var establecerConexion = function(otro_peer_id) {
         });
         conn.on('data', function (data) {
             console.log(data);
+            mensajesServicio.redirigirMensaje(data);
         });
     } else {
         alert('Ingresa un peerId');
