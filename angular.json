@@ -128,5 +128,9 @@
       }
     }
   },
-  "defaultProject": "pocket-ballot-chain"
+
+  "defaultProject": "pocket-ballot-chain",
+  "cli": {
+    "analytics": "850d70d3-197f-4c0e-9064-132e6c48a30d"
+  }
 }
