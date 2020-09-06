@@ -28,7 +28,7 @@ export class CifradoService {
   }
 
   getEncryptPublicKey(){
-    return this.encryptPublicKey();
+    return this.encryptPublicKey;
   }
 
   encrypt(object){
