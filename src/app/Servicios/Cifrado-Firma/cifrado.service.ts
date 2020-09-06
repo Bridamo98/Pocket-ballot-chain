@@ -24,7 +24,7 @@ export class CifradoService {
   
     this.signature = new nodeRSA({b: 1024});
     this.signaturePrivate = this.signature.exportKey('private');
-    this.encryptPublicKey = this.signature.exportKey('public');
+    this.signaturePublic = this.signature.exportKey('public');
   }
 
   getEncryptPublicKey(){
@@ -47,12 +47,12 @@ export class CifradoService {
 
 
   //Firma Digital
-  sing(object){
-    
+  sign(object){
+    return this.signature.sign(object, 'base64', 'base64');
   }
 
-  chekSing(){
-
+  chekSing(objectUnsigned, objectSigned){
+    return this.signature.verify(objectUnsigned, objectSigned, 'base64', 'base64');
   }
 
 }
