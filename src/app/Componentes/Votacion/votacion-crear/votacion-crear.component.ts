@@ -6,7 +6,7 @@ import { Votacion } from 'src/app/Modelo/Votacion';
 import { Opcion } from 'src/app/Modelo/Opcion';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
 import { Usuario } from 'src/app/Modelo/Usuario';
-import { CifradoService } from './../../../Servicios/Cifrado-Firma/cifrado.service'
+import { CifradoService } from './../../../Servicios/Cifrado-Firma/cifrado.service';
 
 @Component({
   selector: 'app-votacion-crear',
@@ -30,13 +30,14 @@ export class VotacionCrearComponent implements OnInit {
 
   ngOnInit() {    
 
-    let hola1 = this.cifradoService.encrypt('hola');
-    let hola2 = this.cifradoService.encrypt('hola');
-    console.log('Primero: ' + hola1);
-    console.log('Segundo: ' + hola2);
-    console.log(this.cifradoService.decrypt(this.cifradoService.encrypt('hola')));
-    console.log(this.cifradoService.getEncryptPublicKey());
-    console.log(this.cifradoService.decrypt(hola2));
+    //let sig = this.cifradoService.getSignature();
+    let message = "hola";
+    console.log('message: ' + message);
+    //console.log('sig: ' + sig);
+    let firmado = this.cifradoService.sign(message);
+    console.log('messageSig: ' + firmado);
+    console.log('verifyTrue: ' + this.cifradoService.checkSing('hola', firmado));
+    console.log('verifyFalse: ' + this.cifradoService.checkSing('adios', firmado));
 
 
     this.getUsuario();

@@ -7,6 +7,7 @@ import { CifradoService } from './../Servicios/Cifrado-Firma/cifrado.service';
 import { environment } from './../../environments/environment';
 import { Mensaje } from './../Modelo/Blockchain/mensaje';
 import { Injectable } from '@angular/core';
+import { CifradoService } from '../Servicios/Cifrado-Firma/cifrado.service';
 
 @Injectable({
   providedIn: 'root',
@@ -30,6 +31,11 @@ export class ManejadorMensajesService {
         break;
 
       case environment.votar:
+
+        //Creo el voto con su incripcion
+
+        //
+
         this.votarP2PService.votar(mensaje.contenido);
         //////////////////////////////////////////////////
         this.votarP2PService.imprimirTransacciones();
