@@ -1,10 +1,8 @@
-
 var peer;
-var conn;
-var peer_id;
+var connections = {};
+//var peer_id;
 var mensajesServicio;
 var inicializar = function() {
-
     peer = new Peer({
         host: location.hostname,
         port: (location.protocol === 'https:' ? 443 : 9000),
@@ -17,13 +15,13 @@ var inicializar = function() {
     });
 
     peer.on('connection', function (connection) {
-        conn = connection;
-        peer_id = connection.peer;
+        connections[connection.peer] = connection;
+        //peer_id = connection.peer;
         console.log('conexion establecida');
-        conn.on('data', function (data) {
-            // Will print 'this is a test'
-            mensajesServicio.redirigirMensaje(data);
-            console.log(data);
+        connections[connection.peer].on('data', function (data) {
+            //desencriptar
+            console.log(data + " Enviado de: "+ connection.peer);
+            mensajesServicio.redirigirMensaje(data, connection.peer);
         });
     });
 
@@ -33,25 +31,28 @@ var inicializar = function() {
     })
 }
 
-var establecerConexion = function(otro_peer_id) {
+var enviar = function(msj, otro_peer_id) {
+    console.log('Enviando mensaje ' + msj);
+    //encriptar...
+    connections[otro_peer_id].send(msj);
+}
+
+var enviarMensaje = function(msj, otro_peer_id) {//si no existe conexion con ese peer_id crear la conexion y enviar el msj
 
     if (otro_peer_id) {
-        peer_id = otro_peer_id;
-        conn = peer.connect(peer_id);
-        conn.on('open', function () {
+        //peer_id = otro_peer_id;
+        connections[otro_peer_id] = peer.connect(otro_peer_id);
+        connections[otro_peer_id].on('open', function () {
             console.log('Conexion establecida');
+            enviar(msj, otro_peer_id);
         });
-        conn.on('data', function (data) {
-            console.log(data);
-            mensajesServicio.redirigirMensaje(data);
+        connections[otro_peer_id].on('data', function (data) {
+            //desencriptar
+            console.log(data + " Enviado de: "+ otro_peer_id);
+            mensajesServicio.redirigirMensaje(data, connection.peer);
         });
     } else {
         alert('Ingresa un peerId');
         return false;
     }
-}
-
-var enviarMensaje = function(msj) {
-    console.log('Enviando mensaje ' + msj);
-    conn.send(msj);
 }

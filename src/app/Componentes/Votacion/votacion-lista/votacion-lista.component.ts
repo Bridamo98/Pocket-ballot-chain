@@ -1,11 +1,21 @@
+import { ManejadorMensajesService } from './../../../Controladores/manejador-mensajes.service';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
+import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 import { Validador } from 'src/app/Modelo/Validador';//Para probar envio de transacciones
+import { environment } from 'src/environments/environment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
+
+declare var inicializar: any;
+declare var establecerConexion: any;
+declare var enviarMensaje: any;
+declare var peer: any;
+declare var mensajesServicio: any;
+
 
 @Component({
   selector: 'app-votacion-lista',
@@ -24,10 +34,13 @@ export class VotacionListaComponent implements OnInit {
     private rutaActiva: ActivatedRoute,
     private votacionService: VotacionService,
     private usuarioService: UsuarioService,
+    private mensajeServicio: ManejadorMensajesService,
     private votarService: VotarService//Para probar envio de transacciones
-  ) {  }
+  ) { }
 
   ngOnInit(): void {
+    inicializar();
+    mensajesServicio = this.mensajeServicio;
     this.iniciarVista();
   }
 
@@ -126,12 +139,17 @@ export class VotacionListaComponent implements OnInit {
 
 
   //Para probar envio de transacciones
-  enviarTransaccion():void{
+  enviarTransaccion(): void {
     this.votarService.obtenerValidadores()
       .subscribe(
         result => {
           result.forEach(element => {
             console.log(element);
+            let mensaje: Mensaje = new Mensaje(environment.obtenerPk, "");
+            //console.log(element.peerId);
+            
+            enviarMensaje(mensaje, element.peerId);
+            //enviarMensaje(mensaje, element.peerId);
           });
         }
       );

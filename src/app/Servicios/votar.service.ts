@@ -28,4 +28,10 @@ export class VotarService {
     return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
   }
 
+  activarValidador(id):Observable<any> {//Manejar una clase Validador
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    console.log('get: ', this.URLbase + '/activarValidador/'+id);
+    return this.http.get<any>(this.URLbase + '/activarValidador/'+id, { headers: headers });
+  }
+
 }
