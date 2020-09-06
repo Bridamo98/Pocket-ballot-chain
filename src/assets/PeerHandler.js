@@ -21,7 +21,7 @@ var inicializar = function() {
         connections[connection.peer].on('data', function (data) {
             //desencriptar
             console.log(data + " Enviado de: "+ connection.peer);
-            mensajesServicio.redirigirMensaje(data, connection.peer);
+            mensajesServicio.redirigirMensaje(data, connections[connection.peer].peer);
         });
     });
 
@@ -49,7 +49,7 @@ var enviarMensaje = function(msj, otro_peer_id) {//si no existe conexion con ese
         connections[otro_peer_id].on('data', function (data) {
             //desencriptar
             console.log(data + " Enviado de: "+ otro_peer_id);
-            mensajesServicio.redirigirMensaje(data, connection.peer);
+            mensajesServicio.redirigirMensaje(data, connections[otro_peer_id].peer);
         });
     } else {
         alert('Ingresa un peerId');
