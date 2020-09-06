@@ -35,7 +35,7 @@ export class VotacionCrearComponent implements OnInit {
     console.log('Primero: ' + hola1);
     console.log('Segundo: ' + hola2);
     console.log(this.cifradoService.decrypt(this.cifradoService.encrypt('hola')));
-    console.log(this.cifradoService.decrypt(hola1));
+    console.log(this.cifradoService.getEncryptPublicKey());
     console.log(this.cifradoService.decrypt(hola2));
 
 
