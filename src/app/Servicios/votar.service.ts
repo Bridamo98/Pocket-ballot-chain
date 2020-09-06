@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Validador } from 'src/app/Modelo/Validador';//Para probar envio de transacciones
+import { Voto } from '../Modelo/Voto';
 
 
 
@@ -20,4 +21,11 @@ export class VotarService {
     console.log('get: ', this.URLbase + '/validadores');
     return this.http.get<Validador[]>(this.URLbase + '/validadores', { headers: headers });
   }
+
+  enviarVoto(mensaje):Observable<any>{
+    let json = JSON.stringify(mensaje);;
+    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')).set('Content-Type', 'application/json');
+    return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
+  }
+
 }

@@ -45,13 +45,12 @@ export class CifradoService {
     return temporalyKey.encrypt(object, 'base64');
   }
 
-
   //Firma Digital
   sign(object){
     return this.signature.sign(object, 'base64', 'base64');
   }
 
-  chekSing(objectUnsigned, objectSigned){
+  checkSing(objectUnsigned, objectSigned){
     return this.signature.verify(objectUnsigned, objectSigned, 'base64', 'base64');
   }
 
