@@ -8,7 +8,7 @@ declare var enviar: any;
 export class EnvioMensajesService {
 
   constructor() { }
-  enviarPk(pk:string, peerId:any):void{
+  enviarPk(pk:any, peerId:any):void{
     enviar(pk,peerId);
   }
 }

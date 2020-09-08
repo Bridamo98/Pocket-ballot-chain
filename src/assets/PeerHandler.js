@@ -1,6 +1,16 @@
+class Mensaje {
+    tipoPeticion;
+    contenido;
+    constructor(tipoPeticion, contenido){
+      this.tipoPeticion = tipoPeticion;
+      this.contenido = contenido;
+    }
+}
+
+var voto;
 var peer;
 var connections = {};
-//var peer_id;
+var peer_id;
 var mensajesServicio;
 var inicializar = function() {
     peer = new Peer({
@@ -10,7 +20,7 @@ var inicializar = function() {
     });
     //mostrar el peer_id
     peer.on('open', function () {
-        //perr_id.innerHTML = peer.id;
+        peer_id = peer.id;
         console.log('peer open: ' + peer.id);
     });
 
@@ -32,9 +42,14 @@ var inicializar = function() {
 }
 
 var enviar = function(msj, otro_peer_id) {
-    console.log('Enviando mensaje ' + msj);
+    //console.log('Enviando mensaje ' + msj);
     //encriptar...
     connections[otro_peer_id].send(msj);
+}
+
+var setVoto = function(pVoto){
+    this.voto = pVoto;
+    mensajesServicio.setVoto(pVoto);
 }
 
 var enviarMensaje = function(msj, otro_peer_id) {//si no existe conexion con ese peer_id crear la conexion y enviar el msj
@@ -48,8 +63,11 @@ var enviarMensaje = function(msj, otro_peer_id) {//si no existe conexion con ese
         });
         connections[otro_peer_id].on('data', function (data) {
             //desencriptar
-            console.log(data + " Enviado de: "+ otro_peer_id);
+            //console.log(data + " Enviado de: "+ otro_peer_id);
             mensajesServicio.redirigirMensaje(data, connections[otro_peer_id].peer);
+
+            //mensajesServicio.redirigirMensaje(mensaje, connections[otro_peer_id].peer);
+
         });
     } else {
         alert('Ingresa un peerId');

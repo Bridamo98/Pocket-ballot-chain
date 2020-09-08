@@ -9,11 +9,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
+import { element } from 'protractor';
 
 declare var inicializar: any;
 declare var establecerConexion: any;
 declare var enviarMensaje: any;
 declare var peer: any;
+declare var setVoto: any;
 declare var mensajesServicio: any;
 
 
@@ -137,9 +139,14 @@ export class VotacionListaComponent implements OnInit {
     }
   }
 
+  registrarVoto(voto){
+    setVoto(voto);
+  }
 
   //Para probar envio de transacciones
   enviarTransaccion(): void {
+    
+    this.registrarVoto("Voto Ejemplo"); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()
       .subscribe(
         result => {
@@ -154,4 +161,13 @@ export class VotacionListaComponent implements OnInit {
         }
       );
   }
+
+  //Envio del voto
+  EnviarVoto(){
+
+    let mensaje = new Mensaje(environment.votar, "");
+    enviarMensaje(mensaje, "");
+
+  }
+
 }
