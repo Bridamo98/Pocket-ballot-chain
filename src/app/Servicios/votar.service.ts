@@ -26,7 +26,7 @@ export class VotarService {
     let returned;
     let json = JSON.stringify(mensaje);
     //console.log(json);
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     
     //return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
 
