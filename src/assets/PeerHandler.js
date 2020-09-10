@@ -25,14 +25,19 @@ var inicializar = function() {
     });
 
     peer.on('connection', function (connection) {
-        connections[connection.peer] = connection;
+        //connections[connection.peer] = connection;
         //peer_id = connection.peer;
+        console.log(connection.metadata.p_msj);
         console.log('conexion establecida');
-        connections[connection.peer].on('data', function (data) {
+        mensajesServicio.redirigirMensaje(connection.metadata.p_msj, connection.peer);
+
+        //connections[connection.peer].on('data', function (data) {
             //desencriptar
-            console.log(data + " Enviado de: "+ connection.peer);
-            mensajesServicio.redirigirMensaje(data, connections[connection.peer].peer);
-        });
+          //  console.log(data + " Enviado de: "+ connection.peer);
+           // mensajesServicio.redirigirMensaje(data, connections[connection.peer].peer);
+        //});
+
+        connection.close();
     });
 
     peer.on('error', function (err) {
@@ -41,11 +46,6 @@ var inicializar = function() {
     })
 }
 
-var enviar = function(msj, otro_peer_id) {
-    //console.log('Enviando mensaje ' + msj);
-    //encriptar...
-    connections[otro_peer_id].send(msj);
-}
 
 var setVoto = function(pVoto){
     this.voto = pVoto;
@@ -56,19 +56,24 @@ var enviarMensaje = function(msj, otro_peer_id) {//si no existe conexion con ese
 
     if (otro_peer_id) {
         //peer_id = otro_peer_id;
-        connections[otro_peer_id] = peer.connect(otro_peer_id);
-        connections[otro_peer_id].on('open', function () {
-            console.log('Conexion establecida');
-            enviar(msj, otro_peer_id);
-        });
-        connections[otro_peer_id].on('data', function (data) {
+        var options = {
+            metadata: {
+                p_msj: msj
+            },
+            serialization: "json"
+        };
+        peer.connect(otro_peer_id, options);
+        //connections[otro_peer_id].on('open', function () {
+        //    console.log('Conexion establecida');
+        //    enviar(msj, otro_peer_id);
+        //});
+        //connections[otro_peer_id].on('data', function (data) {
             //desencriptar
             //console.log(data + " Enviado de: "+ otro_peer_id);
-            mensajesServicio.redirigirMensaje(data, connections[otro_peer_id].peer);
 
             //mensajesServicio.redirigirMensaje(mensaje, connections[otro_peer_id].peer);
 
-        });
+       // });
     } else {
         alert('Ingresa un peerId');
         return false;
