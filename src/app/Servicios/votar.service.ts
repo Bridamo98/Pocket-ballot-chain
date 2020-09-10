@@ -22,10 +22,18 @@ export class VotarService {
     return this.http.get<Validador[]>(this.URLbase + '/validadores', { headers: headers });
   }
 
-  enviarVoto(mensaje):Observable<any>{
-    let json = JSON.stringify(mensaje);;
-    let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token')).set('Content-Type', 'application/json');
-    return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
+  enviarVoto(mensaje):any{
+    let returned;
+    let json = JSON.stringify(mensaje);
+    //console.log(json);
+    let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    
+    //return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
+
+    this.http.post<any>(this.URLbase + "/redirigir", json, { headers: headers }).subscribe(data => {
+      returned = data['Status'];
+    });
+    return returned;
   }
 
   activarValidador(id):Observable<any> {//Manejar una clase Validador

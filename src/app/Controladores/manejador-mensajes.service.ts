@@ -2,23 +2,49 @@ import { Votacion } from './../Modelo/Votacion';
 import { CrearVotacionP2PService } from './../LogicaP2P/crear-votacion-p2-p.service';
 import { VotarP2PService } from './../LogicaP2P/votar-p2-p.service';
 import { BlockchainService } from './../LogicaP2P/blockchain.service';
+import { VotarService } from './../Servicios/votar.service';
 import { EnvioMensajesService } from './../LogicaP2P/envio-mensajes.service';
 import { CifradoService } from './../Servicios/Cifrado-Firma/cifrado.service';
 import { environment } from './../../environments/environment';
 import { Mensaje } from './../Modelo/Blockchain/mensaje';
 import { Injectable } from '@angular/core';
 
+declare var peer_id;
+
 @Injectable({
   providedIn: 'root',
 })
 export class ManejadorMensajesService {
+
+
+  //Atributos de un voto 
+  voto: any; //se encrypta 
+  firma: any; //se crea con el voto y sign
+  peerValidador: any;
+  encryptId: any; //Puede ser la misma pk
+
   constructor(
+    private votarService: VotarService,
     private votarP2PService: VotarP2PService,
     private crearVotacionP2PService: CrearVotacionP2PService,
     public cifradoService:CifradoService,
     public envioMensajesService:EnvioMensajesService
   ) {}
-  redirigirMensaje(mensaje: Mensaje,peerId:any) {
+
+  setVoto(pVoto){
+    this.voto = pVoto;
+  }
+
+  redirigirMensaje(data: Mensaje,peerId:any) {
+
+    let mensaje;
+    if(typeof data == "string"){
+      mensaje = JSON.parse(data);
+    }
+    else{
+      mensaje = data;
+    }
+
     switch (mensaje.tipoPeticion) {
       case environment.aprobarBloque:
         break;
@@ -28,13 +54,23 @@ export class ManejadorMensajesService {
         break;
       case environment.syncBlockchain:
         break;
+      case environment.responderPk:
+        //Creo el voto con su incripcion
+        let votoCifrado = this.cifradoService.encryptExternal(mensaje.contenido['pk'], this.voto);
+        let firmaVoto = this.cifradoService.sign(votoCifrado);
 
+        let votoToServer = {
+          voto: votoCifrado,
+          firma: firmaVoto,
+          peerValidador: mensaje.contenido['peerValidador'],
+          encryptId: mensaje.contenido['pk']
+        };
+          //let votoToServer;
+          console.log(this.votarService.enviarVoto(votoToServer));
+        break;
       case environment.votar:
 
-        //Creo el voto con su incripcion
-
-        //
-
+        
         this.votarP2PService.votar(mensaje.contenido);
         //////////////////////////////////////////////////
         this.votarP2PService.imprimirTransacciones();
@@ -49,8 +85,13 @@ export class ManejadorMensajesService {
         break;
       case environment.obtenerPk:
         //generar pk
-        let pk = this.cifradoService.getEncryptPublicKey();
-        this.envioMensajesService.enviarPk(pk, peerId);
+        let pkAndPeer = {
+          pk: this.cifradoService.getEncryptPublicKey(),
+          peerValidador: peer_id
+        };
+
+        let data = new Mensaje(environment.responderPk, pkAndPeer);
+        this.envioMensajesService.enviarPk(JSON.stringify(data), peerId);
         break;
 
       default:

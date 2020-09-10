@@ -14,6 +14,7 @@ export const environment = {
   aprobarBloque: 5,
   inicializarVotacion: 6,
   obtenerPk: 7,
+  responderPk: 8,
 
   //tipos de votacion
   ranking: 1,
