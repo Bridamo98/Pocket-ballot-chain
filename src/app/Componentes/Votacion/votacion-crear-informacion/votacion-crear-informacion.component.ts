@@ -85,7 +85,6 @@ export class VotacionCrearInformacionComponent implements OnInit {
   }
 
 
-
   getUsuario(): void {
     this.usuarioService.getUsuario()
       .subscribe(
@@ -110,6 +109,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   crearVotacion(){
     let tipoDeVotacionID;
+    let RespuestaVotacion;
+    let IdVotacion;
     if(this.tipo == 'Popular'){
       tipoDeVotacionID = 1;
     } else if(this.tipo == 'Ranking'){
@@ -130,12 +131,23 @@ export class VotacionCrearInformacionComponent implements OnInit {
       opciones: this.opciones
     };
     
-    this.votacionService.addVotacion(votacion).subscribe(status => console.log(status));
+    this.votacionService.addVotacion(votacion).subscribe (Status => {
+      let idVotacion = Status['Id']
     
-    for (let index = 0; index < this.opciones.length; index++) {
-      //this.votacionService.addOpcion()
-    }
-
+      if(!Status['Error']){
+        console.log("Se creo con exito: " + idVotacion);
+        for (let index = 0; index < this.opciones.length; index++) {
+          //Aqui debo agregar cada opción
+          this.votacionService.addOpcion(idVotacion, this.opciones[index]);
+        }
+    
+        for (let index = 0; index < this.participantes.length; index++){
+          //Aqui debo agregar cada participante
+          this.votacionService.addParticipante(idVotacion, this.participantes[index]);
+        }
+      }
+      
+    }); 
   }
 
   public changeListener(files: FileList){
