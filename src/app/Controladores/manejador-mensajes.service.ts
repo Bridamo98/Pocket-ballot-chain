@@ -8,15 +8,19 @@ import { CifradoService } from './../Servicios/Cifrado-Firma/cifrado.service';
 import { environment } from './../../environments/environment';
 import { Mensaje } from './../Modelo/Blockchain/mensaje';
 import { Injectable } from '@angular/core';
+import { ListenerSocketsService } from './../LogicaP2P/listener-sockets.service';
+import { Observable } from 'rxjs';
+import * as io from 'socket.io-client';
 
 declare var peer_id;
 
 @Injectable({
   providedIn: 'root',
 })
-export class ManejadorMensajesService {
+export class ManejadorMensajesService{
 
 
+  socket: any;
   //Atributos de un voto 
   voto: any; //se encrypta 
   firma: any; //se crea con el voto y sign
@@ -24,6 +28,7 @@ export class ManejadorMensajesService {
   encryptId: any; //Puede ser la misma pk
 
   constructor(
+    private listenerSocket: ListenerSocketsService,
     private votarService: VotarService,
     private votarP2PService: VotarP2PService,
     private crearVotacionP2PService: CrearVotacionP2PService,
@@ -33,6 +38,14 @@ export class ManejadorMensajesService {
 
   setVoto(pVoto){
     this.voto = pVoto;
+  }
+
+  decrypt(data){
+    return this.cifradoService.decrypt(data);
+  }
+
+  checkSing(voto, firma){
+    return this.cifradoService.checkSing(voto, firma);
   }
 
   redirigirMensaje(data: Mensaje,peerId:any) {
@@ -59,14 +72,18 @@ export class ManejadorMensajesService {
         let votoCifrado = this.cifradoService.encryptExternal(mensaje.contenido['pk'], this.voto);
         let firmaVoto = this.cifradoService.sign(votoCifrado);
 
+        console.log("Firmado?: " + this.cifradoService.checkSing(votoCifrado, firmaVoto));
+
         let votoToServer = {
           voto: votoCifrado,
           firma: firmaVoto,
           peerValidador: mensaje.contenido['peerValidador'],
-          encryptId: mensaje.contenido['pk']
         };
           //let votoToServer;
-          console.log(this.votarService.enviarVoto(votoToServer));
+          //console.log(this.votarService.enviarVoto(votoToServer));
+
+          this.listenerSocket.emit('voto', votoToServer);
+
         break;
       case environment.votar:
 
@@ -90,8 +107,14 @@ export class ManejadorMensajesService {
           peerValidador: peer_id
         };
 
+        //Sockets
+        this.socket = io(environment.socketUrl);
+
+
+        //Envio La PK
         let data = new Mensaje(environment.responderPk, pkAndPeer);
         this.envioMensajesService.enviarPk(JSON.stringify(data), peerId);
+
         break;
 
       default:

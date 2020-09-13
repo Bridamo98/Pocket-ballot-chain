@@ -25,9 +25,17 @@ export class VotacionService {
     return this.http.get<Votacion[]>(this.URLbase + '/votacion');
   }
 
+  addOpcion(idVotacion, opcion) {
+    console.log("Agrego Opcion: " + opcion);
+  }
+
+  addParticipante(idVotacion, participante){
+    console.log("Agrego Participante: " + participante);
+  }
+
   addVotacion(votacion: any): Observable<Object> {
     let json = JSON.stringify(votacion);
-    let headers = new HttpHeaders().set('Content-Type', 'application/json');
+    let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     console.log(json);
     return this.http.post<Votacion>(this.URLbase + "votacionAdd", json, { headers: headers });
   }
