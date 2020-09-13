@@ -5,6 +5,7 @@
 export const environment = {
   production: false,
   serverUrl: 'http://localhost:3000',
+  socketUrl: 'http://localhost:4000',
 
   //Constantes de Blockchain
   votar: 1,

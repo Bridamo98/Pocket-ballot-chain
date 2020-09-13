@@ -8,6 +8,7 @@ import { Votacion } from 'src/app/Modelo/Votacion';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 import { environment } from 'src/environments/environment';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
+import { ListenerSocketsService } from '../../../LogicaP2P/listener-sockets.service';
 
 //peer handler
 declare var inicializar: any;
@@ -33,6 +34,7 @@ export class ValidadorPostularseComponent implements OnInit {
   msj;
 
   constructor(
+    private listenerSocket: ListenerSocketsService,
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -44,6 +46,31 @@ export class ValidadorPostularseComponent implements OnInit {
     console.log("First");
     setTimeout("Hello world!", 3000);
     inicializar();
+
+    this.listenerSocket.listen('voto').subscribe((data) => {
+
+      if(peer.id === data['peerValidador']){
+
+        console.log("Mi peer id es: " + data['peerValidador']);
+        console.log("Me llego esto: " + data);
+
+        if(this.mensajeServicio.checkSing(data['voto'], data['firma'])){
+          console.log('FIRMA CORRECTA');
+        }
+        else{
+          console.log('FIRMA ERRADA');
+        }
+
+        console.log("Voto: " + data['voto']);
+        console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
+        //validar firma
+      
+      }
+      
+
+      //Se Debe validar si se gano el torneo antes de utilizar el voto
+      //Se recomienda crear otro componente que sea el de validador y se muestre cuando se gana el torneo
+    })
 
     mensajesServicio = this.mensajeServicio;
     let votacion: Votacion = new Votacion();
@@ -67,12 +94,14 @@ export class ValidadorPostularseComponent implements OnInit {
 
 
     //Si torneo actualizar a disponible
-    this.votarService.activarValidador(peer.id)
-      .subscribe(
-        result => {
-          console.log(result);
-        }
-      );
+    this.votarService.activarValidador(peer.id).subscribe(
+      result => {
+        console.log(result);
+      }
+    );
+    //Si torneo Escucha los votos
+    
+
   }
 
   enviarMensaje():void{

@@ -32,6 +32,8 @@
     "node-rsa": "^1.1.1",
     "popper.js": "^1.16.1",
     "rxjs": "~6.5.4",
+    "socket.io": "^2.3.0",
+    "socket.io-client": "^2.3.0",
     "ts-md5": "^1.2.7",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
