@@ -6,7 +6,7 @@ export class Blockchain {
   blockchain: Map<string, Bloque> = new Map();
   transacciones: Array<Transaccion> = new Array();
   votaciones: Map<number, Votacion> = new Map();
-
+  ultHash: string;
 
   buscarTxInicioVotacion(idVotacion: number):Transaccion{
     this.blockchain.forEach(element => {
@@ -16,5 +16,10 @@ export class Blockchain {
       }
     });
     return null;
+  }
+
+  insertarBloque(bloque: Bloque) {
+    this.blockchain.set(bloque.hash, bloque);
+    this.ultHash = bloque.hash;
   }
 }
