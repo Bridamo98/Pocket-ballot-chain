@@ -47,6 +47,8 @@ export class ValidadorPostularseComponent implements OnInit {
   ) {  }
 
   ngOnInit(): void {
+    console.log("First");
+    setTimeout("Hello world!", 3000);
     inicializar();
     this.getUsuario();
 
@@ -89,10 +91,10 @@ export class ValidadorPostularseComponent implements OnInit {
   serValidador(): void {
     console.log('serValidador');
     //Crear Peer
-    
+
 
     //Esperar torneo
-    
+
 
     //Si torneo actualizar a disponible
     this.votarService.activarValidador(peer.id).subscribe(
