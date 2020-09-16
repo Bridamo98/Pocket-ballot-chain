@@ -12,6 +12,10 @@ var peer;
 var connections = {};
 var peer_id;
 var mensajesServicio;
+var votarServicio;
+var nombreUsuario;
+var usuarioPeer;
+
 var inicializar = function() {
     peer = new Peer({
         host: location.hostname,
@@ -21,6 +25,14 @@ var inicializar = function() {
     peer.on('open', function () {
         peer_id = peer.id;
         console.log('peer open: ' + peer.id);
+
+        let usuarioValidador = {
+            peerId: peer.id,
+            nombre: usuarioPeer
+        };
+
+        votarServicio.setUsuario(usuarioValidador);
+
     });
 
     peer.on('connection', function (connection) {

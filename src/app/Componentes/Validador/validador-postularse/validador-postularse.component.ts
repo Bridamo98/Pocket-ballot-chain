@@ -9,6 +9,7 @@ import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 import { environment } from 'src/environments/environment';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
 import { ListenerSocketsService } from '../../../LogicaP2P/listener-sockets.service';
+import { UsuarioService } from '../../../Servicios/usuario.service';
 
 //peer handler
 declare var inicializar: any;
@@ -16,6 +17,8 @@ declare var inicializar: any;
 declare var enviarMensaje: any;
 declare var peer: any;
 declare var mensajesServicio: any;
+declare var votarServicio: any;
+declare var usuarioPeer: any;
 
 
 @Component({
@@ -35,6 +38,7 @@ export class ValidadorPostularseComponent implements OnInit {
 
   constructor(
     private listenerSocket: ListenerSocketsService,
+    private usuarioService: UsuarioService,
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder,
@@ -44,6 +48,7 @@ export class ValidadorPostularseComponent implements OnInit {
 
   ngOnInit(): void {
     inicializar();
+    this.getUsuario();
 
     this.listenerSocket.listen('voto').subscribe((data) => {
 
@@ -58,18 +63,16 @@ export class ValidadorPostularseComponent implements OnInit {
         else{
           console.log('FIRMA ERRADA');
         }
-
         console.log("Voto: " + data['voto']);
         console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
         //validar firma
-      
       }
       
-
       //Se Debe validar si se gano el torneo antes de utilizar el voto
       //Se recomienda crear otro componente que sea el de validador y se muestre cuando se gana el torneo
     })
 
+    votarServicio = this.votarService;
     mensajesServicio = this.mensajeServicio;
     let votacion: Votacion = new Votacion();
     votacion.id = 3;
@@ -100,6 +103,16 @@ export class ValidadorPostularseComponent implements OnInit {
     //Si torneo Escucha los votos
     
 
+  }
+
+  getUsuario(): void {
+    this.usuarioService.getUsuario()
+      .subscribe(
+        result => {
+          let usuarioResult = result;
+          usuarioPeer = usuarioResult.nombre.toString();
+        }
+      );
   }
 
   enviarMensaje():void{

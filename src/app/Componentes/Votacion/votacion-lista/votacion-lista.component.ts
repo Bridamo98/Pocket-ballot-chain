@@ -146,7 +146,7 @@ export class VotacionListaComponent implements OnInit {
   //Para probar envio de transacciones
   enviarTransaccion(): void {
     
-    this.registrarVoto("Voto Ejemplo"); //Generar aqui el voto con los datos nesesarios
+    this.registrarVoto("voto ejemplo"); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()
       .subscribe(
         result => {
