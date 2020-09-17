@@ -64,6 +64,7 @@ var enviarMensaje = function(msj, otro_peer_id) {
             },
             serialization: "json"
         };
+        console.log("En PeerHandler se envía a:", otro_peer_id);
         peer.connect(otro_peer_id, options);
     } else {
         alert('Ingresa un peerId');

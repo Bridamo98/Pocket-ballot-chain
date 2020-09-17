@@ -10,6 +10,7 @@ import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
 import { element } from 'protractor';
+import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
 
 declare var inicializar: any;
 declare var establecerConexion: any;
@@ -145,18 +146,18 @@ export class VotacionListaComponent implements OnInit {
 
   //Para probar envio de transacciones
   enviarTransaccion(): void {
-    
-    this.registrarVoto("voto ejemplo"); //Generar aqui el voto con los datos nesesarios
+    let transaccion: Transaccion = new Transaccion(1, 3, null,["Diego", "Santiago"]);
+    let mensaje = new Mensaje(environment.votar, transaccion);
+    this.registrarVoto(mensaje); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()
       .subscribe(
         result => {
           result.forEach(element => {
             console.log(element);
-            let mensaje: Mensaje = new Mensaje(environment.obtenerPk, "");
             //console.log(element.peerId);
-            
+            console.log("Enviando mensaje a:", element.peerId);
             enviarMensaje(mensaje, element.peerId);
-            //enviarMensaje(mensaje, element.peerId);
+            //this.votarService.enviarVoto(mensaje, element.peerId); EN EL SERVIDOR NO FUNCIONA
           });
         }
       );

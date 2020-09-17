@@ -15,19 +15,23 @@ export class VotarService {
   constructor(private http: HttpClient) { }
 
   URLbase = 'http://localhost:3000';
-  
+
   obtenerValidadores():Observable<Validador[]> {//Manejar una clase Validador
     let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     console.log('get: ', this.URLbase + '/validadores');
     return this.http.get<Validador[]>(this.URLbase + '/validadores', { headers: headers });
   }
 
-  enviarVoto(mensaje):any{
+  enviarVoto(mensaje, peerId):any{
+    let obj = {
+      peerValidador: peerId,
+      mensaje: mensaje
+    };
     let returned;
-    let json = JSON.stringify(mensaje);
-    //console.log(json);
+    let json = JSON.stringify(obj);
+    console.log("El JSON enviado es:",json);
     let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + localStorage.getItem('token'));
-    
+
     //return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
 
     this.http.post<any>(this.URLbase + "/redirigir", json, { headers: headers }).subscribe(data => {

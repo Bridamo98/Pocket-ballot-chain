@@ -44,13 +44,23 @@ export class ValidadorPostularseComponent implements OnInit {
     private formBuilder: FormBuilder,
     private mensajeServicio: ManejadorMensajesService,
     private votarService: VotarService//Para probar envio de transacciones
-  ) {  }
+  ) {
+    votarServicio = this.votarService;
+    mensajesServicio = this.mensajeServicio;
+   }
 
   ngOnInit(): void {
-    console.log("First");
-    setTimeout("Hello world!", 3000);
     inicializar();
     this.getUsuario();
+
+    this.listenerSocket.listen('torneo').subscribe((data) => {
+      console.log("Torneo recibe:", data);
+      console.log("Se suscribe al socket de torneo");
+/*       let validadoresActivos: Array<string>[] = data['validadoresActivos'];
+      if(validadoresActivos.includes(peer.id)){
+        console.log("Comienza a validad el peer:", peer.id());
+      } */
+    });
 
     this.listenerSocket.listen('voto').subscribe((data) => {
 
@@ -69,13 +79,11 @@ export class ValidadorPostularseComponent implements OnInit {
         console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
         //validar firma
       }
-      
+
       //Se Debe validar si se gano el torneo antes de utilizar el voto
       //Se recomienda crear otro componente que sea el de validador y se muestre cuando se gana el torneo
     })
 
-    votarServicio = this.votarService;
-    mensajesServicio = this.mensajeServicio;
     let votacion: Votacion = new Votacion();
     votacion.id = 3;
     votacion.votos = 2;
@@ -85,7 +93,7 @@ export class ValidadorPostularseComponent implements OnInit {
     let transaccion: Transaccion = new Transaccion(1, 3, null,["Diego", "Santiago"]);
     mensaje = new Mensaje(environment.votar, transaccion);
     this.mensajeServicio.redirigirMensaje(mensaje,"");
-    console.log(this.transaccion);
+    //console.log(this.transaccion);
   }
 
   serValidador(): void {
@@ -103,7 +111,7 @@ export class ValidadorPostularseComponent implements OnInit {
       }
     );
     //Si torneo Escucha los votos
-    
+
 
   }
 
