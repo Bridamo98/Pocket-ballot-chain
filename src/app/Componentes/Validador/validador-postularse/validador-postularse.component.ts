@@ -52,7 +52,6 @@ export class ValidadorPostularseComponent implements OnInit {
    }
 
   ngOnInit(): void {
-    inicializar();
     this.getUsuario();
 
     this.listenerSocket.listen('torneo').subscribe((data: string) => {
@@ -65,30 +64,7 @@ export class ValidadorPostularseComponent implements OnInit {
       };
     });
 
-    this.listenerSocket.listen('voto').subscribe((data) => {
 
-      console.log("Data recibida:", data);
-      if(peer.id === data['peerValidador']){
-
-        console.log("Mi peer id es: " + data['peerValidador']);
-        console.log("Me llego esto: " + data['firma']);
-        console.log("Me llego esto: " + data['firmaKey']);
-
-        if(this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
-          console.log('FIRMA CORRECTA');
-        }
-        else{
-          console.log('FIRMA ERRADA');
-        }
-        
-        console.log("Voto: " + data['voto']);
-        console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
-        //validar firma
-      }
-
-      //Se Debe validar si se gano el torneo antes de utilizar el voto
-      //Se recomienda crear otro componente que sea el de validador y se muestre cuando se gana el torneo
-    })
 
     let votacion: Votacion = new Votacion();
     votacion.id = 3;
@@ -104,19 +80,35 @@ export class ValidadorPostularseComponent implements OnInit {
 
   serValidador(): void {
     console.log('serValidador');
+    inicializar();
     //Crear Peer
-
-
     //Esperar torneo
-
-
     //Si torneo actualizar a disponible
-    this.votarService.activarValidador(peer.id).subscribe(
-      result => {
-        console.log(result);
-      }
-    );
     //Si torneo Escucha los votos
+    this.listenerSocket.listen('voto').subscribe((data) => {
+
+      console.log("Data recibida:", data);
+      if(peer.id === data['peerValidador']){
+
+        console.log("Mi peer id es: " + data['peerValidador']);
+        console.log("Me llego esto: " + data['firma']);
+        console.log("Me llego esto: " + data['firmaKey']);
+
+        if(this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
+          console.log('FIRMA CORRECTA');
+        }
+        else{
+          console.log('FIRMA ERRADA');
+        }
+
+        console.log("Voto: " + data['voto']);
+        console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
+        //validar firma
+      }
+
+      //Se Debe validar si se gano el torneo antes de utilizar el voto
+      //Se recomienda crear otro componente que sea el de validador y se muestre cuando se gana el torneo
+    })
 
 
   }
