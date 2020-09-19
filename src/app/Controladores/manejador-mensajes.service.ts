@@ -21,8 +21,8 @@ export class ManejadorMensajesService{
 
 
   socket: any;
-  //Atributos de un voto 
-  voto: any; //se encrypta 
+  //Atributos de un voto
+  voto: any; //se encrypta
   firma: any; //se crea con el voto y sign
   peerValidador: any;
   encryptId: any; //Puede ser la misma pk
@@ -82,12 +82,13 @@ export class ManejadorMensajesService{
           //let votoToServer;
           //console.log(this.votarService.enviarVoto(votoToServer));
 
+          console.log("Emitiendo al servidor");
           this.listenerSocket.emit('voto', votoToServer);
 
         break;
       case environment.votar:
 
-        
+
         this.votarP2PService.votar(mensaje.contenido);
         //////////////////////////////////////////////////
         this.votarP2PService.imprimirTransacciones();

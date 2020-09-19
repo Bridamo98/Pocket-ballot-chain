@@ -24,6 +24,8 @@ export class AlgoritmoConsensoP2pService {
     this.inicio = inicio;
     this.duracion = duracion;
 
+    console.log("Iniciando validacion del validador:", posicion);
+
     setTimeout(this.proponerBloque, duracion * posicion);
   }
 

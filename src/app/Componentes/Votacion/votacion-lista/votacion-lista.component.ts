@@ -18,6 +18,7 @@ declare var enviarMensaje: any;
 declare var peer: any;
 declare var setVoto: any;
 declare var mensajesServicio: any;
+declare var votarServicio: any;
 
 
 @Component({
@@ -39,7 +40,9 @@ export class VotacionListaComponent implements OnInit {
     private usuarioService: UsuarioService,
     private mensajeServicio: ManejadorMensajesService,
     private votarService: VotarService//Para probar envio de transacciones
-  ) { }
+  ) {
+    votarServicio = this.votarService;
+   }
 
   ngOnInit(): void {
     inicializar();
@@ -147,7 +150,7 @@ export class VotacionListaComponent implements OnInit {
   //Para probar envio de transacciones
   enviarTransaccion(): void {
     let transaccion: Transaccion = new Transaccion(1, 3, null,["Diego", "Santiago"]);
-    let mensaje = new Mensaje(environment.votar, transaccion);
+    let mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.registrarVoto(mensaje); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()
       .subscribe(

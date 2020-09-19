@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
 import { ListenerSocketsService } from '../../../LogicaP2P/listener-sockets.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
+import { AlgoritmoConsensoP2pService } from '../../../LogicaP2P/algoritmo-consenso-p2p.service';
 
 //peer handler
 declare var inicializar: any;
@@ -43,7 +44,8 @@ export class ValidadorPostularseComponent implements OnInit {
     private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder,
     private mensajeServicio: ManejadorMensajesService,
-    private votarService: VotarService//Para probar envio de transacciones
+    private votarService: VotarService,//Para probar envio de transacciones
+    private consenso: AlgoritmoConsensoP2pService
   ) {
     votarServicio = this.votarService;
     mensajesServicio = this.mensajeServicio;
@@ -53,17 +55,19 @@ export class ValidadorPostularseComponent implements OnInit {
     inicializar();
     this.getUsuario();
 
-    this.listenerSocket.listen('torneo').subscribe((data) => {
-      console.log("Torneo recibe:", data);
-      console.log("Se suscribe al socket de torneo");
-/*       let validadoresActivos: Array<string>[] = data['validadoresActivos'];
-      if(validadoresActivos.includes(peer.id)){
-        console.log("Comienza a validad el peer:", peer.id());
-      } */
+    this.listenerSocket.listen('torneo').subscribe((data: string) => {
+      const respuesta = JSON.parse(data);
+      const validadoresActivos = respuesta["validadoresActivos"];
+      for(let i = 0; i < validadoresActivos.length; i++){
+        if(validadoresActivos[i]["nombre"] === this.usuario.nombre)
+          this.consenso.inicializarValidador(validadoresActivos, i, null, respuesta["tiempo"]);
+          break;
+      };
     });
 
     this.listenerSocket.listen('voto').subscribe((data) => {
 
+      console.log("Data recibida:", data);
       if(peer.id === data['peerValidador']){
 
         console.log("Mi peer id es: " + data['peerValidador']);
@@ -119,8 +123,8 @@ export class ValidadorPostularseComponent implements OnInit {
     this.usuarioService.getUsuario()
       .subscribe(
         result => {
-          let usuarioResult = result;
-          usuarioPeer = usuarioResult.nombre.toString();
+          this.usuario = result;
+          usuarioPeer = this.usuario.nombre.toString();
         }
       );
   }
