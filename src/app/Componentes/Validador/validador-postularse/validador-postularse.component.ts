@@ -55,14 +55,16 @@ export class ValidadorPostularseComponent implements OnInit {
       if(peer.id === data['peerValidador']){
 
         console.log("Mi peer id es: " + data['peerValidador']);
-        console.log("Me llego esto: " + data);
+        console.log("Me llego esto: " + data['firma']);
+        console.log("Me llego esto: " + data['firmaKey']);
 
-        if(this.mensajeServicio.checkSing(data['voto'], data['firma'])){
+        if(this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
           console.log('FIRMA CORRECTA');
         }
         else{
           console.log('FIRMA ERRADA');
         }
+        
         console.log("Voto: " + data['voto']);
         console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
         //validar firma

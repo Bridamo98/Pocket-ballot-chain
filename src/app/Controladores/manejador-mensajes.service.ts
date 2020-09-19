@@ -44,9 +44,11 @@ export class ManejadorMensajesService{
     return this.cifradoService.decrypt(data);
   }
 
-  checkSing(voto, firma){
-    return this.cifradoService.checkSing(voto, firma);
+  
+  checkSing(voto, firma, firmaKey){
+    return this.cifradoService.checkSing(voto, firma, firmaKey);
   }
+  
 
   redirigirMensaje(data: Mensaje,peerId:any) {
 
@@ -72,11 +74,12 @@ export class ManejadorMensajesService{
         let votoCifrado = this.cifradoService.encryptExternal(mensaje.contenido['pk'], this.voto);
         let firmaVoto = this.cifradoService.sign(votoCifrado);
 
-        console.log("Firmado?: " + this.cifradoService.checkSing(votoCifrado, firmaVoto));
+        console.log("Firmado?: " + this.cifradoService.checkSing(votoCifrado, firmaVoto, this.cifradoService.getSignaturePublic()));
 
         let votoToServer = {
           voto: votoCifrado,
           firma: firmaVoto,
+          firmaKey: this.cifradoService.getSignaturePublic(),
           peerValidador: mensaje.contenido['peerValidador'],
         };
           //let votoToServer;
@@ -109,7 +112,6 @@ export class ManejadorMensajesService{
 
         //Sockets
         this.socket = io(environment.socketUrl);
-
 
         //Envio La PK
         let data = new Mensaje(environment.responderPk, pkAndPeer);

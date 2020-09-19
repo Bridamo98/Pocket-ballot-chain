@@ -36,7 +36,6 @@ var inicializar = function() {
     });
 
     peer.on('connection', function (connection) {
-
         console.log(connection.metadata.p_msj);
         console.log('conexion establecida');
         mensajesServicio.redirigirMensaje(connection.metadata.p_msj, connection.peer);
