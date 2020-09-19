@@ -46,12 +46,18 @@ export class CifradoService {
   }
 
   //Firma Digital
-  sign(object){
+  sign(object) {
     return this.signature.sign(object, 'base64', 'base64');
   }
 
-  checkSing(objectUnsigned, objectSigned){
-    return this.signature.verify(objectUnsigned, objectSigned, 'base64', 'base64');
+  getSignaturePublic(){
+    return this.signaturePublic;
+  }
+
+  checkSing(objectUnsigned, objectSigned, singKey){
+    let temporalSignature;
+    temporalSignature = new nodeRSA(singKey);
+    return temporalSignature.verify(objectUnsigned, objectSigned, 'base64', 'base64');
   }
 
 }

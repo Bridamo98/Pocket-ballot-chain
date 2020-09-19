@@ -36,8 +36,8 @@ export class VotacionCrearComponent implements OnInit {
     //console.log('sig: ' + sig);
     let firmado = this.cifradoService.sign(message);
     console.log('messageSig: ' + firmado);
-    console.log('verifyTrue: ' + this.cifradoService.checkSing('hola', firmado));
-    console.log('verifyFalse: ' + this.cifradoService.checkSing('adios', firmado));
+    //console.log('verifyTrue: ' + this.cifradoService.checkSing('hola', firmado));
+    //console.log('verifyFalse: ' + this.cifradoService.checkSing('adios', firmado));
 
 
     this.getUsuario();
