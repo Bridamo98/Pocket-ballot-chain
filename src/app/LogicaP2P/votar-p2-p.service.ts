@@ -6,6 +6,7 @@ import { VotacionService } from '../Servicios/votacion.service';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Votacion } from '../Modelo/Votacion';
 import { environment } from 'src/environments/environment';
+import { CrearVotacionP2PService } from './crear-votacion-p2-p.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,8 @@ export class VotarP2PService {
   constructor(
     private votacionService: VotacionService,
     private blockchainService: BlockchainService,
-    private opcionService: OpcionService
+    private opcionService: OpcionService,
+    private crearVotacionP2PService: CrearVotacionP2PService
   ) {
     this.blockchain = this.blockchainService.retornarBlockchain();
   }
@@ -41,10 +43,6 @@ export class VotarP2PService {
       this.blockchain.votaciones.get(
         transaccion.idVotacion
       ).opcionDeVotacion = result;
-      console.log('opciones:');
-      console.log(
-        this.blockchain.votaciones.get(transaccion.idVotacion).opcionDeVotacion
-      );
       this.validarVoto(transaccion);
     });
   }
@@ -61,7 +59,6 @@ export class VotarP2PService {
     }
   }
   private validarFormatoVoto(transaccion: Transaccion, votacion: Votacion) {
-    this.blockchain.transacciones.push(transaccion);
     let isValid: boolean;
     switch (votacion.tipoDeVotacion.valueOf()) {
       case environment.ranking:
@@ -78,20 +75,14 @@ export class VotarP2PService {
         break;
     }
     if (isValid) {
-      transaccion.hashIn = this.blockchain.buscarTxInicioVotacion(
-        transaccion.idVotacion
-      ).hash;
-      console.log(
-        'ohai' + this.blockchain.buscarTxInicioVotacion(transaccion.idVotacion)
-      );
-      if (
-        transaccion.hashIn !== null &&
-        transaccion.hashIn !== undefined &&
-        transaccion.hashIn !== ''
-      ) {
-        console.log(transaccion);
-        this.blockchain.transacciones.push(transaccion);
+      let txInicial = this.blockchain.buscarTxInicioVotacion(
+        transaccion.idVotacion);
+      if (txInicial == null || txInicial === undefined) {
+        transaccion.hashIn = this.crearVotacionP2PService.crearVotacion(votacion);
+      }else{
+        transaccion.hashIn = txInicial.hash;
       }
+      this.blockchain.transacciones.push(transaccion);
     }
   }
 
@@ -166,10 +157,12 @@ export class VotarP2PService {
   }
 
   votar(transaccion: Transaccion) {
+    console.log('Votando en p2p con tx:', transaccion);
     this.actualizarVotaciones(transaccion);
   }
 
   imprimirTransacciones() {
+    console.log("Transacciones");
     console.log(this.blockchain.transacciones);
   }
 }

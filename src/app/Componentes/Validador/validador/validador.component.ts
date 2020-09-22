@@ -1,4 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { ManejadorMensajesService } from 'src/app/Controladores/manejador-mensajes.service';
+import { ListenerSocketsService } from 'src/app/LogicaP2P/listener-sockets.service';
+import { environment } from '../../../../environments/environment';
+import { Mensaje } from '../../../Modelo/Blockchain/mensaje';
+import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
+
+// PeerHandler
+declare var peer: any;
 
 @Component({
   selector: 'app-validador',
@@ -7,19 +16,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ValidadorComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private listenerSocket: ListenerSocketsService,
+    private mensajeServicio: ManejadorMensajesService,
+    private router: Router
+  ) { }
 
   ngOnInit(): void {
-    inicializar();
-
     this.listenerSocket.listen('voto').subscribe((data) => {
-
-      console.log("Data recibida:", data);
       if(peer.id === data['peerValidador']){
 
-        console.log("Mi peer id es: " + data['peerValidador']);
-        console.log("Me llego esto: " + data['firma']);
-        console.log("Me llego esto: " + data['firmaKey']);
+        //console.log("Mi peer id es: " + data['peerValidador']);
+        //console.log("Me llego esto: " + data['firma']);
+        //console.log("Me llego esto: " + data['firmaKey']);
 
         if(this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
           console.log('FIRMA CORRECTA');
@@ -28,12 +37,28 @@ export class ValidadorComponent implements OnInit {
           console.log('FIRMA ERRADA');
         }
 
-        console.log("Voto: " + data['voto']);
-        console.log('Decript: ' + this.mensajeServicio.decrypt(data['voto']));
+        //console.log("Voto: " + data['voto']);
+        let voto = this.mensajeServicio.decrypt(data['voto']);
+        let mensaje = JSON.parse(voto.toString());
+        if (mensaje.tipoPeticion === 7){
+          mensaje.tipoPeticion = environment.votar;
+          this.almacenarVoto(mensaje);
+        }
         //validar firma
       }
     });
+  }
 
+  almacenarVoto(msj): void{
+    const tx = msj.contenido;
+    const transaccion = new Transaccion(
+      tx.tipoTransaccion,
+      tx.idVotacion,
+      tx.hashIn,
+      tx.mensaje
+    );
+    const mensaje = new Mensaje(msj.tipoPeticion, transaccion);
+    this.mensajeServicio.redirigirMensaje(mensaje, null);
   }
 
 }

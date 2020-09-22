@@ -24,5 +24,6 @@ export class CrearVotacionP2PService {
     );
     this.blockchain.transacciones.push(transaccion); //queda en el ultimo elemento de la lista
     this.blockchain.votaciones.set(votacion.id.valueOf(), votacion);
+    return transaccion.hash;
   }
 }
