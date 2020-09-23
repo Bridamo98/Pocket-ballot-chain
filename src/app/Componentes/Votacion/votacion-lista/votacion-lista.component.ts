@@ -149,7 +149,7 @@ export class VotacionListaComponent implements OnInit {
 
   //Para probar envio de transacciones
   enviarTransaccion(): void {
-    let transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"]);
+    let transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], null);
     let mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.registrarVoto(mensaje); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()

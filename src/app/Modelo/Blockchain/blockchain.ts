@@ -22,4 +22,21 @@ export class Blockchain {
     this.blockchain.set(bloque.hash, bloque);
     this.ultHash = bloque.hash;
   }
+
+  ordenarTransacciones(): void {
+    this.transacciones.sort(this.compararTimestamps);
+  }
+
+  compararTimestamps(a: Transaccion, b: Transaccion) {
+    let x = a.timestamp;
+    let y = b.timestamp;
+    if (x < y) {
+      return -1;
+    }
+    if (x > y) {
+      return 1;
+    }
+    // a must be equal to b
+    return 0;
+  }
 }

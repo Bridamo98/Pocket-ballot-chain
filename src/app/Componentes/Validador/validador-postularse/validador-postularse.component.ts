@@ -10,6 +10,7 @@ import { ListenerSocketsService } from '../../../LogicaP2P/listener-sockets.serv
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { AlgoritmoConsensoP2pService } from '../../../LogicaP2P/algoritmo-consenso-p2p.service';
 import { Router } from '@angular/router';
+import { Validador } from '../../../Modelo/Validador';
 
 //peer handler
 declare var inicializar: any;
@@ -28,7 +29,6 @@ declare var usuarioPeer: any;
 export class ValidadorPostularseComponent implements OnInit {
 
   usuario: Usuario = new Usuario('', 0, '', '');
-  transaccion: Transaccion = new Transaccion(3, 2 , 'init' , ['brandonn', 'diegonnn'] );
 
   otro_peer_id;
   msj;
@@ -38,7 +38,7 @@ export class ValidadorPostularseComponent implements OnInit {
     private usuarioService: UsuarioService,
     private mensajeServicio: ManejadorMensajesService,
     private votarService: VotarService,//Para probar envio de transacciones
-    private consenso: AlgoritmoConsensoP2pService,
+    private consensoService: AlgoritmoConsensoP2pService,
     private router: Router
   ) {
     votarServicio = this.votarService;
@@ -62,15 +62,23 @@ export class ValidadorPostularseComponent implements OnInit {
 
   serValidador(): void {
     inicializar();
+    let posicion = -1;
+    let validadores = new Array<Validador>();
     this.listenerSocket.listen('torneo').subscribe((data: string) => {
       const respuesta = JSON.parse(data);
       const validadoresActivos = respuesta["validadoresActivos"];
       for (let i = 0; i < validadoresActivos.length; i++){
-        if (validadoresActivos[i]["nombre"] === this.usuario.nombre){
-          this.consenso.inicializarValidador(validadoresActivos, i, null, respuesta["tiempo"]);
-          this.router.navigate(['Validador']);
-          break;
+        if (validadoresActivos[i]["nombre"] === this.usuario.nombre.toString()){
+          posicion = i;
+          continue;
         }
+        let validador = new Validador();
+        validador = {id: validadoresActivos[i]["id"], peerId: validadoresActivos[i]["peerId"]};
+        validadores.push(validador);
+      }
+      if (posicion >= 0){
+        this.consensoService.inicializarValidador(validadores, posicion + 1, null, respuesta["tiempo"]);
+        this.router.navigate(['Validador']);
       }
     });
   }

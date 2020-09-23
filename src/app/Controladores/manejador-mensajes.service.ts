@@ -11,6 +11,7 @@ import { Injectable } from '@angular/core';
 import { ListenerSocketsService } from './../LogicaP2P/listener-sockets.service';
 import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
+import { AlgoritmoConsensoP2pService } from '../LogicaP2P/algoritmo-consenso-p2p.service';
 
 declare var peer_id;
 
@@ -33,7 +34,8 @@ export class ManejadorMensajesService{
     private votarP2PService: VotarP2PService,
     private crearVotacionP2PService: CrearVotacionP2PService,
     public cifradoService:CifradoService,
-    public envioMensajesService:EnvioMensajesService
+    public envioMensajesService:EnvioMensajesService,
+    private consensoService: AlgoritmoConsensoP2pService
   ) {}
 
   setVoto(pVoto){
@@ -44,11 +46,11 @@ export class ManejadorMensajesService{
     return this.cifradoService.decrypt(data);
   }
 
-  
+
   checkSing(voto, firma, firmaKey){
     return this.cifradoService.checkSing(voto, firma, firmaKey);
   }
-  
+
 
   redirigirMensaje(data: Mensaje,peerId:any) {
 
@@ -66,6 +68,8 @@ export class ManejadorMensajesService{
       case environment.obtenerResultados:
         break;
       case environment.ofrecerBloque:
+        console.log('Bloque propuesto recibido', mensaje.contenido);
+        this.consensoService.validarBloque(mensaje.contenido, peerId);
         break;
       case environment.syncBlockchain:
         break;
@@ -93,13 +97,6 @@ export class ManejadorMensajesService{
 
 
         this.votarP2PService.votar(mensaje.contenido);
-        //////////////////////////////////////////////////
-        this.votarP2PService.imprimirTransacciones();
-        /////////////////////////////////////////////////
-        break;
-
-      case environment.inicializarVotacion:
-        this.crearVotacionP2PService.crearVotacion(mensaje.contenido);
         //////////////////////////////////////////////////
         this.votarP2PService.imprimirTransacciones();
         /////////////////////////////////////////////////

@@ -78,7 +78,7 @@ export class VotarP2PService {
       let txInicial = this.blockchain.buscarTxInicioVotacion(
         transaccion.idVotacion);
       if (txInicial == null || txInicial === undefined) {
-        transaccion.hashIn = this.crearVotacionP2PService.crearVotacion(votacion);
+        transaccion.hashIn = this.crearVotacionP2PService.crearVotacion(votacion, transaccion.timestamp);
       }else{
         transaccion.hashIn = txInicial.hash;
       }

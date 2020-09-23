@@ -38,24 +38,27 @@ export class ValidadorComponent implements OnInit {
         }
 
         //console.log("Voto: " + data['voto']);
+        let timestamp = data['timestamp'];
+        console.log('Timestamp:',Number(timestamp));
         let voto = this.mensajeServicio.decrypt(data['voto']);
         let mensaje = JSON.parse(voto.toString());
         if (mensaje.tipoPeticion === 7){
           mensaje.tipoPeticion = environment.votar;
-          this.almacenarVoto(mensaje);
+          this.almacenarVoto(mensaje, Number(timestamp));
         }
         //validar firma
       }
     });
   }
 
-  almacenarVoto(msj): void{
+  almacenarVoto(msj, timestamp): void{
     const tx = msj.contenido;
     const transaccion = new Transaccion(
       tx.tipoTransaccion,
       tx.idVotacion,
       tx.hashIn,
-      tx.mensaje
+      tx.mensaje,
+      timestamp
     );
     const mensaje = new Mensaje(msj.tipoPeticion, transaccion);
     this.mensajeServicio.redirigirMensaje(mensaje, null);
