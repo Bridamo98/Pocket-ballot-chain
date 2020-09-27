@@ -20,4 +20,18 @@ export class Transaccion {
     }
   }
 
+  equals( transaccion : Transaccion): boolean{
+    const keys1 = Object.keys(transaccion);
+    const keys2 = Object.keys(this);
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+    for (let key of keys1) {
+      if (this[key] !== transaccion[key]) {
+        return false;
+      }
+    }
+    return true;
+  }
+
 }

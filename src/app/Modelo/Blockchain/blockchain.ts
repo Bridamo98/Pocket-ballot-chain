@@ -3,24 +3,62 @@ import { Transaccion } from './transaccion';
 import { Votacion } from '../Votacion';
 
 export class Blockchain {
-  blockchain: Map<string, Bloque> = new Map();
+  blockchain: Map<number, Map<string, Bloque>> = new Map();
   transacciones: Array<Transaccion> = new Array();
   votaciones: Map<number, Votacion> = new Map();
-  ultHash: string;
+  ultHash: Map<number, string> = new Map();
 
-  buscarTxInicioVotacion(idVotacion: number):Transaccion{
-    this.blockchain.forEach(element => {
-      let transaccion: Transaccion = element.buscarTxInicioVotacion(idVotacion);
-      if(transaccion != null){
-        return transaccion;
-      }
+  buscarTxInicioVotacion(idVotacion: number): Transaccion {
+    const subBlockchain = this.blockchain.get(idVotacion);
+    if (subBlockchain != null && subBlockchain !== undefined) {
+      subBlockchain.forEach((element) => {
+        const transaccion: Transaccion = element.buscarTxInicioVotacion(
+          idVotacion
+        );
+        if (transaccion != null) {
+          return transaccion;
+        }
+      });
+    }
+    return this.buscarTxInicioVotacionColaTxs(idVotacion);
+  }
+
+  buscarTxInicioVotacionColaTxs(idVotacion: number): Transaccion {
+    const transaccion = this.transacciones.filter((transaccion) => {
+      transaccion.idVotacion === idVotacion &&
+        transaccion.tipoTransaccion === 0;
     });
+    if (transaccion.length > 0) {
+      return transaccion[0];
+    }
     return null;
   }
 
-  insertarBloque(bloque: Bloque) {
-    this.blockchain.set(bloque.hash, bloque);
-    this.ultHash = bloque.hash;
+  insertarBloque(bloque: Bloque, idVotacion: number) {
+    const subBlockchain = this.blockchain.get(idVotacion);
+    subBlockchain.set(bloque.hash, bloque);
+    this.ultHash.set(idVotacion, bloque.hash);
+  }
+  inicializarVotacion(idVotacion: number) {
+    this.blockchain.set(idVotacion, new Map());
+  }
+
+  validadorBloque(bloque: Bloque): boolean {
+    const transacciones = bloque.transacciones;
+
+    for (const transaccionPendiente of transacciones) {
+      const resultado = this.transacciones.filter((transaccionEnLista) => {
+        transaccionPendiente.equals(transaccionEnLista);
+      });
+      if (resultado.length === 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  obtenerHashUltimoBloque(idVotacion) {
+    return this.ultHash.get(idVotacion);
   }
 
   ordenarTransacciones(): void {

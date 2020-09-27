@@ -5,7 +5,7 @@ import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 import { environment } from 'src/environments/environment';
-import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
+import { VotarService } from '../../../Servicios/votar.service'; //Para probar envio de transacciones
 import { ListenerSocketsService } from '../../../LogicaP2P/listener-sockets.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { AlgoritmoConsensoP2pService } from '../../../LogicaP2P/algoritmo-consenso-p2p.service';
@@ -20,14 +20,12 @@ declare var mensajesServicio: any;
 declare var votarServicio: any;
 declare var usuarioPeer: any;
 
-
 @Component({
   selector: 'app-validador-postularse',
   templateUrl: './validador-postularse.component.html',
-  styleUrls: ['./validador-postularse.component.css']
+  styleUrls: ['./validador-postularse.component.css'],
 })
 export class ValidadorPostularseComponent implements OnInit {
-
   usuario: Usuario = new Usuario('', 0, '', '');
 
   otro_peer_id;
@@ -37,18 +35,18 @@ export class ValidadorPostularseComponent implements OnInit {
     private listenerSocket: ListenerSocketsService,
     private usuarioService: UsuarioService,
     private mensajeServicio: ManejadorMensajesService,
-    private votarService: VotarService,//Para probar envio de transacciones
+    private votarService: VotarService, //Para probar envio de transacciones
     private consensoService: AlgoritmoConsensoP2pService,
     private router: Router
   ) {
     votarServicio = this.votarService;
     mensajesServicio = this.mensajeServicio;
-   }
+  }
 
   ngOnInit(): void {
     this.getUsuario();
 
-/*     let votacion: Votacion = new Votacion();
+    /*     let votacion: Votacion = new Votacion();
     votacion.id = 3;
     votacion.votos = 2;
     let mensaje: Mensaje = new Mensaje(environment.inicializarVotacion, votacion);
@@ -63,37 +61,65 @@ export class ValidadorPostularseComponent implements OnInit {
   serValidador(): void {
     inicializar();
     let posicion = -1;
-    let validadores = new Array<Validador>();
     this.listenerSocket.listen('torneo').subscribe((data: string) => {
-      const respuesta = JSON.parse(data);
-      const validadoresActivos = respuesta["validadoresActivos"];
-      for (let i = 0; i < validadoresActivos.length; i++){
-        if (validadoresActivos[i]["nombre"] === this.usuario.nombre.toString()){
+      let validadoresAct = new Array<Validador>();
+      let respuesta = JSON.parse(data);
+      const validadoresActivos = respuesta['validadoresActivos'];
+      console.log('YET BEFORE');
+      console.log(validadoresActivos);
+      for (let i = 0; i < validadoresActivos.length; i++) {
+        if (
+          validadoresActivos[i]['nombre'] === this.usuario.nombre.toString()
+        ) {
           posicion = i;
-          continue;
+        } else {
+          let validador = new Validador();
+          validador = {
+            id: validadoresActivos[i]['nombre'],
+            peerId: validadoresActivos[i]['peerId'],
+          };
+          validadoresAct.push(validador);
         }
+      }
+      console.log('VALIDADORES ACTIVOS ---------------------');
+      console.log(validadoresAct);
+      let validadores = new Array<Validador>();
+      respuesta = JSON.parse(data);
+      const validadoresJSON = respuesta['validadores'];
+      console.log(validadoresJSON);
+      for (let i = 0; i < validadoresJSON.length; i++) {
         let validador = new Validador();
-        validador = {id: validadoresActivos[i]["id"], peerId: validadoresActivos[i]["peerId"]};
+        validador = {
+          id: validadoresJSON[i]['nombre'],
+          peerId: validadoresJSON[i]['peerId'],
+        };
         validadores.push(validador);
       }
-      if (posicion >= 0){
-        this.consensoService.inicializarValidador(validadores, posicion + 1, null, respuesta["tiempo"]);
+
+      console.log('VALIDADORES ---------------------');
+      console.log(validadores);
+
+      if (posicion >= 0) {
+        this.consensoService.inicializarValidador(
+          validadoresAct,
+          validadores,
+          posicion + 1,
+          null,
+          respuesta['tiempo']
+        );
         this.router.navigate(['Validador']);
       }
     });
   }
 
   getUsuario(): void {
-    this.usuarioService.getUsuario()
-      .subscribe(
-        result => {
-          this.usuario = result;
-          usuarioPeer = this.usuario.nombre.toString();
-        }
-      );
+    this.usuarioService.getUsuario().subscribe((result) => {
+      this.usuario = result;
+      usuarioPeer = this.usuario.nombre.toString();
+    });
   }
 
-  enviarMensaje(): void{
+  enviarMensaje(): void {
     enviarMensaje(this.msj, this.otro_peer_id);
   }
 }
