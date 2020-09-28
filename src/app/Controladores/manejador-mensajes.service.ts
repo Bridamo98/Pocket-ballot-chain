@@ -64,6 +64,7 @@ export class ManejadorMensajesService{
 
     switch (mensaje.tipoPeticion) {
       case environment.aprobarBloque:
+        this.consensoService.aprobarBloque(mensaje.contenido);
         break;
       case environment.obtenerResultados:
         break;

@@ -24,10 +24,10 @@ export class Blockchain {
   }
 
   buscarTxInicioVotacionColaTxs(idVotacion: number): Transaccion {
-    const transaccion = this.transacciones.filter((transaccion) => {
+    const transaccion = this.transacciones.filter((transaccion) =>
       transaccion.idVotacion === idVotacion &&
-        transaccion.tipoTransaccion === 0;
-    });
+        transaccion.tipoTransaccion === 0
+    );
     if (transaccion.length > 0) {
       return transaccion[0];
     }
@@ -36,6 +36,9 @@ export class Blockchain {
 
   insertarBloque(bloque: Bloque, idVotacion: number) {
     const subBlockchain = this.blockchain.get(idVotacion);
+    if (subBlockchain == null || subBlockchain === undefined){
+      this.inicializarVotacion(idVotacion);
+    }
     subBlockchain.set(bloque.hash, bloque);
     this.ultHash.set(idVotacion, bloque.hash);
   }
@@ -47,14 +50,22 @@ export class Blockchain {
     const transacciones = bloque.transacciones;
 
     for (const transaccionPendiente of transacciones) {
+
       const resultado = this.transacciones.filter((transaccionEnLista) => {
-        transaccionPendiente.equals(transaccionEnLista);
-      });
+        return Transaccion.igual(transaccionPendiente, transaccionEnLista);
+      }
+      );
       if (resultado.length === 0) {
         return false;
       }
     }
     return true;
+  }
+
+  eliminarTransacciones(bloque:Bloque){
+    for (const transaccion of bloque.transacciones) {
+      this.transacciones = this.transacciones.filter( tx => transaccion.hash !== tx.hash );
+    }
   }
 
   obtenerHashUltimoBloque(idVotacion) {

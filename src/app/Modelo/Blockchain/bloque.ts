@@ -5,6 +5,7 @@ export class Bloque {
   hashBloqueAnterior: string;
   hash: string;
   transacciones: Transaccion[];
+  idVotacion: number = -1;
   constructor(hashBloqueAnterior: string, transacciones: Transaccion[]) {
     this.hashBloqueAnterior = hashBloqueAnterior;
     this.transacciones = transacciones;
@@ -20,5 +21,26 @@ export class Bloque {
       }
     });
     return null;
+  }
+  obtenerHash(){
+    return sha512
+      .create()
+      .update(this.transacciones + this.hashBloqueAnterior)
+      .hex();
+  }
+  // Retorna -1 si esta mal construido, si esta bien construido regresa el id de votacion.
+  estaBienConstruido(): number{
+    if (this.transacciones.length === 0){
+      return -1;
+    }
+    const respuesta: number = this.transacciones[0].idVotacion;
+    for (const transaccion of this.transacciones) {
+      if (transaccion.idVotacion !== respuesta || this.hash !== this.obtenerHash())
+      {
+        return -1;
+      }
+    }
+    this.idVotacion = respuesta;
+    return respuesta;
   }
 }
