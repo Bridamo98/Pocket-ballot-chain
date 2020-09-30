@@ -17,7 +17,7 @@ declare var enviarMensaje: any;
   providedIn: 'root',
 })
 export class AlgoritmoConsensoP2pService {
-  validadoresActivos = new Array <Validador>();
+  validadoresActivos = new Array<Validador>();
   validadores = null;
   miPosicion: number;
   step: number;
@@ -31,10 +31,9 @@ export class AlgoritmoConsensoP2pService {
   nombreUsuario: string = localStorage.getItem('nombre');
 
   //Contar votos
-  conteoVotos = new Map<string , number>();
-  votosBuffer = new Map<string, Array<Bloque> > ();
-
-
+  conteoVotos = new Map<string, number>();
+  votosBuffer = new Map<string, Array<Bloque>>();
+  bloqueRecibido = false;
 
   constructor(private blockchainService: BlockchainService) {}
 
@@ -56,11 +55,7 @@ export class AlgoritmoConsensoP2pService {
 
     //console.log('Iniciando validacion del validador:', posicion);
 
-    setTimeout(
-      this.crearBloque,
-      duracion * posicion,
-      this
-    );
+    setTimeout(this.crearBloque, duracion * posicion, this);
     // TO-DO: reiniciar los votos
   }
 
@@ -72,12 +67,11 @@ export class AlgoritmoConsensoP2pService {
   obtenerLider(): number {
     return this.step % this.validadoresActivos.length;
   }
-  crearBloque(servicio : any
-  ) {
+  crearBloque(servicio: AlgoritmoConsensoP2pService) {
     if (servicio.blockchain.transacciones.length > 0) {
       servicio.blockchain.ordenarTransacciones();
       let transacciones = servicio.blockchain.transacciones.filter(
-        (element) => Date.now() - element.timestamp  < servicio.tiempoMin
+        (element) => Date.now() - element.timestamp < servicio.tiempoMin
       );
       let ulthash: string;
       let idVotacion: number;
@@ -88,13 +82,13 @@ export class AlgoritmoConsensoP2pService {
         bloques.push(
           new Bloque(
             ulthash,
-            transacciones.filter((transaccion) =>
-              transaccion.idVotacion == idVotacion
+            transacciones.filter(
+              (transaccion) => transaccion.idVotacion == idVotacion
             )
           )
         );
-        transacciones = transacciones.filter((transaccion) =>
-          transaccion.idVotacion !== idVotacion
+        transacciones = transacciones.filter(
+          (transaccion) => transaccion.idVotacion !== idVotacion
         );
       }
       servicio.proponerBloque(bloques, servicio.validadoresActivos, servicio);
@@ -103,9 +97,15 @@ export class AlgoritmoConsensoP2pService {
   }
 
   // usar servicio para enviar el bloque a los validadores
-  proponerBloque(bloques: Array<Bloque>, validadoresActivos, servicio:any) {
+  proponerBloque(
+    bloques: Array<Bloque>,
+    validadoresActivos,
+    servicio: AlgoritmoConsensoP2pService
+  ) {
+    servicio.aprobarBloque2(bloques, 1);
+    servicio.bloqueRecibido = true;
     let mensaje = new Mensaje(environment.ofrecerBloque, bloques);
-    servicio.validadores.forEach((validador) => {
+    servicio.validadoresActivos.forEach((validador) => {
       enviarMensaje(mensaje, validador.peerId);
     });
   }
@@ -121,11 +121,12 @@ export class AlgoritmoConsensoP2pService {
         return;
       }
     }
+    this.bloqueRecibido = true;
     const mensaje = new Mensaje(environment.aprobarBloque, bloques);
     for (const validador of this.validadoresActivos) {
       enviarMensaje(mensaje, validador.peerId);
     }
-
+    this.aprobarBloque2(this.bloquesPropuestos, 2);
   }
 
   validarLider(peerId): Boolean {
@@ -140,50 +141,53 @@ export class AlgoritmoConsensoP2pService {
     return false;
   }
 
-  aprobarBloque(bloques: Array<Bloque>): void{
-     // NICE TO HAVE: Ver si los bloques corresponden al step
-     // Bloques estan bien construidos, tienen los hash bien
-     console.log('holaaaaaaaaaaaaaaaaaaaaaaaaa jej');
-     for (let bloque of bloques) {
-      if (bloque.estaBienConstruido() === -1){
-       return;
+  aprobarBloque(bloques: Array<Bloque>): void {
+    // NICE TO HAVE: Ver si los bloques corresponden al step
+    // Bloques estan bien construidos, tienen los hash bien
+    console.log('holaaaaaaaaaaaaaaaaaaaaaaaaa jej');
+    for (let bloque of bloques) {
+      if (Bloque.estaBienConstruido(bloque) === -1) {
+        return;
       }
-     }
-     console.log("está bien construido");
-
-     // Reorganizar bloques
-     bloques = bloques.sort(this.compararIdVotacion);
-     console.log()
-     // Sacarle hash a todos los hashes en orden
-     let hash: string="";
-     for (const bloque of bloques) {
-       hash += bloque.hash;
-     }
-     hash = sha512
-     .create()
-     .update(hash)
-     .hex();
-
-     // Insertar voto
-     this.votosBuffer.set(hash, bloques);
-     if (this.conteoVotos.has(hash)){
-      this.conteoVotos.set(hash, this.conteoVotos.get(hash) + 1);
-     }else{
-       this.conteoVotos.set(hash, 1);
-     }
-     //comprobar 60%
-     this.calcularGanador();
-  }
-  calcularGanador(): boolean{
-    let hashGanador: string = null;
-    const umbral: number = Math.floor(this.validadoresActivos.length * 0.60);
-
-    for (const hash  of this.conteoVotos.keys()) {
-       if (this.conteoVotos.get(hash) >= umbral){
-         hashGanador = hash;
-       }
     }
-    if (hashGanador == null){
+    console.log('está bien construido');
+    this.aprobarBloque2(bloques, 1);
+  }
+  aprobarBloque2(bloques: Array<Bloque>, votosIniciales: number): void {
+    // Reorganizar bloques
+    bloques = bloques.sort(this.compararIdVotacion);
+    // Sacarle hash a todos los hashes en orden
+    let hash: string = '';
+    for (const bloque of bloques) {
+      hash += bloque.hash;
+    }
+    hash = sha512.create().update(hash).hex();
+
+    // Insertar voto
+    this.votosBuffer.set(hash, bloques);
+    if (this.conteoVotos.has(hash)) {
+      this.conteoVotos.set(hash, this.conteoVotos.get(hash) + 1);
+    } else {
+      this.conteoVotos.set(hash, votosIniciales);
+    }
+    console.log('LAL');
+    console.log(this.conteoVotos);
+    //comprobar 60%
+    if (this.bloqueRecibido) {
+      this.calcularGanador();
+    }
+  }
+
+  calcularGanador(): boolean {
+    let hashGanador: string = null;
+    const umbral: number = (this.validadoresActivos.length + 1) * 0.6;
+
+    for (const hash of this.conteoVotos.keys()) {
+      if (this.conteoVotos.get(hash) >= umbral) {
+        hashGanador = hash;
+      }
+    }
+    if (hashGanador == null) {
       return;
     }
     // if(60%) insertar bloques en la blockchain y eliminar transacciones de la cola.
@@ -191,8 +195,12 @@ export class AlgoritmoConsensoP2pService {
       this.blockchain.insertarBloque(bloque, bloque.idVotacion);
       this.blockchain.eliminarTransacciones(bloque);
     }
-    this.conteoVotos = new Map<string , number>();
-    this.votosBuffer = new Map<string, Array<Bloque> > ();
+    console.log('GANADOR');
+    console.log(this.conteoVotos);
+    console.log(this.votosBuffer);
+    this.conteoVotos = new Map<string, number>();
+    this.votosBuffer = new Map<string, Array<Bloque>>();
+    this.bloqueRecibido = false;
   }
 
   compararIdVotacion(a: Bloque, b: Bloque) {
@@ -207,5 +215,4 @@ export class AlgoritmoConsensoP2pService {
     // a must be equal to b
     return 0;
   }
-
 }

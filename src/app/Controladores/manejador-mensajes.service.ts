@@ -12,6 +12,7 @@ import { ListenerSocketsService } from './../LogicaP2P/listener-sockets.service'
 import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
 import { AlgoritmoConsensoP2pService } from '../LogicaP2P/algoritmo-consenso-p2p.service';
+import { Bloque } from '../Modelo/Blockchain/bloque';
 
 declare var peer_id;
 
@@ -64,7 +65,14 @@ export class ManejadorMensajesService{
 
     switch (mensaje.tipoPeticion) {
       case environment.aprobarBloque:
-        this.consensoService.aprobarBloque(mensaje.contenido);
+        let bloques = new Array<Bloque>();
+        for (let bloque of mensaje.contenido) {
+
+          let b = new Bloque(bloque['hashBloqueAnterior'], bloque['transacciones']);
+          b.hash = bloque['hash'];
+          bloques.push(b);
+        }
+        this.consensoService.aprobarBloque(bloques);
         break;
       case environment.obtenerResultados:
         break;

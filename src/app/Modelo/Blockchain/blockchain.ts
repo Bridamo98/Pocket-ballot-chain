@@ -35,9 +35,10 @@ export class Blockchain {
   }
 
   insertarBloque(bloque: Bloque, idVotacion: number) {
-    const subBlockchain = this.blockchain.get(idVotacion);
+    let subBlockchain = this.blockchain.get(idVotacion);
     if (subBlockchain == null || subBlockchain === undefined){
       this.inicializarVotacion(idVotacion);
+      subBlockchain = this.blockchain.get(idVotacion);
     }
     subBlockchain.set(bloque.hash, bloque);
     this.ultHash.set(idVotacion, bloque.hash);
