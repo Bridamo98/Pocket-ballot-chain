@@ -11,14 +11,15 @@ export class Blockchain {
   buscarTxInicioVotacion(idVotacion: number): Transaccion {
     const subBlockchain = this.blockchain.get(idVotacion);
     if (subBlockchain != null && subBlockchain !== undefined) {
-      subBlockchain.forEach((element) => {
+
+      for (const element of subBlockchain.values()) {
         const transaccion: Transaccion = element.buscarTxInicioVotacion(
           idVotacion
         );
         if (transaccion != null) {
           return transaccion;
         }
-      });
+      }
     }
     return this.buscarTxInicioVotacionColaTxs(idVotacion);
   }

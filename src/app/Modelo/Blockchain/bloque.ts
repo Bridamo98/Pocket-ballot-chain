@@ -32,11 +32,11 @@ export class Bloque {
     return respuesta;
   }
   buscarTxInicioVotacion(idVotacion: number): Transaccion {
-    this.transacciones.forEach((element) => {
-      if (element.idVotacion === idVotacion && element.tipoTransaccion === 0) {
-        return element;
+    for (const transaccion of this.transacciones) {
+      if (transaccion.idVotacion === idVotacion && transaccion.tipoTransaccion === 0) {
+        return transaccion;
       }
-    });
+    }
     return null;
   }
   obtenerHash() {

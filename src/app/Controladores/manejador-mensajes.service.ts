@@ -129,23 +129,28 @@ export class ManejadorMensajesService{
     let bloques = new Array<Bloque>();
     for (let bloque of contenido) {
       let b = new Bloque(bloque['hashBloqueAnterior'], this.convertirTransacciones(bloque['transacciones']));
-      b.hash = bloque['hash'];
       b.idVotacion = bloque['idVotacion'];
       bloques.push(b);
     }
     return bloques;
   }
 
+  // Revisar por què no es el mismo hash de la tx
   convertirTransacciones(contenido: any): Array<Transaccion>{
     let transacciones = new Array<Transaccion>();
     for (const tx of contenido) {
+      let mensaje: string[] = [];
+      for (const msj of tx.mensaje) {
+        mensaje.push(msj);
+      }
       const transaccion = new Transaccion(
         tx.tipoTransaccion,
         tx.idVotacion,
         tx.hashIn,
-        tx.mensaje,
+        mensaje,
         tx.timestamp
       );
+      transaccion.hash = tx.hash;
       transacciones.push(transaccion);
     }
     return transacciones;

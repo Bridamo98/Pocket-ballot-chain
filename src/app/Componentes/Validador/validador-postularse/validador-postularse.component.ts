@@ -66,8 +66,7 @@ export class ValidadorPostularseComponent implements OnInit {
       let validadoresAct = new Array<Validador>();
       let respuesta = JSON.parse(data);
       const validadoresActivos = respuesta['validadoresActivos'];
-      //console.log('YET BEFORE');
-      //console.log(validadoresActivos);
+
       for (let i = 0; i < validadoresActivos.length; i++) {
         if (validadoresActivos[i]['nombre'] === this.usuario.nombre.toString()) {
           posicion = i;
@@ -79,12 +78,10 @@ export class ValidadorPostularseComponent implements OnInit {
         };
         validadoresAct.push(validador);
       }
-      //console.log('VALIDADORES ACTIVOS ---------------------');
-      //console.log(validadoresAct);
+
       let validadores = new Array<Validador>();
       respuesta = JSON.parse(data);
       const validadoresJSON = respuesta['validadores'];
-      //console.log(validadoresJSON);
       for (let i = 0; i < validadoresJSON.length; i++) {
         let validador = new Validador();
         validador = {
@@ -94,15 +91,12 @@ export class ValidadorPostularseComponent implements OnInit {
         validadores.push(validador);
       }
 
-      //console.log('VALIDADORES ---------------------');
-      //console.log(validadores);
-
       if (posicion >= 0) {
         this.consensoService.inicializarValidador(
           validadoresAct,
           validadores,
-          posicion + 1,
-          null,
+          posicion,
+          respuesta['inicio'],
           respuesta['tiempo']
         );
         this.router.navigate(['Validador']);

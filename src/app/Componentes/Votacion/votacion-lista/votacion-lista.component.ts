@@ -158,10 +158,8 @@ export class VotacionListaComponent implements OnInit {
         result => {
           result.forEach(element => {
             console.log(element);
-            //console.log(element.peerId);
             console.log("Enviando mensaje a:", element.peerId);
             enviarMensaje(mensaje, element.peerId);
-            //this.votarService.enviarVoto(mensaje, element.peerId); EN EL SERVIDOR NO FUNCIONA
           });
         }
       );

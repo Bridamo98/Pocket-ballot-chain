@@ -26,10 +26,6 @@ export class ValidadorComponent implements OnInit {
     this.listenerSocket.listen('voto').subscribe((data) => {
       if(peer.id === data['peerValidador']){
 
-        //console.log("Mi peer id es: " + data['peerValidador']);
-        //console.log("Me llego esto: " + data['firma']);
-        //console.log("Me llego esto: " + data['firmaKey']);
-
         if(this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
           console.log('FIRMA CORRECTA');
         }
@@ -37,7 +33,6 @@ export class ValidadorComponent implements OnInit {
           console.log('FIRMA ERRADA');
         }
 
-        //console.log("Voto: " + data['voto']);
         //let timestamp = data['timestamp'];
         let voto = this.mensajeServicio.decrypt(data['voto']);
         let mensaje = JSON.parse(voto.toString());

@@ -10,6 +10,7 @@ import { Bloque } from '../Modelo/Blockchain/bloque';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Blockchain } from '../Modelo/Blockchain/blockchain';
 import { Mensaje } from '../Modelo/Blockchain/mensaje';
+import { serialize } from 'v8';
 
 declare var enviarMensaje: any;
 
@@ -52,8 +53,10 @@ export class AlgoritmoConsensoP2pService {
     this.blockchain = this.blockchainService.retornarBlockchain();
     //console.log('Iniciando validacion del validador:', posicion);
 
-    setTimeout(this.crearBloque, duracion * posicion, this);
-    //setTimeout(this.vaciarBuffer, (duracion*2)-1000, this, 0);
+    console.log('Esperando el inicio del validador en la posición', this.miPosicion);
+    console.log('Comenzando timer', Math.floor((this.inicio - Date.now()) / 1000));
+    setTimeout(this.crearBloque, (duracion * posicion) + (this.inicio - Date.now()), this);
+    setTimeout(this.vaciarBuffer, duracion - 100, this, 0);
     // TO-DO: reiniciar los votos
   }
 
@@ -61,8 +64,8 @@ export class AlgoritmoConsensoP2pService {
     servicio.conteoVotos = new Map<string, number>();
     servicio.votosBuffer = new Map<string, Array<Bloque>>();
     servicio.bloqueRecibido = false;
-    if(contador < servicio.validadoresActivos.length && contador != servicio.miPosicion) {
-      setTimeout(this.vaciarBuffer, servicio.duracion, servicio, contador++);
+    if (contador < servicio.validadoresActivos.length) {
+      setTimeout(servicio.vaciarBuffer, servicio.duracion, servicio, contador++);
     }
   }
 
@@ -115,11 +118,7 @@ export class AlgoritmoConsensoP2pService {
     servicio.bloqueRecibido = true;
     let mensaje = new Mensaje(environment.ofrecerBloque, bloques);
     console.log('Proponiendo bloques:', bloques);
-    for (let i = 0; i < servicio.validadoresActivos.length; i++) {
-      if (i != servicio.miPosicion) {
-        enviarMensaje(mensaje, servicio.validadoresActivos[i].peerId);
-      }
-    }
+    servicio.enviarBloques(servicio, mensaje);
   }
 
   // TO-DO: Validar tiempo
@@ -135,22 +134,21 @@ export class AlgoritmoConsensoP2pService {
     }
     this.bloqueRecibido = true;
     const mensaje = new Mensaje(environment.aprobarBloque, bloques);
-    for (const validador of this.validadoresActivos) {
-      enviarMensaje(mensaje, validador.peerId);
-    }
+    this.enviarBloques(this, mensaje);
     this.aprobarBloque2(this.bloquesPropuestos, 2);
   }
 
-  enviarBloques() {
-
+  enviarBloques(servicio: AlgoritmoConsensoP2pService, mensaje: Mensaje) {
+    for (let i = 0; i < servicio.validadoresActivos.length; i++) {
+      if (i !== servicio.miPosicion) {
+        enviarMensaje(mensaje, servicio.validadoresActivos[i].peerId);
+      }
+    }
   }
 
-  validarLider(peerId): Boolean {
+  validarLider(peerId): boolean {
     this.obtenerStep();
     let lider = this.obtenerLider();
-    //console.log("holaaaaaaaaaaaaaaaaaaaaaaaaaa")
-    //console.log(lider);
-    //console.log(this.validadoresActivos);
     if (this.validadoresActivos[lider].peerId === peerId) {
       return true;
     }
@@ -220,8 +218,8 @@ export class AlgoritmoConsensoP2pService {
   }
 
   compararIdVotacion(a: Bloque, b: Bloque) {
-    let x = a.idVotacion;
-    let y = b.idVotacion;
+    const x = a.idVotacion;
+    const y = b.idVotacion;
     if (x < y) {
       return -1;
     }
