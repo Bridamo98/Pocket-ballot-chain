@@ -17,7 +17,7 @@ export class Transaccion {
     this.mensaje = mensaje;
     this.timestamp = timestamp;
     if (hashIn != null && hashIn !== undefined){
-      this.hash = sha512.create().update(this.tipoTransaccion + this.idVotacion + this.hashIn + this.mensaje).hex();
+      this.hash = sha512.create().update(this.tipoTransaccion + this.idVotacion + this.hashIn + this.mensaje + this.timestamp).hex();
     }
   }
 

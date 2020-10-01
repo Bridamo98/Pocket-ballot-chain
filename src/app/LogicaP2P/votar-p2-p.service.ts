@@ -157,7 +157,6 @@ export class VotarP2PService {
   }
 
   votar(transaccion: Transaccion) {
-    console.log('Votando en p2p con tx:', transaccion);
     this.actualizarVotaciones(transaccion);
   }
 

@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
 import { AlgoritmoConsensoP2pService } from '../LogicaP2P/algoritmo-consenso-p2p.service';
 import { Bloque } from '../Modelo/Blockchain/bloque';
+import { Transaccion } from '../Modelo/Blockchain/transaccion';
 
 declare var peer_id;
 
@@ -65,20 +66,13 @@ export class ManejadorMensajesService{
 
     switch (mensaje.tipoPeticion) {
       case environment.aprobarBloque:
-        let bloques = new Array<Bloque>();
-        for (let bloque of mensaje.contenido) {
-
-          let b = new Bloque(bloque['hashBloqueAnterior'], bloque['transacciones']);
-          b.hash = bloque['hash'];
-          bloques.push(b);
-        }
-        this.consensoService.aprobarBloque(bloques);
+        this.consensoService.aprobarBloque(this.convertirBloques(mensaje.contenido));
         break;
       case environment.obtenerResultados:
         break;
       case environment.ofrecerBloque:
         console.log('Bloque propuesto recibido', mensaje.contenido);
-        this.consensoService.validarBloque(mensaje.contenido, peerId);
+        this.consensoService.validarBloque(this.convertirBloques(mensaje.contenido), peerId);
         break;
       case environment.syncBlockchain:
         break;
@@ -129,5 +123,31 @@ export class ManejadorMensajesService{
       default:
         break;
     }
+  }
+
+  convertirBloques(contenido: any): Array<Bloque>{
+    let bloques = new Array<Bloque>();
+    for (let bloque of contenido) {
+      let b = new Bloque(bloque['hashBloqueAnterior'], this.convertirTransacciones(bloque['transacciones']));
+      b.hash = bloque['hash'];
+      b.idVotacion = bloque['idVotacion'];
+      bloques.push(b);
+    }
+    return bloques;
+  }
+
+  convertirTransacciones(contenido: any): Array<Transaccion>{
+    let transacciones = new Array<Transaccion>();
+    for (const tx of contenido) {
+      const transaccion = new Transaccion(
+        tx.tipoTransaccion,
+        tx.idVotacion,
+        tx.hashIn,
+        tx.mensaje,
+        tx.timestamp
+      );
+      transacciones.push(transaccion);
+    }
+    return transacciones;
   }
 }
