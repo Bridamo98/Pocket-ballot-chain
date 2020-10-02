@@ -11,6 +11,8 @@ import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Blockchain } from '../Modelo/Blockchain/blockchain';
 import { Mensaje } from '../Modelo/Blockchain/mensaje';
 import { serialize } from 'v8';
+import { VotarService } from '../Servicios/votar.service';
+import { Router } from '@angular/router';
 
 declare var enviarMensaje: any;
 
@@ -36,7 +38,10 @@ export class AlgoritmoConsensoP2pService {
   votosBuffer = new Map<string, Array<Bloque>>();
   bloqueRecibido = false;
 
-  constructor(private blockchainService: BlockchainService) {}
+  constructor(
+    private blockchainService: BlockchainService,
+    private votarService: VotarService
+    ) {}
 
   inicializarValidador(
     validadoresActivos,
@@ -55,9 +60,15 @@ export class AlgoritmoConsensoP2pService {
 
     console.log('Esperando el inicio del validador en la posición', this.miPosicion);
     console.log('Comenzando timer', Math.floor((this.inicio - Date.now()) / 1000));
+    // TO-DO: Validar tiempo
     setTimeout(this.crearBloque, (duracion * posicion) + (this.inicio - Date.now()), this);
     setTimeout(this.vaciarBuffer, duracion - 100, this, 0);
+    setTimeout(this.confirmarBlockchain, (duracion * (this.validadoresActivos.length + 1)) + (this.inicio - Date.now()), this);
     // TO-DO: reiniciar los votos
+  }
+
+  confirmarBlockchain(servicio: AlgoritmoConsensoP2pService) {
+    servicio.votarService.confirmarBlockchain(servicio.blockchain.obtenerHashBlockchain());
   }
 
   vaciarBuffer(servicio: AlgoritmoConsensoP2pService, contador: number) {

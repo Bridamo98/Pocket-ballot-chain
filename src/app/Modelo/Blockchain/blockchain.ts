@@ -1,6 +1,8 @@
 import { Bloque } from './bloque';
 import { Transaccion } from './transaccion';
 import { Votacion } from '../Votacion';
+import { stringify } from 'querystring';
+import { sha512 } from 'js-sha512';
 
 export class Blockchain {
   blockchain: Map<number, Map<string, Bloque>> = new Map();
@@ -89,5 +91,15 @@ export class Blockchain {
     }
     // a must be equal to b
     return 0;
+  }
+
+  obtenerHashBlockchain(): string {
+    const keys = Array.from( this.ultHash.keys() ).sort();
+    let hash = '';
+    for (const i of keys) {
+      hash += this.ultHash.get(i);
+    }
+    hash = sha512.create().update(hash).hex();
+    return hash;
   }
 }

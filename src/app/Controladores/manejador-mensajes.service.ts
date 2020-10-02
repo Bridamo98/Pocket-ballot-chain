@@ -75,6 +75,7 @@ export class ManejadorMensajesService{
         this.consensoService.validarBloque(this.convertirBloques(mensaje.contenido), peerId);
         break;
       case environment.syncBlockchain:
+        // TO-DO: Llamar al servicio que actualice la blockchain
         break;
       case environment.responderPk:
         //Creo el voto con su incripcion
