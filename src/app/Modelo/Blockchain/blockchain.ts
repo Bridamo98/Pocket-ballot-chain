@@ -13,7 +13,6 @@ export class Blockchain {
   buscarTxInicioVotacion(idVotacion: number): Transaccion {
     const subBlockchain = this.blockchain.get(idVotacion);
     if (subBlockchain != null && subBlockchain !== undefined) {
-
       for (const element of subBlockchain.values()) {
         const transaccion: Transaccion = element.buscarTxInicioVotacion(
           idVotacion
@@ -27,8 +26,9 @@ export class Blockchain {
   }
 
   buscarTxInicioVotacionColaTxs(idVotacion: number): Transaccion {
-    const transaccion = this.transacciones.filter((transaccion) =>
-      transaccion.idVotacion === idVotacion &&
+    const transaccion = this.transacciones.filter(
+      (transaccion) =>
+        transaccion.idVotacion === idVotacion &&
         transaccion.tipoTransaccion === 0
     );
     if (transaccion.length > 0) {
@@ -39,7 +39,7 @@ export class Blockchain {
 
   insertarBloque(bloque: Bloque, idVotacion: number) {
     let subBlockchain = this.blockchain.get(idVotacion);
-    if (subBlockchain == null || subBlockchain === undefined){
+    if (subBlockchain == null || subBlockchain === undefined) {
       this.inicializarVotacion(idVotacion);
       subBlockchain = this.blockchain.get(idVotacion);
     }
@@ -55,11 +55,9 @@ export class Blockchain {
     const transacciones = bloque.transacciones;
 
     for (const transaccionPendiente of transacciones) {
-
       const resultado = this.transacciones.filter((transaccionEnLista) => {
         return Transaccion.igual(transaccionPendiente, transaccionEnLista);
-      }
-      );
+      });
       if (resultado.length === 0) {
         return false;
       }
@@ -67,9 +65,11 @@ export class Blockchain {
     return true;
   }
 
-  eliminarTransacciones(bloque:Bloque){
+  eliminarTransacciones(bloque: Bloque) {
     for (const transaccion of bloque.transacciones) {
-      this.transacciones = this.transacciones.filter( tx => transaccion.hash !== tx.hash );
+      this.transacciones = this.transacciones.filter(
+        (tx) => transaccion.hash !== tx.hash
+      );
     }
   }
 
@@ -95,7 +95,7 @@ export class Blockchain {
   }
 
   obtenerHashBlockchain(): string {
-    const keys = Array.from( this.ultHash.keys() ).sort();
+    const keys = Array.from(this.ultHash.keys()).sort();
     let hash = '';
     for (const i of keys) {
       hash += this.ultHash.get(i);
@@ -104,17 +104,37 @@ export class Blockchain {
     return hash;
   }
 
-  obtenerBloque(idVotacion: number, hashBloque: string): Bloque{
+  obtenerBloque(idVotacion: number, hashBloque: string): Bloque {
     return this.blockchain.get(idVotacion).get(hashBloque);
   }
 
-  actualizarBlockchain(blockchain: Map<number, Map<string, Bloque>>) {
+  actualizarBlockchain(
+    blockchain: Map<number, Map<string, Bloque>>,
+    ultHashGanador: Map<number, string>
+  ): boolean {
     for (const idVotacion of blockchain.keys()) {
       let subBlockchain = blockchain.get(idVotacion);
       for (const hash of subBlockchain.keys()) {
         let bloque = subBlockchain.get(hash);
         this.insertarBloque(bloque, idVotacion);
         this.eliminarTransacciones(bloque);
+      }
+    }
+    this.ultHash = ultHashGanador;
+    return this.validarIntegridad();
+  }
+  validarIntegridad(): boolean {
+    for (const idVotacion of this.ultHash.keys()) {
+      const subBlockchain: Map<string, Bloque> = this.blockchain.get(
+        idVotacion
+      );
+      const ultimoBloque: Bloque = subBlockchain.get(
+        this.ultHash.get(idVotacion)
+      );
+      if (!ultimoBloque.validarIntegridad(subBlockchain)) {
+        return false;
+      } else {
+        return true;
       }
     }
   }

@@ -45,4 +45,17 @@ export class Bloque {
       .update(this.transacciones + this.hashBloqueAnterior)
       .hex();
   }
+
+  validarIntegridad( subBlockchain: Map<string, Bloque>): boolean{
+    if (this.hashBloqueAnterior === ''){
+      return true;
+    }else{
+      const bloqueAnterior: Bloque = subBlockchain.get(this.hashBloqueAnterior);
+      if (bloqueAnterior != null){
+        return bloqueAnterior.validarIntegridad(subBlockchain);
+      }
+      return false;
+    }
+  }
+
 }

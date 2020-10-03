@@ -1,3 +1,4 @@
+import { ConvertersService } from './../Utils/converters.service';
 import { Votacion } from './../Modelo/Votacion';
 import { CrearVotacionP2PService } from './../LogicaP2P/crear-votacion-p2-p.service';
 import { VotarP2PService } from './../LogicaP2P/votar-p2-p.service';
@@ -22,25 +23,22 @@ declare var peer_id;
   providedIn: 'root',
 })
 export class ManejadorMensajesService {
-
-
   socket: any;
-  //Atributos de un voto
-  voto: any; //se encrypta
-  firma: any; //se crea con el voto y sign
+  // Atributos de un voto
+  voto: any; // se encrypta
+  firma: any; // se crea con el voto y sign
   peerValidador: any;
-  encryptId: any; //Puede ser la misma pk
+  encryptId: any; // Puede ser la misma pk
 
   constructor(
     private listenerSocket: ListenerSocketsService,
-    private votarService: VotarService,
     private votarP2PService: VotarP2PService,
-    private crearVotacionP2PService: CrearVotacionP2PService,
     public cifradoService: CifradoService,
     public envioMensajesService: EnvioMensajesService,
     private consensoService: AlgoritmoConsensoP2pService,
-    private syncBlockchainService: SyncBlockchainP2pService
-  ) { }
+    private syncBlockchainService: SyncBlockchainP2pService,
+    private convertersService: ConvertersService
+  ) {}
 
   setVoto(pVoto) {
     this.voto = pVoto;
@@ -50,75 +48,89 @@ export class ManejadorMensajesService {
     return this.cifradoService.decrypt(data);
   }
 
-
   checkSing(voto, firma, firmaKey) {
     return this.cifradoService.checkSing(voto, firma, firmaKey);
   }
 
-
   redirigirMensaje(data: Mensaje, peerId: any) {
-
     let mensaje;
-    if (typeof data == "string") {
+    if (typeof data === 'string') {
       mensaje = JSON.parse(data);
-    }
-    else {
+    } else {
       mensaje = data;
     }
 
     switch (mensaje.tipoPeticion) {
       case environment.aprobarBloque:
-        this.consensoService.aprobarBloque(this.convertirBloques(mensaje.contenido));
+        this.consensoService.aprobarBloque(
+          this.convertersService.convertirBloques(mensaje.contenido)
+        );
         break;
       case environment.obtenerResultados:
         break;
       case environment.ofrecerBloque:
         console.log('Bloque propuesto recibido', mensaje.contenido);
-        this.consensoService.validarBloque(this.convertirBloques(mensaje.contenido), peerId);
+        this.consensoService.validarBloque(
+          this.convertersService.convertirBloques(mensaje.contenido),
+          peerId
+        );
         break;
       case environment.syncBlockchain:
         this.enviarBlockchainActualizada(mensaje.contenido, peerId);
         break;
+      case environment.solicitarBCH:
+
+        break;
+      case environment.syncCompleteBlockchain:
+        break;
       case environment.responderPk:
-        //Creo el voto con su incripcion
-        let votoCifrado = this.cifradoService.encryptExternal(mensaje.contenido['pk'], this.voto);
-        let firmaVoto = this.cifradoService.sign(votoCifrado);
+        // Creo el voto con su incripcion
+        const votoCifrado = this.cifradoService.encryptExternal(
+          mensaje.contenido['pk'],
+          this.voto
+        );
+        const firmaVoto = this.cifradoService.sign(votoCifrado);
 
-        console.log("Firmado?: " + this.cifradoService.checkSing(votoCifrado, firmaVoto, this.cifradoService.getSignaturePublic()));
+        console.log(
+          'Firmado?: ' +
+            this.cifradoService.checkSing(
+              votoCifrado,
+              firmaVoto,
+              this.cifradoService.getSignaturePublic()
+            )
+        );
 
-        let votoToServer = {
+        const votoToServer = {
           voto: votoCifrado,
           firma: firmaVoto,
           firmaKey: this.cifradoService.getSignaturePublic(),
           peerValidador: mensaje.contenido['peerValidador'],
         };
-        //let votoToServer;
-        //console.log(this.votarService.enviarVoto(votoToServer));
+        // let votoToServer;
+        // console.log(this.votarService.enviarVoto(votoToServer));
 
-        console.log("Emitiendo al servidor");
+        console.log('Emitiendo al servidor');
         this.listenerSocket.emit('voto', votoToServer);
 
         break;
       case environment.votar:
-
-
         this.votarP2PService.votar(mensaje.contenido);
         //////////////////////////////////////////////////
         this.votarP2PService.imprimirTransacciones();
         /////////////////////////////////////////////////
         break;
       case environment.obtenerPk:
-        //generar pk
-        let pkAndPeer = {
+        // generar pk
+        const pkAndPeer = {
           pk: this.cifradoService.getEncryptPublicKey(),
-          peerValidador: peer_id
+          peerValidador: peer_id,
         };
 
-        //Sockets
+        // Sockets
         this.socket = io(environment.socketUrl);
 
-        //Envio La PK
-        let data = new Mensaje(environment.responderPk, pkAndPeer);
+        // Envio La PK
+        const data = new Mensaje(environment.responderPk, pkAndPeer);
         this.envioMensajesService.enviarPk(JSON.stringify(data), peerId);
 
         break;
@@ -130,69 +142,20 @@ export class ManejadorMensajesService {
 
   enviarBlockchainActualizada(contenido: any, peerId: any) {
     console.log('La actualización que se recibe es', contenido);
-    let hash: string = null;
-    let blockchain = new Map<number, Map<string, Bloque>>();
-    let ultHash = new Map<number, string>();
-    this.convertirActualizacion(contenido, hash, blockchain, ultHash);
-    this.syncBlockchainService.sincronizarBlockchain(contenido['hash'], blockchain, ultHash, peerId);
-  }
-
-  // Lógica de convertir
-  convertirBloques(contenido: any): Array<Bloque> {
-    let bloques = new Array<Bloque>();
-    for (let bloque of contenido) {
-      let b = new Bloque(bloque['hashBloqueAnterior'], this.convertirTransacciones(bloque['transacciones']));
-      b.idVotacion = bloque['idVotacion'];
-      bloques.push(b);
-    }
-    return bloques;
-  }
-
-  // Revisar por qué no es el mismo hash de la tx
-  convertirTransacciones(contenido: any): Array<Transaccion> {
-    let transacciones = new Array<Transaccion>();
-    for (const tx of contenido) {
-      let mensaje: string[] = [];
-      for (const msj of tx.mensaje) {
-        mensaje.push(msj);
-      }
-      const transaccion = new Transaccion(
-        tx.tipoTransaccion,
-        tx.idVotacion,
-        tx.hashIn,
-        mensaje,
-        tx.timestamp
-      );
-      transaccion.hash = tx.hash;
-      transacciones.push(transaccion);
-    }
-    return transacciones;
-  }
-
-  convertirActualizacion(
-    contenido: any,
-    hash: string,
-    blockchain: Map<number, Map<string, Bloque>>,
-    ultHash: Map<number, string>,
-  ) {
-    hash = contenido['hash'];
-    for (const i of contenido['ultHash']) {
-      ultHash.set(i['idVotacion'], i['hash']);
-    }
-
-    for (const i of contenido['blockchain']) {
-      let sBlockchain = new Map<string, Bloque>();
-      for (const j of i['subBlockchain']) {
-        let bloque = this.convertirBloque(j['bloque']);
-        sBlockchain.set(j['hash'], bloque);
-      }
-      blockchain.set(i['idVotacion'], sBlockchain);
-    }
-  }
-
-  convertirBloque(contenido: any): Bloque {
-    let bloque = new Bloque(contenido['hashBloqueAnterior'], this.convertirTransacciones(contenido['transacciones']));
-    bloque.idVotacion = contenido['idVotacion'];
-    return bloque;
+    const hash: string = null;
+    const blockchain = new Map<number, Map<string, Bloque>>();
+    const ultHash = new Map<number, string>();
+    this.convertersService.convertirActualizacion(
+      contenido,
+      hash,
+      blockchain,
+      ultHash
+    );
+    this.syncBlockchainService.sincronizarBlockchain(
+      contenido['hash'],
+      blockchain,
+      ultHash,
+      peerId
+    );
   }
 }

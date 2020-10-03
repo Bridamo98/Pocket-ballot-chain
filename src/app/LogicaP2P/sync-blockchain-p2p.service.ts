@@ -16,12 +16,30 @@ export class SyncBlockchainP2pService {
 
   blockchain: Blockchain;
   validadoresActivos = new Array<Validador>();
+  inicioStep: number = -1;
+  duracionStep: number = -1;
+
   hashGanador: string = null;
   ultHashGanador: Map<number, string> = null;
 
   //Contar votos
+  peerIdHash = new Map <string, string>();
   conteoVotos = new Map<string, number>();
-  votosBuffer = new Map<string, Map<number, Map<string, Bloque>>>();
+  votosBuffer = new Map< string, Map<number, Map<string, Bloque> > >();
+
+  prepararSync(validadoresActivos: Array<Validador>, inicioStep: number, duracionStep: number){
+    this.validadoresActivos = validadoresActivos;
+    this.inicioStep = inicioStep;
+    this.duracionStep = duracionStep;
+
+    //TO-DO: Planear final de sync
+  }
+  obtenerStep() {
+    return  Math.floor((Date.now() - this.inicioStep) / this.duracionStep);
+  }
+  esTiempoDeSync(): boolean{
+    return Math.floor((Date.now() - this.inicioStep) / this.duracionStep) === this.validadoresActivos.length;
+  }
 
   constructor(
     private blockchainService: BlockchainService
@@ -43,6 +61,7 @@ export class SyncBlockchainP2pService {
       } else {
         this.conteoVotos.set(hash, 1);
       }
+      this.peerIdHash.set(hash, peerId);
       this.votosBuffer.set(hash, blockchain);
       this.calcularGanador();
       if (this.hashGanador != null){
@@ -57,12 +76,17 @@ export class SyncBlockchainP2pService {
   }
 
   actualizarBlockchain() {
-    let blockchain: Map<number, Map<string, Bloque>> = this.votosBuffer.get(this.hashGanador);
-    this.blockchain.actualizarBlockchain(blockchain);
+    const blockchain: Map<number, Map<string, Bloque>> = this.votosBuffer.get(this.hashGanador);
+    const estaActualizada: boolean = this.blockchain.actualizarBlockchain(blockchain, this.ultHashGanador);
+    if (estaActualizada){
+      // TO-DO: Notificar al servidor
+    }else{
+      enviarMensaje( )
+    }
   }
 
   calcularGanador() {
-    const umbral: number = (this.validadoresActivos.length + 1) * 0.6;
+    const umbral: number = (this.validadoresActivos.length) * 0.6;
 
     for (const hash of this.conteoVotos.keys()) {
       if (this.conteoVotos.get(hash) >= umbral) {

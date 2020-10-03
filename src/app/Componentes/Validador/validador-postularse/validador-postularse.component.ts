@@ -1,3 +1,4 @@
+import { SyncBlockchainP2pService } from './../../../LogicaP2P/sync-blockchain-p2p.service';
 import { ManejadorMensajesService } from './../../../Controladores/manejador-mensajes.service';
 import { Transaccion } from './../../../Modelo/Blockchain/transaccion';
 import { Component, OnInit } from '@angular/core';
@@ -37,6 +38,7 @@ export class ValidadorPostularseComponent implements OnInit {
     private mensajeServicio: ManejadorMensajesService,
     private votarService: VotarService, //Para probar envio de transacciones
     private consensoService: AlgoritmoConsensoP2pService,
+    private syncBlockchainP2pService: SyncBlockchainP2pService,
     private router: Router
   ) {
     votarServicio = this.votarService;
@@ -100,6 +102,8 @@ export class ValidadorPostularseComponent implements OnInit {
           respuesta['tiempo']
         );
         this.router.navigate(['Validador']);
+      }else{
+        this.syncBlockchainP2pService.prepararSync(validadoresAct,  respuesta['inicio'], respuesta['tiempo']);
       }
     });
   }
