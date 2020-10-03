@@ -46,6 +46,7 @@ export class Blockchain {
     subBlockchain.set(bloque.hash, bloque);
     this.ultHash.set(idVotacion, bloque.hash);
   }
+
   inicializarVotacion(idVotacion: number) {
     this.blockchain.set(idVotacion, new Map());
   }
@@ -101,5 +102,20 @@ export class Blockchain {
     }
     hash = sha512.create().update(hash).hex();
     return hash;
+  }
+
+  obtenerBloque(idVotacion: number, hashBloque: string): Bloque{
+    return this.blockchain.get(idVotacion).get(hashBloque);
+  }
+
+  actualizarBlockchain(blockchain: Map<number, Map<string, Bloque>>) {
+    for (const idVotacion of blockchain.keys()) {
+      let subBlockchain = blockchain.get(idVotacion);
+      for (const hash of subBlockchain.keys()) {
+        let bloque = subBlockchain.get(hash);
+        this.insertarBloque(bloque, idVotacion);
+        this.eliminarTransacciones(bloque);
+      }
+    }
   }
 }

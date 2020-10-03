@@ -14,13 +14,14 @@ import * as io from 'socket.io-client';
 import { AlgoritmoConsensoP2pService } from '../LogicaP2P/algoritmo-consenso-p2p.service';
 import { Bloque } from '../Modelo/Blockchain/bloque';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
+import { SyncBlockchainP2pService } from '../LogicaP2P/sync-blockchain-p2p.service';
 
 declare var peer_id;
 
 @Injectable({
   providedIn: 'root',
 })
-export class ManejadorMensajesService{
+export class ManejadorMensajesService {
 
 
   socket: any;
@@ -35,32 +36,33 @@ export class ManejadorMensajesService{
     private votarService: VotarService,
     private votarP2PService: VotarP2PService,
     private crearVotacionP2PService: CrearVotacionP2PService,
-    public cifradoService:CifradoService,
-    public envioMensajesService:EnvioMensajesService,
-    private consensoService: AlgoritmoConsensoP2pService
-  ) {}
+    public cifradoService: CifradoService,
+    public envioMensajesService: EnvioMensajesService,
+    private consensoService: AlgoritmoConsensoP2pService,
+    private syncBlockchainService: SyncBlockchainP2pService
+  ) { }
 
-  setVoto(pVoto){
+  setVoto(pVoto) {
     this.voto = pVoto;
   }
 
-  decrypt(data){
+  decrypt(data) {
     return this.cifradoService.decrypt(data);
   }
 
 
-  checkSing(voto, firma, firmaKey){
+  checkSing(voto, firma, firmaKey) {
     return this.cifradoService.checkSing(voto, firma, firmaKey);
   }
 
 
-  redirigirMensaje(data: Mensaje,peerId:any) {
+  redirigirMensaje(data: Mensaje, peerId: any) {
 
     let mensaje;
-    if(typeof data == "string"){
+    if (typeof data == "string") {
       mensaje = JSON.parse(data);
     }
-    else{
+    else {
       mensaje = data;
     }
 
@@ -75,7 +77,7 @@ export class ManejadorMensajesService{
         this.consensoService.validarBloque(this.convertirBloques(mensaje.contenido), peerId);
         break;
       case environment.syncBlockchain:
-        // TO-DO: Llamar al servicio que actualice la blockchain
+        this.enviarBlockchainActualizada(mensaje.contenido, peerId);
         break;
       case environment.responderPk:
         //Creo el voto con su incripcion
@@ -90,11 +92,11 @@ export class ManejadorMensajesService{
           firmaKey: this.cifradoService.getSignaturePublic(),
           peerValidador: mensaje.contenido['peerValidador'],
         };
-          //let votoToServer;
-          //console.log(this.votarService.enviarVoto(votoToServer));
+        //let votoToServer;
+        //console.log(this.votarService.enviarVoto(votoToServer));
 
-          console.log("Emitiendo al servidor");
-          this.listenerSocket.emit('voto', votoToServer);
+        console.log("Emitiendo al servidor");
+        this.listenerSocket.emit('voto', votoToServer);
 
         break;
       case environment.votar:
@@ -126,7 +128,17 @@ export class ManejadorMensajesService{
     }
   }
 
-  convertirBloques(contenido: any): Array<Bloque>{
+  enviarBlockchainActualizada(contenido: any, peerId: any) {
+    console.log('La actualización que se recibe es', contenido);
+    let hash: string = null;
+    let blockchain = new Map<number, Map<string, Bloque>>();
+    let ultHash = new Map<number, string>();
+    this.convertirActualizacion(contenido, hash, blockchain, ultHash);
+    this.syncBlockchainService.sincronizarBlockchain(contenido['hash'], blockchain, ultHash, peerId);
+  }
+
+  // Lógica de convertir
+  convertirBloques(contenido: any): Array<Bloque> {
     let bloques = new Array<Bloque>();
     for (let bloque of contenido) {
       let b = new Bloque(bloque['hashBloqueAnterior'], this.convertirTransacciones(bloque['transacciones']));
@@ -136,8 +148,8 @@ export class ManejadorMensajesService{
     return bloques;
   }
 
-  // Revisar por què no es el mismo hash de la tx
-  convertirTransacciones(contenido: any): Array<Transaccion>{
+  // Revisar por qué no es el mismo hash de la tx
+  convertirTransacciones(contenido: any): Array<Transaccion> {
     let transacciones = new Array<Transaccion>();
     for (const tx of contenido) {
       let mensaje: string[] = [];
@@ -155,5 +167,32 @@ export class ManejadorMensajesService{
       transacciones.push(transaccion);
     }
     return transacciones;
+  }
+
+  convertirActualizacion(
+    contenido: any,
+    hash: string,
+    blockchain: Map<number, Map<string, Bloque>>,
+    ultHash: Map<number, string>,
+  ) {
+    hash = contenido['hash'];
+    for (const i of contenido['ultHash']) {
+      ultHash.set(i['idVotacion'], i['hash']);
+    }
+
+    for (const i of contenido['blockchain']) {
+      let sBlockchain = new Map<string, Bloque>();
+      for (const j of i['subBlockchain']) {
+        let bloque = this.convertirBloque(j['bloque']);
+        sBlockchain.set(j['hash'], bloque);
+      }
+      blockchain.set(i['idVotacion'], sBlockchain);
+    }
+  }
+
+  convertirBloque(contenido: any): Bloque {
+    let bloque = new Bloque(contenido['hashBloqueAnterior'], this.convertirTransacciones(contenido['transacciones']));
+    bloque.idVotacion = contenido['idVotacion'];
+    return bloque;
   }
 }

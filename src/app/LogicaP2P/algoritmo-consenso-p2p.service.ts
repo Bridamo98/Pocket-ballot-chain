@@ -21,7 +21,7 @@ declare var enviarMensaje: any;
 })
 export class AlgoritmoConsensoP2pService {
   validadoresActivos = new Array<Validador>();
-  validadores = null;
+  validadores: Array<Validador> = null;
   miPosicion: number;
   step: number;
   inicio: number;
@@ -30,6 +30,8 @@ export class AlgoritmoConsensoP2pService {
   bloquesPropuestos: Array<Bloque>;
   blockchain: Blockchain;
   tiempoMin: number = 5000;
+
+  nuevosBloques = new Map<number, Array<string>>();
 
   nombreUsuario: string = localStorage.getItem('nombre');
 
@@ -56,15 +58,25 @@ export class AlgoritmoConsensoP2pService {
     this.inicio = inicio;
     this.duracion = duracion;
     this.blockchain = this.blockchainService.retornarBlockchain();
-    //console.log('Iniciando validacion del validador:', posicion);
+
+    // Almacenar estado de recibimiento de la blockchain
 
     console.log('Esperando el inicio del validador en la posición', this.miPosicion);
     console.log('Comenzando timer', Math.floor((this.inicio - Date.now()) / 1000));
+    console.log('Blockchain al iniciar', this.blockchain);
+
     // TO-DO: Validar tiempo
     setTimeout(this.crearBloque, (duracion * posicion) + (this.inicio - Date.now()), this);
     setTimeout(this.vaciarBuffer, duracion - 100, this, 0);
-    setTimeout(this.confirmarBlockchain, (duracion * (this.validadoresActivos.length + 1)) + (this.inicio - Date.now()), this);
+    setTimeout(this.finalizarEra, (duracion * (this.validadoresActivos.length + 1)) + (this.inicio - Date.now()), this);
     // TO-DO: reiniciar los votos
+  }
+
+  finalizarEra(servicio: AlgoritmoConsensoP2pService) {
+    servicio.confirmarBlockchain(servicio);
+    console.log('Los nuevos bloques son:', servicio.nuevosBloques);
+    servicio.enviarUltimaBlockchain(servicio);
+    servicio.nuevosBloques = new Map<number, Array<string>>();
   }
 
   confirmarBlockchain(servicio: AlgoritmoConsensoP2pService) {
@@ -88,6 +100,7 @@ export class AlgoritmoConsensoP2pService {
   obtenerLider(): number {
     return this.step % this.validadoresActivos.length;
   }
+
   crearBloque(servicio: AlgoritmoConsensoP2pService) {
     console.log('Transacciones en la blockchain en crear:', servicio.blockchain.transacciones);
     console.log('Tiempo transcurrido:', Math.floor((Date.now() - servicio.inicio) / 1000));
@@ -125,8 +138,8 @@ export class AlgoritmoConsensoP2pService {
     bloques: Array<Bloque>,
     servicio: AlgoritmoConsensoP2pService
   ) {
-    servicio.aprobarBloque2(bloques, 1);
     servicio.bloqueRecibido = true;
+    servicio.aprobarBloque2(bloques, 1);
     let mensaje = new Mensaje(environment.ofrecerBloque, bloques);
     console.log('Proponiendo bloques:', bloques);
     servicio.enviarBloques(servicio, mensaje);
@@ -178,6 +191,7 @@ export class AlgoritmoConsensoP2pService {
     console.log('Bloques bien construìdos');
     this.aprobarBloque2(bloques, 1);
   }
+
   aprobarBloque2(bloques: Array<Bloque>, votosIniciales: number): void {
     // Reorganizar bloques
     bloques = bloques.sort(this.compararIdVotacion);
@@ -205,7 +219,7 @@ export class AlgoritmoConsensoP2pService {
 
   calcularGanador(): boolean {
     let hashGanador: string = null;
-    const umbral: number = (this.validadoresActivos.length + 1) * 0.6;
+    const umbral: number = this.validadoresActivos.length * 0.6;
 
     for (const hash of this.conteoVotos.keys()) {
       if (this.conteoVotos.get(hash) >= umbral) {
@@ -219,6 +233,7 @@ export class AlgoritmoConsensoP2pService {
     for (const bloque of this.votosBuffer.get(hashGanador)) {
       this.blockchain.insertarBloque(bloque, bloque.idVotacion);
       this.blockchain.eliminarTransacciones(bloque);
+      this.actualizarNuevosBloques(bloque);
     }
     console.log('GANADOR');
     console.log('Blockchain:', this.blockchain.blockchain);
@@ -239,5 +254,83 @@ export class AlgoritmoConsensoP2pService {
     }
     // a must be equal to b
     return 0;
+  }
+
+  // Lógica de envío de blockchain
+
+  actualizarNuevosBloques(bloque: Bloque) {
+    let subBlockchain: Array<string> = [];
+    if (this.nuevosBloques.has(bloque.idVotacion)){
+      subBlockchain = this.nuevosBloques.get(bloque.idVotacion);
+    }
+    subBlockchain.push(bloque.hash);
+    this.nuevosBloques.set(bloque.idVotacion, subBlockchain);
+  }
+
+  enviarUltimaBlockchain(servicio: AlgoritmoConsensoP2pService) {
+    const hash: string = servicio.blockchain.obtenerHashBlockchain();
+    const blockchain = new Map<number, Map<string, Bloque>>();
+    const ultHash = new Map<number, string>();
+
+    const keys = Array.from( servicio.nuevosBloques.keys() ).sort();
+    for (const i of keys) {
+      ultHash.set(i, servicio.blockchain.obtenerHashUltimoBloque(i));
+      const subBlockchain = new Map<string, Bloque>();
+      for (const hBloque of servicio.nuevosBloques.get(i)) {
+        const bloque = servicio.blockchain.obtenerBloque(i, hBloque);
+        subBlockchain.set(bloque.hash, bloque);
+      }
+      blockchain.set(i, subBlockchain);
+    }
+
+    let ultHashArray: Array<object> = [];
+    let blockchainArray: Array<object> = [];
+
+    for (const key of ultHash.keys()) {
+      let par = {
+        idVotacion: key,
+        hash: ultHash.get(key)
+      };
+      ultHashArray.push(par);
+
+      let sBlockchain = blockchain.get(key);
+      let subBlockchain: Array<object> = [];
+      for (const hBloque of sBlockchain.keys()) {
+        let parBloque = {
+          hash: hBloque,
+          bloque: sBlockchain.get(hBloque)
+        };
+        subBlockchain.push(parBloque);
+      }
+
+      let parBlockchain = {
+        idVotacion: key,
+        subBlockchain: subBlockchain
+      };
+      blockchainArray.push(parBlockchain);
+    }
+
+    let actualizacion = {
+      hash: hash,
+      ultHash: ultHashArray,
+      blockchain: blockchainArray
+    };
+
+    console.log('La actualización que se envía es', actualizacion);
+    const mensaje = new Mensaje(environment.syncBlockchain, actualizacion);
+    servicio.enviarBlockchainAInactivos(servicio, mensaje);
+  }
+
+  enviarBlockchainAInactivos(servicio: AlgoritmoConsensoP2pService, mensaje: Mensaje) {
+    let validadoresInactivos = new Array<Validador>();
+    for (const validador of servicio.validadores) {
+      if (servicio.validadoresActivos.filter(v => v.id === validador.id).length === 0){
+        validadoresInactivos.push(validador);
+      }
+    }
+    console.log('Notificando a los validadores inactivos', validadoresInactivos);
+    for (let i = 0; i < validadoresInactivos.length; i++) {
+      enviarMensaje(mensaje, validadoresInactivos[i].peerId);
+    }
   }
 }

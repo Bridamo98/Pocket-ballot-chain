@@ -58,7 +58,6 @@ export class VotarService {
   confirmarBlockchain(hash: string): any{
     let returned;
     let json = JSON.stringify({hashBlockchain: hash});
-    console.log(json);
     let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     this.http.post<any>(this.URLbase + "/confirmarBlockChainActualizada", json, { headers: headers }).subscribe(data => {
       returned = data['Status'];
