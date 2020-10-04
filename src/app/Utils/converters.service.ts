@@ -9,7 +9,7 @@ export class ConvertersService {
 
   constructor() { }
   // Lógica de convertir
-  convertirBloques(contenido: any): Array<Bloque> {
+  static convertirBloques(contenido: any): Array<Bloque> {
     const bloques = new Array<Bloque>();
     for (const bloque of contenido) {
       const b = new Bloque(bloque['hashBloqueAnterior'], this.convertirTransacciones(bloque['transacciones']));
@@ -20,7 +20,7 @@ export class ConvertersService {
   }
 
   // Revisar por qué no es el mismo hash de la tx
-  convertirTransacciones(contenido: any): Array<Transaccion> {
+  static convertirTransacciones(contenido: any): Array<Transaccion> {
     const transacciones = new Array<Transaccion>();
     for (const tx of contenido) {
       const mensaje: string[] = [];
@@ -40,7 +40,7 @@ export class ConvertersService {
     return transacciones;
   }
 
-  convertirActualizacion(
+  static convertirActualizacion(
     contenido: any,
     hash: string,
     blockchain: Map<number, Map<string, Bloque>>,
@@ -61,7 +61,7 @@ export class ConvertersService {
     }
   }
 
-  convertirBloque(contenido: any): Bloque {
+  static convertirBloque(contenido: any): Bloque {
     const bloque = new Bloque(contenido['hashBloqueAnterior'], this.convertirTransacciones(contenido['transacciones']));
     bloque.idVotacion = contenido['idVotacion'];
     return bloque;

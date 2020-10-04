@@ -63,7 +63,7 @@ export class ManejadorMensajesService {
     switch (mensaje.tipoPeticion) {
       case environment.aprobarBloque:
         this.consensoService.aprobarBloque(
-          this.convertersService.convertirBloques(mensaje.contenido)
+          ConvertersService.convertirBloques(mensaje.contenido)
         );
         break;
       case environment.obtenerResultados:
@@ -71,15 +71,15 @@ export class ManejadorMensajesService {
       case environment.ofrecerBloque:
         console.log('Bloque propuesto recibido', mensaje.contenido);
         this.consensoService.validarBloque(
-          this.convertersService.convertirBloques(mensaje.contenido),
+          ConvertersService.convertirBloques(mensaje.contenido),
           peerId
         );
         break;
       case environment.syncBlockchain:
         this.enviarBlockchainActualizada(mensaje.contenido, peerId);
         break;
-      case environment.solicitarBCH:
-
+        case environment.solicitarBCH:
+          this.syncBlockchainService.enviarBlockChainCompleta(peerId);
         break;
       case environment.syncCompleteBlockchain:
         break;
@@ -145,7 +145,7 @@ export class ManejadorMensajesService {
     const hash: string = null;
     const blockchain = new Map<number, Map<string, Bloque>>();
     const ultHash = new Map<number, string>();
-    this.convertersService.convertirActualizacion(
+    ConvertersService.convertirActualizacion(
       contenido,
       hash,
       blockchain,

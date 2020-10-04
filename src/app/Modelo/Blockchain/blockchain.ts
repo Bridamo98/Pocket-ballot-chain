@@ -123,6 +123,7 @@ export class Blockchain {
     this.ultHash = ultHashGanador;
     return this.validarIntegridad();
   }
+
   validarIntegridad(): boolean {
     for (const idVotacion of this.ultHash.keys()) {
       const subBlockchain: Map<string, Bloque> = this.blockchain.get(
@@ -137,5 +138,17 @@ export class Blockchain {
         return true;
       }
     }
+  }
+
+  actualizarTransacciones(transaccionesNuevas: Array<Transaccion>) {
+    for (const transaccionNueva of transaccionesNuevas) {
+      const res = this.transacciones.filter(
+        (transaccion) => transaccion.hash === transaccionNueva.hash
+      );
+      if (res.length === 0){
+        this.transacciones.push(transaccionNueva);
+      }
+    }
+    this.ordenarTransacciones();
   }
 }

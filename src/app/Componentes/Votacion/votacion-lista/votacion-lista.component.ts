@@ -150,7 +150,8 @@ export class VotacionListaComponent implements OnInit {
 
   //Para probar envio de transacciones
   enviarTransaccion(): void {
-    let transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], Date.now());
+    const numero: number = Date.now();
+    let transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
     let mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.registrarVoto(mensaje); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()
@@ -159,6 +160,9 @@ export class VotacionListaComponent implements OnInit {
           result.forEach(element => {
             console.log(element);
             console.log("Enviando mensaje a:", element.peerId);
+            console.log(mensaje);
+            enviarMensaje(mensaje, element.peerId);
+            enviarMensaje(mensaje, element.peerId);
             enviarMensaje(mensaje, element.peerId);
           });
         }
