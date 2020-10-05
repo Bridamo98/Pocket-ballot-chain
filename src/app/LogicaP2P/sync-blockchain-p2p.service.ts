@@ -9,6 +9,7 @@ import { Bloque } from '../Modelo/Blockchain/bloque';
 import { Validador } from '../Modelo/Validador';
 import { BlockchainService } from './blockchain.service';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
+import { VotarService } from '../Servicios/votar.service';
 
 declare var enviarMensaje: any;
 
@@ -29,6 +30,13 @@ export class SyncBlockchainP2pService {
   conteoVotos = new Map<string, number>();
   votosBuffer = new Map<string, Map<number, Map<string, Bloque>>>();
 
+  constructor(
+    private blockchainService: BlockchainService,
+    private votarService: VotarService
+  ) {
+    this.blockchain = blockchainService.retornarBlockchain();
+  }
+
   prepararSync(
     validadoresActivos: Array<Validador>,
     inicioStep: number,
@@ -37,12 +45,16 @@ export class SyncBlockchainP2pService {
     this.validadoresActivos = validadoresActivos;
     this.inicioStep = inicioStep;
     this.duracionStep = duracionStep;
-
-    //TO-DO: Planear final de sync
+    console.log('Preparando la sincronizacion');
+    console.log('Blockchain al iniciar', this.blockchain);
+    // Planear final de sync
+    this.vaciarBuffer();
   }
+
   obtenerStep() {
     return Math.floor((Date.now() - this.inicioStep) / this.duracionStep);
   }
+
   esTiempoDeSync(): boolean {
     return (
       Math.floor((Date.now() - this.inicioStep) / this.duracionStep) ===
@@ -50,8 +62,10 @@ export class SyncBlockchainP2pService {
     );
   }
 
-  constructor(private blockchainService: BlockchainService) {
-    this.blockchain = blockchainService.retornarBlockchain();
+  vaciarBuffer() {
+    this.peerIdHash = new Map<string, string>();
+    this.conteoVotos = new Map<string, number>();
+    this.votosBuffer = new Map<string, Map<number, Map<string, Bloque>>>();
   }
 
   // TO-DO: BlockchainRecibida debe indicar si la blockchain fue modificada
@@ -61,6 +75,8 @@ export class SyncBlockchainP2pService {
     ultHash: Map<number, string>,
     peerId: string
   ) {
+    console.log('La blockchain al sincronizar última era es', this.blockchain);
+    console.log('Recibida actualización con hash', hash);
     if (
       this.hashGanador == null &&
       this.comprobarValidador(peerId) &&
@@ -74,7 +90,8 @@ export class SyncBlockchainP2pService {
       }
       this.peerIdHash.set(hash, peerId);
       this.votosBuffer.set(hash, blockchain);
-      this.calcularGanador();
+      this.calcularGanador(ultHash);
+
       if (this.hashGanador != null) {
         this.actualizarBlockchain();
       }
@@ -87,27 +104,39 @@ export class SyncBlockchainP2pService {
   }
 
   actualizarBlockchain() {
+    let estaActualizada: boolean = false;
     const blockchain: Map<number, Map<string, Bloque>> = this.votosBuffer.get(
       this.hashGanador
     );
-    const estaActualizada: boolean = this.blockchain.actualizarBlockchain(
-      blockchain,
-      this.ultHashGanador
-    );
+    console.log('va a actualizar la blockchain con b:', blockchain);
+    if (blockchain !== undefined){
+      if (blockchain.size !== 0){
+        console.log('Actualizando blockchain con tamaño', blockchain.size);
+        estaActualizada = this.blockchain.actualizarBlockchain(
+          blockchain,
+          this.ultHashGanador
+        );
+      }
+    }
+    console.log('Esta acualizada = ', estaActualizada);
     if (estaActualizada) {
-      // TO-DO: Notificar al servidor
+      // Notificar al servidor
+      this.confirmarBlockchain();
+      this.vaciarBuffer();
     } else {
+      console.log('Solicitando blockchain');
       const mensaje: Mensaje = new Mensaje(environment.solicitarBCH, null);
       enviarMensaje(mensaje, this.peerIdHash.get(this.hashGanador));
     }
   }
 
-  calcularGanador() {
+  calcularGanador(ultHash: Map<number, string>) {
     const umbral: number = this.validadoresActivos.length * 0.6;
 
     for (const hash of this.conteoVotos.keys()) {
       if (this.conteoVotos.get(hash) >= umbral) {
         this.hashGanador = hash;
+        this.ultHashGanador = ultHash;
         break;
       }
     }
@@ -118,6 +147,9 @@ export class SyncBlockchainP2pService {
     blockchain: Map<number, Map<string, Bloque>>,
     ultHash: Map<number, string>
   ): boolean {
+    if (blockchain.size === 0 || blockchain === undefined || blockchain == null){
+      return true;
+    }
     const keys = Array.from(blockchain.keys()).sort();
     let hashTmp = '';
     for (const i of keys) {
@@ -167,15 +199,24 @@ export class SyncBlockchainP2pService {
   }
 
   syncBlockchainCompleta(contenido: any) {
+    console.log('Sincronizando blockchain');
     ConvertersService.convertirActualizacion(
       contenido,
       '',
       this.blockchain.blockchain,
       this.blockchain.ultHash
     );
-    const transaccionesNuevas: Array<Transaccion> = ConvertersService.convertirTransacciones(contenido);
+    const transaccionesNuevas: Array<Transaccion> = ConvertersService.convertirTransacciones(contenido['transacciones']);
     this.blockchain.actualizarTransacciones(transaccionesNuevas);
 
-    //TO-DO: Notificar al servidor
+    console.log('Blockchain luego de la sincronización completa', this.blockchain);
+
+    //Notificar al servidor
+    this.confirmarBlockchain();
+    this.vaciarBuffer();
+  }
+
+  confirmarBlockchain() {
+    this.votarService.confirmarBlockchain(this.blockchain.obtenerHashBlockchain());
   }
 }

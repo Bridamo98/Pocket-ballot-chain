@@ -129,6 +129,9 @@ export class Blockchain {
       const subBlockchain: Map<string, Bloque> = this.blockchain.get(
         idVotacion
       );
+      if (subBlockchain === undefined){
+        return false;
+      }
       const ultimoBloque: Bloque = subBlockchain.get(
         this.ultHash.get(idVotacion)
       );

@@ -1,6 +1,6 @@
 import { Validador } from './../Modelo/Validador';
 import { environment } from './../../environments/environment';
-import { element } from 'protractor';
+import { element, utils } from 'protractor';
 import { Injectable } from '@angular/core';
 import { sha512 } from 'js-sha512';
 
@@ -13,6 +13,7 @@ import { Mensaje } from '../Modelo/Blockchain/mensaje';
 import { serialize } from 'v8';
 import { VotarService } from '../Servicios/votar.service';
 import { Router } from '@angular/router';
+import { ConverterToObjectService } from '../Utils/converter-to-object.service';
 
 declare var enviarMensaje: any;
 
@@ -73,6 +74,7 @@ export class AlgoritmoConsensoP2pService {
   }
 
   finalizarEra(servicio: AlgoritmoConsensoP2pService) {
+    console.log('Finalizando era luego de', Math.floor((Date.now() - servicio.inicio) / 1000));
     servicio.confirmarBlockchain(servicio);
     console.log('Los nuevos bloques son:', servicio.nuevosBloques);
     servicio.enviarUltimaBlockchain(servicio);
@@ -111,7 +113,7 @@ export class AlgoritmoConsensoP2pService {
       );
       let ulthash: string;
       let idVotacion: number;
-      let bloques = new Array<Bloque>();
+      const bloques = new Array<Bloque>();
       while (transacciones.length > 0) {
         idVotacion = transacciones[0].idVotacion;
         ulthash = servicio.blockchain.obtenerHashUltimoBloque(idVotacion);
@@ -140,7 +142,7 @@ export class AlgoritmoConsensoP2pService {
   ) {
     servicio.bloqueRecibido = true;
     servicio.aprobarBloque2(bloques, 1);
-    let mensaje = new Mensaje(environment.ofrecerBloque, bloques);
+    const mensaje = new Mensaje(environment.ofrecerBloque, bloques);
     console.log('Proponiendo bloques:', bloques);
     servicio.enviarBloques(servicio, mensaje);
   }
@@ -172,7 +174,7 @@ export class AlgoritmoConsensoP2pService {
 
   validarLider(peerId): boolean {
     this.obtenerStep();
-    let lider = this.obtenerLider();
+    const lider = this.obtenerLider();
     if (this.validadoresActivos[lider].peerId === peerId) {
       return true;
     }
@@ -183,7 +185,7 @@ export class AlgoritmoConsensoP2pService {
     // NICE TO HAVE: Ver si los bloques corresponden al step
     // Bloques estan bien construidos, tienen los hash bien
     console.log('Aprobar bloques:', bloques);
-    for (let bloque of bloques) {
+    for (const bloque of bloques) {
       if (Bloque.estaBienConstruido(bloque) === -1) {
         return;
       }
@@ -270,49 +272,26 @@ export class AlgoritmoConsensoP2pService {
   enviarUltimaBlockchain(servicio: AlgoritmoConsensoP2pService) {
     const hash: string = servicio.blockchain.obtenerHashBlockchain();
     const blockchain = new Map<number, Map<string, Bloque>>();
-    const ultHash = new Map<number, string>();
+    const ultHash: Map<number, string> = servicio.blockchain.ultHash;
 
-    const keys = Array.from( servicio.nuevosBloques.keys() ).sort();
-    for (const i of keys) {
-      ultHash.set(i, servicio.blockchain.obtenerHashUltimoBloque(i));
-      const subBlockchain = new Map<string, Bloque>();
-      for (const hBloque of servicio.nuevosBloques.get(i)) {
-        const bloque = servicio.blockchain.obtenerBloque(i, hBloque);
-        subBlockchain.set(bloque.hash, bloque);
-      }
-      blockchain.set(i, subBlockchain);
-    }
-
-    let ultHashArray: Array<object> = [];
     let blockchainArray: Array<object> = [];
 
-    for (const key of ultHash.keys()) {
-      let par = {
-        idVotacion: key,
-        hash: ultHash.get(key)
-      };
-      ultHashArray.push(par);
-
-      let sBlockchain = blockchain.get(key);
-      let subBlockchain: Array<object> = [];
-      for (const hBloque of sBlockchain.keys()) {
-        let parBloque = {
-          hash: hBloque,
-          bloque: sBlockchain.get(hBloque)
-        };
-        subBlockchain.push(parBloque);
+    if (servicio.nuevosBloques.size !== 0){
+      const keys = Array.from( servicio.nuevosBloques.keys() ).sort();
+      for (const i of keys) {
+        const subBlockchain = new Map<string, Bloque>();
+        for (const hBloque of servicio.nuevosBloques.get(i)) {
+          const bloque = servicio.blockchain.obtenerBloque(i, hBloque);
+          subBlockchain.set(bloque.hash, bloque);
+        }
+        blockchain.set(i, subBlockchain);
       }
-
-      let parBlockchain = {
-        idVotacion: key,
-        subBlockchain: subBlockchain
-      };
-      blockchainArray.push(parBlockchain);
+      blockchainArray = ConverterToObjectService.convertirBlockchainToObject(blockchain);
     }
 
-    let actualizacion = {
+    const actualizacion = {
       hash: hash,
-      ultHash: ultHashArray,
+      ultHash: ConverterToObjectService.convertUltHashToObject(ultHash),
       blockchain: blockchainArray
     };
 
@@ -322,7 +301,7 @@ export class AlgoritmoConsensoP2pService {
   }
 
   enviarBlockchainAInactivos(servicio: AlgoritmoConsensoP2pService, mensaje: Mensaje) {
-    let validadoresInactivos = new Array<Validador>();
+    const validadoresInactivos = new Array<Validador>();
     for (const validador of servicio.validadores) {
       if (servicio.validadoresActivos.filter(v => v.id === validador.id).length === 0){
         validadoresInactivos.push(validador);

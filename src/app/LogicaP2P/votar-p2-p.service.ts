@@ -24,11 +24,14 @@ export class VotarP2PService {
   }
 
   private actualizarVotaciones(transaccion: Transaccion) {
-    if (!this.blockchain.votaciones.has(transaccion.idVotacion)) {
+    const resultado = Array.from(this.blockchain.votaciones.values()).filter(v => v.id === transaccion.idVotacion);
+    console.log('Resultado votaciones', resultado);
+    if (resultado.length === 0) {
       this.votacionService
         .getVotacion(transaccion.idVotacion)
         .subscribe((result) => {
           if (result !== undefined || result != null) {
+            console.log('Se actualiza la votacion y las opciones');
             this.blockchain.votaciones.set(transaccion.idVotacion, result);
             this.actualizarOpciones(transaccion);
           }

@@ -47,11 +47,11 @@ export class Bloque {
   }
 
   validarIntegridad( subBlockchain: Map<string, Bloque>): boolean{
-    if (this.hashBloqueAnterior === ''){
+    if (this.hashBloqueAnterior === '' || this.hashBloqueAnterior === undefined){
       return true;
     }else{
       const bloqueAnterior: Bloque = subBlockchain.get(this.hashBloqueAnterior);
-      if (bloqueAnterior != null){
+      if (bloqueAnterior != null || bloqueAnterior != undefined){
         return bloqueAnterior.validarIntegridad(subBlockchain);
       }
       return false;

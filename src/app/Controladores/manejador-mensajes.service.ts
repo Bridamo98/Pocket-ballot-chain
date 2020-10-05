@@ -82,6 +82,7 @@ export class ManejadorMensajesService {
           this.syncBlockchainService.enviarBlockChainCompleta(peerId);
         break;
       case environment.syncCompleteBlockchain:
+        this.syncBlockchainService.syncBlockchainCompleta(mensaje.contenido);
         break;
       case environment.responderPk:
         // Creo el voto con su incripcion
