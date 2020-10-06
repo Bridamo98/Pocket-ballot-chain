@@ -69,7 +69,7 @@ export class AlgoritmoConsensoP2pService {
     // TO-DO: Validar tiempo
     setTimeout(this.crearBloque, (duracion * posicion) + (this.inicio - Date.now()), this);
     setTimeout(this.vaciarBuffer, duracion - 100, this, 0);
-    setTimeout(this.finalizarEra, (duracion * (this.validadoresActivos.length + 1)) + (this.inicio - Date.now()), this);
+    setTimeout(this.finalizarEra, (duracion * (this.validadoresActivos.length )) + (this.inicio - Date.now()), this);
     // TO-DO: reiniciar los votos
   }
 
