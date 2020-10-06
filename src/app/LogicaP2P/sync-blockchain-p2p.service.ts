@@ -63,6 +63,7 @@ export class SyncBlockchainP2pService {
   }
 
   vaciarBuffer() {
+    this.hashGanador = null;
     this.peerIdHash = new Map<string, string>();
     this.conteoVotos = new Map<string, number>();
     this.votosBuffer = new Map<string, Map<number, Map<string, Bloque>>>();
