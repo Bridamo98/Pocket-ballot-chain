@@ -30,10 +30,12 @@ export class VotarP2PService {
       this.votacionService
         .getVotacion(transaccion.idVotacion)
         .subscribe((result) => {
-          if (result !== undefined || result != null) {
+          if (result !== undefined && result != null) {
             console.log('Se actualiza la votacion y las opciones');
             this.blockchain.votaciones.set(transaccion.idVotacion, result);
             this.actualizarOpciones(transaccion);
+          }else{
+            console.log('Error: votación no encontrada');
           }
         });
     } else {
@@ -43,10 +45,15 @@ export class VotarP2PService {
 
   actualizarOpciones(transaccion: Transaccion) {
     this.opcionService.getOpcion(transaccion.idVotacion).subscribe((result) => {
-      this.blockchain.votaciones.get(
-        transaccion.idVotacion
-      ).opcionDeVotacion = result;
-      this.validarVoto(transaccion);
+      console.log('Las opciones encontradas son:', result);
+      if (result !== undefined && result != null){
+        this.blockchain.votaciones.get(
+          transaccion.idVotacion
+        ).opcionDeVotacion = result;
+        this.validarVoto(transaccion);
+      }else{
+        console.log('Error: opciones no encontradas');
+      }
     });
   }
 
