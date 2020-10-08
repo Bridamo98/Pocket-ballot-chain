@@ -1,6 +1,5 @@
 import { Validador } from './../Modelo/Validador';
 import { environment } from './../../environments/environment';
-import { element, utils } from 'protractor';
 import { Injectable } from '@angular/core';
 import { sha512 } from 'js-sha512';
 
@@ -10,9 +9,7 @@ import { Bloque } from '../Modelo/Blockchain/bloque';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Blockchain } from '../Modelo/Blockchain/blockchain';
 import { Mensaje } from '../Modelo/Blockchain/mensaje';
-import { serialize } from 'v8';
 import { VotarService } from '../Servicios/votar.service';
-import { Router } from '@angular/router';
 import { ConverterToObjectService } from '../Utils/converter-to-object.service';
 
 declare var enviarMensaje: any;
@@ -76,7 +73,6 @@ export class AlgoritmoConsensoP2pService {
   finalizarEra(servicio: AlgoritmoConsensoP2pService) {
     console.log('Finalizando era luego de', Math.floor((Date.now() - servicio.inicio) / 1000));
     servicio.confirmarBlockchain(servicio);
-    console.log('Los nuevos bloques son:', servicio.nuevosBloques);
     servicio.enviarUltimaBlockchain(servicio);
     servicio.nuevosBloques = new Map<number, Array<string>>();
   }
@@ -143,7 +139,6 @@ export class AlgoritmoConsensoP2pService {
     servicio.bloqueRecibido = true;
     servicio.aprobarBloque2(bloques, 1);
     const mensaje = new Mensaje(environment.ofrecerBloque, bloques);
-    console.log('Proponiendo bloques:', bloques);
     servicio.enviarBloques(servicio, mensaje);
   }
 
@@ -184,13 +179,11 @@ export class AlgoritmoConsensoP2pService {
   aprobarBloque(bloques: Array<Bloque>): void {
     // NICE TO HAVE: Ver si los bloques corresponden al step
     // Bloques estan bien construidos, tienen los hash bien
-    console.log('Aprobar bloques:', bloques);
     for (const bloque of bloques) {
       if (Bloque.estaBienConstruido(bloque) === -1) {
         return;
       }
     }
-    console.log('Bloques bien construìdos');
     this.aprobarBloque2(bloques, 1);
   }
 
@@ -211,8 +204,6 @@ export class AlgoritmoConsensoP2pService {
     } else {
       this.conteoVotos.set(hash, votosIniciales);
     }
-    console.log('Aprobar bloques 2:', bloques);
-    console.log(this.conteoVotos);
     //comprobar 60%
     if (this.bloqueRecibido) {
       this.calcularGanador();
@@ -237,7 +228,7 @@ export class AlgoritmoConsensoP2pService {
       this.blockchain.eliminarTransacciones(bloque);
       this.actualizarNuevosBloques(bloque);
     }
-    console.log('GANADOR');
+    console.log('--------------GANADOR--------------');
     console.log('Blockchain:', this.blockchain.blockchain);
     console.log('Transacciones', this.blockchain.transacciones);
     this.conteoVotos = new Map<string, number>();

@@ -70,7 +70,6 @@ export class UsuarioEditarComponent implements OnInit {
     if (this.formulario.valid) {
       this.usuarioService.putUsuario(this.usuario).subscribe(
         result => {
-          console.log(result);
           const token = result['token'];
           if(token != null && token != undefined)
           {

@@ -1,20 +1,14 @@
 import { ConvertersService } from './../Utils/converters.service';
-import { Votacion } from './../Modelo/Votacion';
-import { CrearVotacionP2PService } from './../LogicaP2P/crear-votacion-p2-p.service';
 import { VotarP2PService } from './../LogicaP2P/votar-p2-p.service';
-import { BlockchainService } from './../LogicaP2P/blockchain.service';
-import { VotarService } from './../Servicios/votar.service';
 import { EnvioMensajesService } from './../LogicaP2P/envio-mensajes.service';
 import { CifradoService } from './../Servicios/Cifrado-Firma/cifrado.service';
 import { environment } from './../../environments/environment';
 import { Mensaje } from './../Modelo/Blockchain/mensaje';
 import { Injectable } from '@angular/core';
 import { ListenerSocketsService } from './../LogicaP2P/listener-sockets.service';
-import { Observable } from 'rxjs';
 import * as io from 'socket.io-client';
 import { AlgoritmoConsensoP2pService } from '../LogicaP2P/algoritmo-consenso-p2p.service';
 import { Bloque } from '../Modelo/Blockchain/bloque';
-import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { SyncBlockchainP2pService } from '../LogicaP2P/sync-blockchain-p2p.service';
 
 declare var peer_id;
@@ -37,7 +31,6 @@ export class ManejadorMensajesService {
     public envioMensajesService: EnvioMensajesService,
     private consensoService: AlgoritmoConsensoP2pService,
     private syncBlockchainService: SyncBlockchainP2pService,
-    private convertersService: ConvertersService
   ) {}
 
   setVoto(pVoto) {
@@ -69,7 +62,6 @@ export class ManejadorMensajesService {
       case environment.obtenerResultados:
         break;
       case environment.ofrecerBloque:
-        console.log('Bloque propuesto recibido', mensaje.contenido);
         this.consensoService.validarBloque(
           ConvertersService.convertirBloques(mensaje.contenido),
           peerId
@@ -110,7 +102,6 @@ export class ManejadorMensajesService {
         // let votoToServer;
         // console.log(this.votarService.enviarVoto(votoToServer));
 
-        console.log('Emitiendo al servidor');
         this.listenerSocket.emit('voto', votoToServer);
 
         break;
@@ -142,7 +133,6 @@ export class ManejadorMensajesService {
   }
 
   enviarBlockchainActualizada(contenido: any, peerId: any) {
-    console.log('La actualización que se recibe es', contenido);
     const hash: string = null;
     const blockchain = new Map<number, Map<string, Bloque>>();
     const ultHash = new Map<number, string>();

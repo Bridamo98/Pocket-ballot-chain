@@ -33,7 +33,6 @@ export class ValidadorComponent implements OnInit {
           console.log('FIRMA ERRADA');
         }
 
-        //let timestamp = data['timestamp'];
         let voto = this.mensajeServicio.decrypt(data['voto']);
         let mensaje = JSON.parse(voto.toString());
         if (mensaje.tipoPeticion === 7){

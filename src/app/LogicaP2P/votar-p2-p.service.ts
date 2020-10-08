@@ -25,13 +25,11 @@ export class VotarP2PService {
 
   private actualizarVotaciones(transaccion: Transaccion) {
     const resultado = Array.from(this.blockchain.votaciones.values()).filter(v => v.id === transaccion.idVotacion);
-    console.log('Resultado votaciones', resultado);
     if (resultado.length === 0) {
       this.votacionService
         .getVotacion(transaccion.idVotacion)
         .subscribe((result) => {
           if (result !== undefined && result != null) {
-            console.log('Se actualiza la votacion y las opciones');
             this.blockchain.votaciones.set(transaccion.idVotacion, result);
             this.actualizarOpciones(transaccion);
           }else{
@@ -45,7 +43,6 @@ export class VotarP2PService {
 
   actualizarOpciones(transaccion: Transaccion) {
     this.opcionService.getOpcion(transaccion.idVotacion).subscribe((result) => {
-      console.log('Las opciones encontradas son:', result);
       if (result !== undefined && result != null){
         this.blockchain.votaciones.get(
           transaccion.idVotacion
@@ -68,6 +65,7 @@ export class VotarP2PService {
       this.validarFormatoVoto(transaccion, votacion);
     }
   }
+
   private validarFormatoVoto(transaccion: Transaccion, votacion: Votacion) {
     let isValid: boolean;
     switch (votacion.tipoDeVotacion.valueOf()) {

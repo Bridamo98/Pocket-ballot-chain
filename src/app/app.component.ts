@@ -12,17 +12,13 @@ declare var $: any;
 
 
 export class AppComponent {
-  
+
   title = 'pocket-ballot-chain';
 
   usuario = new Usuario("Diego", 1200, "yo@aaa", "Aadadsd");
-  
+
   ngOnInit(): void {
-    console.log("FUNCIONA EL ON INIT")
     //$('.btn-danger').html("");
     //document.getElementsByClassName('btn-danger').innerHtml = "<i class='far fa-trash-alt'></i>";
   }
 }
-
-
-

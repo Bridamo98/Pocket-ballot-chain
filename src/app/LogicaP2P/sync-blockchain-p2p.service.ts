@@ -76,7 +76,6 @@ export class SyncBlockchainP2pService {
     ultHash: Map<number, string>,
     peerId: string
   ) {
-    console.log('La blockchain al sincronizar última era es', this.blockchain);
     console.log('Recibida actualización con hash', hash);
     if (
       this.hashGanador == null &&
@@ -109,17 +108,14 @@ export class SyncBlockchainP2pService {
     const blockchain: Map<number, Map<string, Bloque>> = this.votosBuffer.get(
       this.hashGanador
     );
-    console.log('va a actualizar la blockchain con b:', blockchain);
     if (blockchain !== undefined){
       if (blockchain.size !== 0){
-        console.log('Actualizando blockchain con tamaño', blockchain.size);
         estaActualizada = this.blockchain.actualizarBlockchain(
           blockchain,
           this.ultHashGanador
         );
       }
     }
-    console.log('Esta acualizada = ', estaActualizada);
     if (estaActualizada) {
       // Notificar al servidor
       this.confirmarBlockchain();
@@ -200,7 +196,6 @@ export class SyncBlockchainP2pService {
   }
 
   syncBlockchainCompleta(contenido: any) {
-    console.log('Sincronizando blockchain');
     ConvertersService.convertirActualizacion(
       contenido,
       '',
