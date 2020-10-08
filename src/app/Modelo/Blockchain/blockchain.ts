@@ -154,4 +154,9 @@ export class Blockchain {
     }
     this.ordenarTransacciones();
   }
+
+  resetearBlockchain(): void {
+    this.blockchain = new Map();
+    this.ultHash = new Map();
+  }
 }

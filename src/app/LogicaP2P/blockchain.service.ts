@@ -16,4 +16,8 @@ export class BlockchainService {
   ordenarTransacciones(): void {
     this.blockchain.ordenarTransacciones();
   }
+
+  resetearBlockchain(): void {
+    this.blockchain.resetearBlockchain();
+  }
 }

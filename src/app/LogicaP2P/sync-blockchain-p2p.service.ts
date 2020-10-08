@@ -196,6 +196,7 @@ export class SyncBlockchainP2pService {
   }
 
   syncBlockchainCompleta(contenido: any) {
+    this.blockchainService.resetearBlockchain();
     ConvertersService.convertirActualizacion(
       contenido,
       '',
