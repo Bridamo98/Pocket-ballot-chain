@@ -7,7 +7,7 @@ export const environment = {
   serverUrl: 'http://localhost:3000',
   socketUrl: 'http://localhost:4000',
 
-  //Constantes de Blockchain
+  // Constantes de Blockchain
   votar: 1,
   obtenerResultados: 2,
   syncBlockchain: 3,
@@ -19,12 +19,21 @@ export const environment = {
   solicitarBCH: 9,
   syncCompleteBlockchain: 10,
 
-  //tipos de votacion
+  // tipos de votacion
   ranking: 1,
   popular: 2,
   clasificacion: 3,
 
+
 };
+
+export const envTipoTx = {
+    // tipos de transaccion
+    inicioVotacion: 0,
+    voto: 1,
+    resultado: 2,
+}
+
 
 /*
  * For easier debugging in development mode, you can import the following file
