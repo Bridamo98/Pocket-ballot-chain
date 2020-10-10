@@ -27,11 +27,12 @@ export class UsuarioService {
   {
     usuario.contrasena=""+Md5.hashStr(usuario.contrasena.toString());
     console.log(usuario);
-    return this.http.post<any>(this.URLbase+'/iniciarSesion', usuario).toPromise().then(data=> {
+    return this.http.post<any>(this.URLbase + '/iniciarSesion', usuario).toPromise().then(data => {
       console.log(data);
-      if(data.token!=null && data.token!=undefined)
+      if (data.token != null && data.token != undefined)
       {
         localStorage.setItem('token', data.token);
+        localStorage.setItem('nombre', usuario.nombre.toString());
       }
     });
   }

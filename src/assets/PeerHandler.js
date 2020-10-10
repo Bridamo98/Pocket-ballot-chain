@@ -43,7 +43,7 @@ var inicializar = function() {
     });
 
     peer.on('error', function (err) {
-        alert('Error: ' + err);
+        console.log('Error: ' + err);
         console.log(err);
     })
 }
@@ -66,7 +66,7 @@ var enviarMensaje = function(msj, otro_peer_id) {
         console.log("En PeerHandler se envía a:", otro_peer_id);
         peer.connect(otro_peer_id, options);
     } else {
-        alert('Ingresa un peerId');
+        console.log('Error: Ingresa un peerId');
         return false;
     }
 }

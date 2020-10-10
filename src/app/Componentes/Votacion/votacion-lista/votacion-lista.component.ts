@@ -11,6 +11,7 @@ import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
 import { element } from 'protractor';
 import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
+//import * as now from 'nano-time';
 
 declare var inicializar: any;
 declare var establecerConexion: any;
@@ -149,7 +150,8 @@ export class VotacionListaComponent implements OnInit {
 
   //Para probar envio de transacciones
   enviarTransaccion(): void {
-    let transaccion: Transaccion = new Transaccion(1, 3, null,["Diego", "Santiago"]);
+    const numero: number = Date.now();
+    let transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
     let mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.registrarVoto(mensaje); //Generar aqui el voto con los datos nesesarios
     this.votarService.obtenerValidadores()
@@ -157,10 +159,11 @@ export class VotacionListaComponent implements OnInit {
         result => {
           result.forEach(element => {
             console.log(element);
-            //console.log(element.peerId);
             console.log("Enviando mensaje a:", element.peerId);
+            console.log(mensaje);
             enviarMensaje(mensaje, element.peerId);
-            //this.votarService.enviarVoto(mensaje, element.peerId); EN EL SERVIDOR NO FUNCIONA
+            enviarMensaje(mensaje, element.peerId);
+            enviarMensaje(mensaje, element.peerId);
           });
         }
       );

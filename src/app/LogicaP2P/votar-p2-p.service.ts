@@ -6,6 +6,7 @@ import { VotacionService } from '../Servicios/votacion.service';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Votacion } from '../Modelo/Votacion';
 import { environment } from 'src/environments/environment';
+import { CrearVotacionP2PService } from './crear-votacion-p2-p.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,19 +17,23 @@ export class VotarP2PService {
   constructor(
     private votacionService: VotacionService,
     private blockchainService: BlockchainService,
-    private opcionService: OpcionService
+    private opcionService: OpcionService,
+    private crearVotacionP2PService: CrearVotacionP2PService
   ) {
     this.blockchain = this.blockchainService.retornarBlockchain();
   }
 
   private actualizarVotaciones(transaccion: Transaccion) {
-    if (!this.blockchain.votaciones.has(transaccion.idVotacion)) {
+    const resultado = Array.from(this.blockchain.votaciones.values()).filter(v => v.id === transaccion.idVotacion);
+    if (resultado.length === 0) {
       this.votacionService
         .getVotacion(transaccion.idVotacion)
         .subscribe((result) => {
-          if (result !== undefined || result != null) {
+          if (result !== undefined && result != null) {
             this.blockchain.votaciones.set(transaccion.idVotacion, result);
             this.actualizarOpciones(transaccion);
+          }else{
+            console.log('Error: votación no encontrada');
           }
         });
     } else {
@@ -38,14 +43,14 @@ export class VotarP2PService {
 
   actualizarOpciones(transaccion: Transaccion) {
     this.opcionService.getOpcion(transaccion.idVotacion).subscribe((result) => {
-      this.blockchain.votaciones.get(
-        transaccion.idVotacion
-      ).opcionDeVotacion = result;
-      console.log('opciones:');
-      console.log(
-        this.blockchain.votaciones.get(transaccion.idVotacion).opcionDeVotacion
-      );
-      this.validarVoto(transaccion);
+      if (result !== undefined && result != null){
+        this.blockchain.votaciones.get(
+          transaccion.idVotacion
+        ).opcionDeVotacion = result;
+        this.validarVoto(transaccion);
+      }else{
+        console.log('Error: opciones no encontradas');
+      }
     });
   }
 
@@ -60,8 +65,8 @@ export class VotarP2PService {
       this.validarFormatoVoto(transaccion, votacion);
     }
   }
+
   private validarFormatoVoto(transaccion: Transaccion, votacion: Votacion) {
-    this.blockchain.transacciones.push(transaccion);
     let isValid: boolean;
     switch (votacion.tipoDeVotacion.valueOf()) {
       case environment.ranking:
@@ -78,20 +83,14 @@ export class VotarP2PService {
         break;
     }
     if (isValid) {
-      transaccion.hashIn = this.blockchain.buscarTxInicioVotacion(
-        transaccion.idVotacion
-      ).hash;
-      console.log(
-        'ohai' + this.blockchain.buscarTxInicioVotacion(transaccion.idVotacion)
-      );
-      if (
-        transaccion.hashIn !== null &&
-        transaccion.hashIn !== undefined &&
-        transaccion.hashIn !== ''
-      ) {
-        console.log(transaccion);
-        this.blockchain.transacciones.push(transaccion);
+      let txInicial = this.blockchain.buscarTxInicioVotacion(
+        transaccion.idVotacion);
+      if (txInicial == null || txInicial === undefined) {
+        transaccion.hashIn = this.crearVotacionP2PService.crearVotacion(votacion, transaccion.timestamp);
+      }else{
+        transaccion.hashIn = txInicial.hash;
       }
+      this.blockchain.transacciones.push(transaccion);
     }
   }
 
@@ -170,6 +169,7 @@ export class VotarP2PService {
   }
 
   imprimirTransacciones() {
+    console.log("Transacciones");
     console.log(this.blockchain.transacciones);
   }
 }

@@ -16,6 +16,8 @@ export const environment = {
   inicializarVotacion: 6,
   obtenerPk: 7,
   responderPk: 8,
+  solicitarBCH: 9,
+  syncCompleteBlockchain: 10,
 
   //tipos de votacion
   ranking: 1,

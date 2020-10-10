@@ -12,4 +12,12 @@ export class BlockchainService {
   retornarBlockchain(): Blockchain{
     return this.blockchain;
   }
+
+  ordenarTransacciones(): void {
+    this.blockchain.ordenarTransacciones();
+  }
+
+  resetearBlockchain(): void {
+    this.blockchain.resetearBlockchain();
+  }
 }
