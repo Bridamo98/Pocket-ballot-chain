@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { VotacionService } from '../Servicios/votacion.service';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Votacion } from '../Modelo/Votacion';
-import { environment } from 'src/environments/environment';
+import { environment, envTipoTx } from 'src/environments/environment';
 import { CrearVotacionP2PService } from './crear-votacion-p2-p.service';
 
 @Injectable({
@@ -24,6 +24,7 @@ export class VotarP2PService {
   }
 
   private actualizarVotaciones(transaccion: Transaccion) {
+    transaccion.tipoTransaccion = envTipoTx.voto;
     const resultado = Array.from(this.blockchain.votaciones.values()).filter(v => v.id === transaccion.idVotacion);
     if (resultado.length === 0) {
       this.votacionService

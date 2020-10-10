@@ -4,6 +4,7 @@ import { BlockchainService } from './blockchain.service';
 import { Injectable } from '@angular/core';
 import { Votacion } from '../Modelo/Votacion';
 import { Transaccion } from '../Modelo/Blockchain/transaccion';
+import { envTipoTx } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +18,7 @@ export class CrearVotacionP2PService {
 
   crearVotacion(votacion: Votacion, timestamp: number) {
     const transaccion: Transaccion = new Transaccion(
-      0,
+      envTipoTx.inicioVotacion,
       votacion.id.valueOf(),
       '',
       [votacion.votos.toString()],

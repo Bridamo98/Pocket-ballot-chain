@@ -3,6 +3,7 @@ import { Transaccion } from './transaccion';
 import { Votacion } from '../Votacion';
 import { stringify } from 'querystring';
 import { sha512 } from 'js-sha512';
+import { CalcularResultadoVotacion } from 'src/app/LogicaP2P/ResultadoVotacion/calcular-resultado-votacion';
 
 export class Blockchain {
   blockchain: Map<number, Map<string, Bloque>> = new Map();
@@ -158,5 +159,12 @@ export class Blockchain {
   resetearBlockchain(): void {
     this.blockchain = new Map();
     this.ultHash = new Map();
+  }
+
+  calcularResultado(idVotacion: number, calcularResultado: CalcularResultadoVotacion): void {
+    const subBlockchain = this.blockchain.get(idVotacion);
+    for (const bloque of subBlockchain.values()) {
+      bloque.calcularResultado(idVotacion, calcularResultado);
+    }
   }
 }

@@ -61,7 +61,7 @@ import { TokenInterceptorService } from './Servicios/token-interceptor.service';
     VotacionReporteComponent,
     ValidadorPostularseComponent,
     VotacionCrearInformacionComponent,
-    CredencialComponent
+    CredencialComponent,
   ],
   imports: [
     BrowserModule,
