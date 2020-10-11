@@ -18,6 +18,7 @@ export const environment = {
   responderPk: 8,
   solicitarBCH: 9,
   syncCompleteBlockchain: 10,
+  calcularResultados: 11,
 
   // tipos de votacion
   ranking: 1,

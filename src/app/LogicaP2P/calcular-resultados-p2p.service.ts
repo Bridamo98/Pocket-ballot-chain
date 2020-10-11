@@ -12,6 +12,9 @@ import { VotacionService } from '../Servicios/votacion.service';
 import { environment, envTipoTx } from 'src/environments/environment';
 import { Opcion } from '../Modelo/Opcion';
 import { VotacionPopular } from './ResultadoVotacion/TipoVotacion/votacion-popular';
+import { Mensaje } from '../Modelo/Blockchain/mensaje';
+
+declare var enviarMensaje: any;
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +28,9 @@ export class CalcularResultadosP2pService {
     private votacionService: VotacionService,
     private opcionService: OpcionService
   ) {}
-  async calcularResultado(idVotacion: number) {
+
+  async calcularResultado(idVotacion: number, peerId: string) {
+    console.log('Calculando resultados de la votación', idVotacion);
     this.blockchain = this.blockchainService.retornarBlockchain();
     this.subBlockchain = this.blockchain.blockchain.get(idVotacion);
     const ultBloque = this.subBlockchain.get(
@@ -47,9 +52,11 @@ export class CalcularResultadosP2pService {
         votacion.opcionDeVotacion = await this.solicitarOpcion(idVotacion);
       }
     }
+    console.log('Votación de los resultados terminada');
     // if votación terminó
     if (votacion.fechaLimite.getTime() <= Date.now()) {
       let ultTransaccion = ultBloque.transacciones[cantTransacciones - 1];
+      console.log('Última tx en resultados', ultTransaccion);
       // if blockchain no está cerrada
       if (ultTransaccion.tipoTransaccion !== envTipoTx.resultado) {
         let calcularResultado: CalcularResultadoVotacion;
@@ -82,7 +89,14 @@ export class CalcularResultadosP2pService {
         this.blockchain.transacciones.push(ultTransaccion);
       }
       // TO-DO: enviar al servidor la transaccion de cierre
+      this.enviarResultados(peerId, ultTransaccion.mensaje[ultTransaccion.mensaje.length - 1]);
     }
+  }
+
+  enviarResultados(peerId: string, resultado: string): void{
+    console.log('Reportando el resultado', resultado);
+    const mensaje = new Mensaje(environment.obtenerResultados, resultado);
+    enviarMensaje(mensaje, peerId);
   }
 
   solicitarVotacion(idVotacion: number): Promise<Votacion> {
@@ -92,6 +106,7 @@ export class CalcularResultadosP2pService {
       });
     });
   }
+
   solicitarOpcion(idVotacion: number): Promise<Opcion[]> {
     return new Promise<Opcion[]>((resolve) => {
       this.opcionService.getOpcion(idVotacion).subscribe((result) => {

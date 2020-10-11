@@ -1,10 +1,16 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Votacion } from '../../../Modelo/Votacion';
-import { Usuario } from 'src/app/Modelo/Usuario';
 import { VotacionService } from 'src/app/Servicios/votacion.service';
 import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
 import { TipoVotacion } from '../../../Modelo/TipoVotacion';
+import { environment } from '../../../../environments/environment';
+import { VotarService } from 'src/app/Servicios/votar.service';
+import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
+
+declare var inicializar: any;
+declare var setVoto: any;
+declare var enviarMensaje: any;
 
 @Component({
   selector: 'app-votacion-reporte',
@@ -31,7 +37,8 @@ export class VotacionReporteComponent implements OnInit {
     private router: Router,
     private rutaActiva: ActivatedRoute,
     private votacionService: VotacionService,
-    private opcionService: OpcionService
+    private opcionService: OpcionService,
+    private votarService: VotarService
   ) {
     this.votacion.id = this.rutaActiva.snapshot.params.id;
     this.votacion = {
@@ -53,6 +60,8 @@ export class VotacionReporteComponent implements OnInit {
 
   ngOnInit(): void {
     this.getVotacion();
+    inicializar();
+    this.solicitarResultados(this.votacion.id.valueOf());
   }
 
   // Solicita al servicio la votación
@@ -165,5 +174,23 @@ export class VotacionReporteComponent implements OnInit {
     this.opcionService.getOpcion(this.votacion.id.valueOf()).subscribe(
       result => { votacion.opcionDeVotacion = result; this.contarVotos(); }
     );
+  }
+
+  registrarSolicitud(contenido){
+    setVoto(contenido);
+  }
+
+  solicitarResultados(idVotacion: number): void {
+    console.log('Solicitando resultados');
+    const mensaje = new Mensaje(environment.calcularResultados, idVotacion);
+    // this.registrarSolicitud(mensaje);
+    this.votarService.obtenerValidadores()
+      .subscribe(
+        result => {
+          result.forEach(element => {
+            enviarMensaje(mensaje, element.peerId);
+          });
+        }
+      );
   }
 }

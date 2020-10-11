@@ -10,6 +10,8 @@ import * as io from 'socket.io-client';
 import { AlgoritmoConsensoP2pService } from '../LogicaP2P/algoritmo-consenso-p2p.service';
 import { Bloque } from '../Modelo/Blockchain/bloque';
 import { SyncBlockchainP2pService } from '../LogicaP2P/sync-blockchain-p2p.service';
+import { ObtenerResultadosService } from '../LogicaP2P/ResultadoVotacion/obtener-resultados.service';
+import { CalcularResultadosP2pService } from '../LogicaP2P/calcular-resultados-p2p.service';
 
 declare var peer_id;
 
@@ -31,6 +33,8 @@ export class ManejadorMensajesService {
     public envioMensajesService: EnvioMensajesService,
     private consensoService: AlgoritmoConsensoP2pService,
     private syncBlockchainService: SyncBlockchainP2pService,
+    private obtenerResultadosService: ObtenerResultadosService,
+    private calcularResultadosP2pService: CalcularResultadosP2pService
   ) {}
 
   setVoto(pVoto) {
@@ -60,6 +64,10 @@ export class ManejadorMensajesService {
         );
         break;
       case environment.obtenerResultados:
+          this.obtenerResultadosService.obtenerResultados(mensaje.contenido, peerId);
+        break;
+      case environment.calcularResultados:
+          this.calcularResultadosP2pService.calcularResultado(mensaje.contenido, peerId);
         break;
       case environment.ofrecerBloque:
         this.consensoService.validarBloque(
