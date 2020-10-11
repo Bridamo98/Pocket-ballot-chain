@@ -67,7 +67,7 @@ export class ManejadorMensajesService {
           this.obtenerResultadosService.obtenerResultados(mensaje.contenido, peerId);
         break;
       case environment.calcularResultados:
-          this.calcularResultadosP2pService.calcularResultado(mensaje.contenido, peerId);
+          this.calcularResultadosP2pService.calcularResultado(+mensaje.contenido, peerId);
         break;
       case environment.ofrecerBloque:
         this.consensoService.validarBloque(

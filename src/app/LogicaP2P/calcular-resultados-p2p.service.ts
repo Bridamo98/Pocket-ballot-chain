@@ -54,7 +54,7 @@ export class CalcularResultadosP2pService {
     }
     console.log('Votación de los resultados terminada');
     // if votación terminó
-    if (votacion.fechaLimite.getTime() <= Date.now()) {
+    if (new Date(votacion.fechaLimite).getTime() <= Date.now()) {
       let ultTransaccion = ultBloque.transacciones[cantTransacciones - 1];
       console.log('Última tx en resultados', ultTransaccion);
       // if blockchain no está cerrada
