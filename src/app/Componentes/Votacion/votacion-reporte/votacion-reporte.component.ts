@@ -1,3 +1,4 @@
+import { ObtenerResultadosService } from './../../../LogicaP2P/ResultadoVotacion/obtener-resultados.service';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Votacion } from '../../../Modelo/Votacion';
@@ -38,7 +39,8 @@ export class VotacionReporteComponent implements OnInit {
     private rutaActiva: ActivatedRoute,
     private votacionService: VotacionService,
     private opcionService: OpcionService,
-    private votarService: VotarService
+    private votarService: VotarService,
+    private obtenerResultadosService: ObtenerResultadosService,
   ) {
     this.votacion.id = this.rutaActiva.snapshot.params.id;
     this.votacion = {
@@ -60,7 +62,7 @@ export class VotacionReporteComponent implements OnInit {
 
   ngOnInit(): void {
     this.getVotacion();
-    inicializar();
+    // inicializar();
     this.solicitarResultados(this.votacion.id.valueOf());
   }
 
@@ -187,6 +189,7 @@ export class VotacionReporteComponent implements OnInit {
     this.votarService.obtenerValidadores()
       .subscribe(
         result => {
+          this.obtenerResultadosService.inicializarResultados(result);
           result.forEach(element => {
             enviarMensaje(mensaje, element.peerId);
           });

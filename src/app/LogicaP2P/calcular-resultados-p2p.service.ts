@@ -22,6 +22,7 @@ declare var enviarMensaje: any;
 export class CalcularResultadosP2pService {
   subBlockchain: Map<string, Bloque>;
   blockchain: Blockchain;
+  probando: boolean = true;
 
   constructor(
     private blockchainService: BlockchainService,
@@ -44,6 +45,7 @@ export class CalcularResultadosP2pService {
       votacion = await this.solicitarVotacion(idVotacion);
       votacion.opcionDeVotacion = await this.solicitarOpcion(idVotacion);
     } else {
+      votacion.fechaLimite = new Date(votacion.fechaLimite);
       // if opcion no existe localmente
       if (
         votacion.opcionDeVotacion == null ||
@@ -54,7 +56,7 @@ export class CalcularResultadosP2pService {
     }
     console.log('Votación de los resultados terminada');
     // if votación terminó
-    if (new Date(votacion.fechaLimite).getTime() <= Date.now()) {
+    if (votacion.fechaLimite.getTime() <= Date.now() || this.probando) {
       let ultTransaccion = ultBloque.transacciones[cantTransacciones - 1];
       console.log('Última tx en resultados', ultTransaccion);
       // if blockchain no está cerrada
@@ -83,7 +85,7 @@ export class CalcularResultadosP2pService {
           idVotacion,
           ultTransaccion.hash,
           mensaje,
-          votacion.fechaLimite.getTime()
+          Date.now() - 1  // votacion.fechaLimite.getTime() + 1
         );
         // cerrar blockchain
         this.blockchain.transacciones.push(ultTransaccion);
@@ -102,6 +104,7 @@ export class CalcularResultadosP2pService {
   solicitarVotacion(idVotacion: number): Promise<Votacion> {
     return new Promise<Votacion>((resolve) => {
       this.votacionService.getVotacion(idVotacion).subscribe((result) => {
+        result.fechaLimite = new Date(result.fechaLimite);
         resolve(result);
       });
     });

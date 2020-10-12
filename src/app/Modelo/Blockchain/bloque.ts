@@ -1,6 +1,7 @@
 import { Transaccion } from './transaccion';
 import { sha512 } from 'js-sha512';
 import { CalcularResultadoVotacion } from 'src/app/LogicaP2P/ResultadoVotacion/calcular-resultado-votacion';
+import { envTipoTx } from 'src/environments/environment';
 
 export class Bloque {
   constructor(hashBloqueAnterior: string, transacciones: Transaccion[]) {
@@ -61,7 +62,9 @@ export class Bloque {
 
   calcularResultado(idVotacion: number, calcularResultado: CalcularResultadoVotacion): void {
     for (const transaccion of this.transacciones) {
-      calcularResultado.procesarVoto(transaccion.mensaje);
+      if (transaccion.tipoTransaccion === envTipoTx.voto){
+          calcularResultado.procesarVoto(transaccion.mensaje);
+      }
     }
   }
 }
