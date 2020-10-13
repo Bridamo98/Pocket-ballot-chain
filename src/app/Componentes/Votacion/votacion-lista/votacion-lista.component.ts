@@ -151,7 +151,7 @@ export class VotacionListaComponent implements OnInit {
   // Para probar envio de transacciones
   enviarTransaccion(): void {
     const numero: number = Date.now();
-    const transaccion: Transaccion = new Transaccion(1, 1, "asd",["1 Diego", "2 Santiago", "3 Brandonn", "4 candidato 1", "5 candidato 2"], numero);
+    const transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
     const mensaje = new Mensaje(environment.obtenerPk, transaccion);
 
     this.enviarVoto(mensaje);
@@ -167,8 +167,9 @@ export class VotacionListaComponent implements OnInit {
 
   enviarTransaccion3(): void {
     const numero: number = Date.now();
-    const transaccion3: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
+    const transaccion3: Transaccion = new Transaccion(1, 1, "asd",["1 Diego", "2 Santiago", "3 Brandonn", "4 candidato 1", "5 candidato 2"], numero);
     const mensaje3 = new Mensaje(environment.obtenerPk, transaccion3);
+
     this.enviarVoto(mensaje3);
   }
 
