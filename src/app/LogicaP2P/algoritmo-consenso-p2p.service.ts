@@ -64,9 +64,10 @@ export class AlgoritmoConsensoP2pService {
     console.log('Blockchain al iniciar', this.blockchain);
 
     // TO-DO: Validar tiempo
-    setTimeout(this.crearBloque, (duracion * posicion) + (this.inicio - Date.now()), this);
-    setTimeout(this.vaciarBuffer, duracion - 100, this, 0);
-    setTimeout(this.finalizarEra, (duracion * (this.validadoresActivos.length )) + (this.inicio - Date.now()), this);
+    const inicial = (this.inicio - Date.now());
+    setTimeout(this.crearBloque, (duracion * posicion) + inicial, this);
+    setTimeout(this.vaciarBuffer, duracion - 100 + inicial, this, 0);
+    setTimeout(this.finalizarEra, (duracion * (this.validadoresActivos.length )) + inicial, this);
     // TO-DO: reiniciar los votos
   }
 
@@ -82,10 +83,11 @@ export class AlgoritmoConsensoP2pService {
   }
 
   vaciarBuffer(servicio: AlgoritmoConsensoP2pService, contador: number) {
+    console.log('Vaciando buffer luego de', Math.floor((Date.now() - servicio.inicio) / 1000));
     servicio.conteoVotos = new Map<string, number>();
     servicio.votosBuffer = new Map<string, Array<Bloque>>();
     servicio.bloqueRecibido = false;
-    if (contador < servicio.validadoresActivos.length) {
+    if (contador < (servicio.validadoresActivos.length - 1)) {
       setTimeout(servicio.vaciarBuffer, servicio.duracion, servicio, contador++);
     }
   }
@@ -102,6 +104,7 @@ export class AlgoritmoConsensoP2pService {
   crearBloque(servicio: AlgoritmoConsensoP2pService) {
     console.log('Transacciones en la blockchain en crear:', servicio.blockchain.transacciones);
     console.log('Tiempo transcurrido:', Math.floor((Date.now() - servicio.inicio) / 1000));
+    servicio.blockchain.eliminarTxInsertadas();
     if (servicio.blockchain.transacciones.length > 0) {
       servicio.blockchain.ordenarTransacciones();
       let transacciones = servicio.blockchain.transacciones.filter(
@@ -160,6 +163,7 @@ export class AlgoritmoConsensoP2pService {
   }
 
   enviarBloques(servicio: AlgoritmoConsensoP2pService, mensaje: Mensaje) {
+    console.log('Proponiendo bloques', mensaje.contenido);
     for (let i = 0; i < servicio.validadoresActivos.length; i++) {
       if (i !== servicio.miPosicion) {
         enviarMensaje(mensaje, servicio.validadoresActivos[i].peerId);
