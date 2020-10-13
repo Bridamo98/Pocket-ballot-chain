@@ -167,4 +167,24 @@ export class Blockchain {
       bloque.calcularResultado(idVotacion, calcularResultado);
     }
   }
+
+  eliminarTxInsertadas(): void{
+    for (const tx of this.transacciones) {
+      let idVotacion = tx.idVotacion;
+      let subBlockchain = this.blockchain.get(idVotacion);
+      if (subBlockchain !== undefined){
+        for (const bloque of subBlockchain.values()) {
+          let longitud = bloque.transacciones.length - 1;
+          if (tx.timestamp < bloque.transacciones[0].timestamp || tx.timestamp > bloque.transacciones[longitud].timestamp){
+            continue;
+          }
+          let resultado = bloque.transacciones.filter(transaccion => transaccion.hash === tx.hash);
+          if (resultado.length > 0){
+            this.transacciones = this.transacciones.filter(transaccion => transaccion.hash !== tx.hash);
+            break;
+          }
+        }
+      }
+    }
+  }
 }

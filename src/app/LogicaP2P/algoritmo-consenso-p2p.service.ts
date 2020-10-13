@@ -86,7 +86,7 @@ export class AlgoritmoConsensoP2pService {
     servicio.conteoVotos = new Map<string, number>();
     servicio.votosBuffer = new Map<string, Array<Bloque>>();
     servicio.bloqueRecibido = false;
-    if (contador < servicio.validadoresActivos.length) {
+    if (contador < servicio.validadoresActivos.length - 1) {
       setTimeout(servicio.vaciarBuffer, servicio.duracion, servicio, contador++);
     }
   }
@@ -103,6 +103,7 @@ export class AlgoritmoConsensoP2pService {
   crearBloque(servicio: AlgoritmoConsensoP2pService) {
     console.log('Transacciones en la blockchain en crear:', servicio.blockchain.transacciones);
     console.log('Tiempo transcurrido:', Math.floor((Date.now() - servicio.inicio) / 1000));
+    servicio.blockchain.eliminarTxInsertadas();
     if (servicio.blockchain.transacciones.length > 0) {
       servicio.blockchain.ordenarTransacciones();
       let transacciones = servicio.blockchain.transacciones.filter(
