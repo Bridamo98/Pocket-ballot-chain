@@ -2,12 +2,13 @@ import { Injectable } from '@angular/core';
 import {Usuario} from '../../Modelo/Usuario'
 import { HttpClient, HttpHeaders, HttpHandler } from '@angular/common/http';
 import {Md5} from 'ts-md5/dist/md5';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioService {
-	URLbase = 'http://localhost:3000';
+	URLbase = environment.serverUrl;
 	private _httpHandler: HttpHandler;
 	httpClient: HttpClient;
   constructor(private http: HttpClient) {

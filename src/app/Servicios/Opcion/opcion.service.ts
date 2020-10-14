@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Opcion } from './../../Modelo/Opcion';
+import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
@@ -8,7 +9,7 @@ export class OpcionService {
 
   constructor(private http: HttpClient) { }
 
-  URLbase = 'http://localhost:3000';
+  URLbase = environment.serverUrl;
 
   prueba(){
     console.log('funciona');

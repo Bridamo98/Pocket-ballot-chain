@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Grupo, Respuesta, Relacion } from '../Modelo/Grupo';
 import { Usuario } from '../Modelo/Usuario';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +12,7 @@ export class GrupoService {
 
   constructor(private http: HttpClient) { }
 
-  URLbase = 'http://localhost:3000';
+  URLbase = environment.serverUrl;
   //pequeño cambio
 
   obtenerUsuarioLogueado():Observable<Respuesta>{

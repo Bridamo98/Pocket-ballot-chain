@@ -14,7 +14,7 @@ export class VotacionService {
 
   constructor(private http: HttpClient) { }
 
-  URLbase = 'http://localhost:3000/';
+  URLbase = environment.serverUrl;
 
   prueba() {
     console.log('funciona');

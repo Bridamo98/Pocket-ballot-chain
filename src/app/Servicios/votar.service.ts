@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 
 import { Validador } from 'src/app/Modelo/Validador';//Para probar envio de transacciones
 import { Voto } from '../Modelo/Voto';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -14,7 +15,7 @@ export class VotarService {
 
   constructor(private http: HttpClient) { }
 
-  URLbase = 'http://localhost:3000';
+  URLbase = environment.serverUrl;
 
   obtenerValidadores():Observable<Validador[]> {//Manejar una clase Validador
     let headers = new HttpHeaders().set('Authorization', 'Bearer ' + localStorage.getItem('token'));
