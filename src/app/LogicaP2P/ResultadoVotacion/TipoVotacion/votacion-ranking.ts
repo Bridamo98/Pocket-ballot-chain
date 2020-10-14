@@ -1,40 +1,44 @@
 import { CalcularResultadoVotacion } from './../calcular-resultado-votacion';
 export class VotacionRanking implements CalcularResultadoVotacion {
-
   conteoVotos: Map<string, number> = new Map();
 
   procesarVoto(voto: string[]): void {
-    for (const opcion of voto) {
-      const opcion = voto[0].substring(voto[0].indexOf(' ') + 1).trim();
+    for (const op of voto) {
+      const posicion: number = +op.substring(0 , op.indexOf(''));
+      const opcion: string = op.substring(op.indexOf(' ') + 1).trim();
       if (this.conteoVotos.has(opcion)) {
         const cantVotos = this.conteoVotos.get(opcion);
-        this.conteoVotos.set(opcion, cantVotos + 1);
+        this.conteoVotos.set(opcion, cantVotos + posicion);
       } else {
-        this.conteoVotos.set(opcion, 1);
+        this.conteoVotos.set(opcion, posicion);
       }
     }
   }
   calcularResultados(): string {
     let resultado = '';
-    let candidatos = Array.from(this.conteoVotos.keys());
+    const nombresCandidato = Array.from(this.conteoVotos.keys());
+    let candidatos = [];
+    for (const nombreCandidato of nombresCandidato) {
+      candidatos.push({ nombre: nombreCandidato, votos: this.conteoVotos.get(nombreCandidato) });
+    }
     candidatos = candidatos.sort(this.compararPosicion);
 
-    for (let i = 0 ; i < candidatos.length; i++){
-      resultado += '#' + (i + 1) + ' ' + candidatos[i] + ' ';
+    for (let i = 0; i < candidatos.length; i++) {
+      resultado += '#' + (i + 1) + ' ' + candidatos[i].nombre + ' ';
     }
-    resultado.trim();
+    resultado = resultado.trim();
     return resultado;
   }
 
-  compararPosicion(a: string, b: string): number{
-    const x = this.conteoVotos.get(a);
-    const y = this.conteoVotos.get(b);
+  compararPosicion(a, b): number {
+    const x: number = +a.votos;
+    const y: number = +b.votos;
     if (x < y) {
       return -1;
     }
     if (x > y) {
       return 1;
     }
-    return -1;
+    return 0;
   }
 }

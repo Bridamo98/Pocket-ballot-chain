@@ -12,6 +12,9 @@ import { VotacionService } from '../Servicios/votacion.service';
 import { environment, envTipoTx } from 'src/environments/environment';
 import { Opcion } from '../Modelo/Opcion';
 import { VotacionPopular } from './ResultadoVotacion/TipoVotacion/votacion-popular';
+import { Mensaje } from '../Modelo/Blockchain/mensaje';
+
+declare var enviarMensaje: any;
 
 @Injectable({
   providedIn: 'root',
@@ -19,13 +22,16 @@ import { VotacionPopular } from './ResultadoVotacion/TipoVotacion/votacion-popul
 export class CalcularResultadosP2pService {
   subBlockchain: Map<string, Bloque>;
   blockchain: Blockchain;
+  probando: boolean = true;
 
   constructor(
     private blockchainService: BlockchainService,
     private votacionService: VotacionService,
     private opcionService: OpcionService
   ) {}
-  async calcularResultado(idVotacion: number) {
+
+  async calcularResultado(idVotacion: number, peerId: string) {
+    console.log('Calculando resultados de la votación', idVotacion);
     this.blockchain = this.blockchainService.retornarBlockchain();
     this.subBlockchain = this.blockchain.blockchain.get(idVotacion);
     const ultBloque = this.subBlockchain.get(
@@ -39,6 +45,7 @@ export class CalcularResultadosP2pService {
       votacion = await this.solicitarVotacion(idVotacion);
       votacion.opcionDeVotacion = await this.solicitarOpcion(idVotacion);
     } else {
+      votacion.fechaLimite = new Date(votacion.fechaLimite);
       // if opcion no existe localmente
       if (
         votacion.opcionDeVotacion == null ||
@@ -47,9 +54,11 @@ export class CalcularResultadosP2pService {
         votacion.opcionDeVotacion = await this.solicitarOpcion(idVotacion);
       }
     }
+    console.log('Votación de los resultados terminada');
     // if votación terminó
-    if (votacion.fechaLimite.getTime() <= Date.now()) {
+    if (votacion.fechaLimite.getTime() <= Date.now() || this.probando) {
       let ultTransaccion = ultBloque.transacciones[cantTransacciones - 1];
+      console.log('Última tx en resultados', ultTransaccion);
       // if blockchain no está cerrada
       if (ultTransaccion.tipoTransaccion !== envTipoTx.resultado) {
         let calcularResultado: CalcularResultadoVotacion;
@@ -76,22 +85,31 @@ export class CalcularResultadosP2pService {
           idVotacion,
           ultTransaccion.hash,
           mensaje,
-          votacion.fechaLimite.getTime()
+          votacion.fechaLimite.getTime() + 1
         );
         // cerrar blockchain
         this.blockchain.transacciones.push(ultTransaccion);
       }
       // TO-DO: enviar al servidor la transaccion de cierre
+      this.enviarResultados(peerId, ultTransaccion.mensaje[ultTransaccion.mensaje.length - 1]);
     }
+  }
+
+  enviarResultados(peerId: string, resultado: string): void{
+    console.log('Reportando el resultado', resultado);
+    const mensaje = new Mensaje(environment.obtenerResultados, resultado);
+    enviarMensaje(mensaje, peerId);
   }
 
   solicitarVotacion(idVotacion: number): Promise<Votacion> {
     return new Promise<Votacion>((resolve) => {
       this.votacionService.getVotacion(idVotacion).subscribe((result) => {
+        result.fechaLimite = new Date(result.fechaLimite);
         resolve(result);
       });
     });
   }
+
   solicitarOpcion(idVotacion: number): Promise<Opcion[]> {
     return new Promise<Opcion[]>((resolve) => {
       this.opcionService.getOpcion(idVotacion).subscribe((result) => {

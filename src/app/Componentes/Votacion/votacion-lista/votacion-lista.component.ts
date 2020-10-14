@@ -92,8 +92,8 @@ export class VotacionListaComponent implements OnInit {
 
   ordenarPorTitulo(votaciones: Votacion[]): void {
     votaciones.sort(function (a, b) {
-      let tituloA = a.titulo.toUpperCase();
-      let tituloB = b.titulo.toUpperCase();
+      const tituloA = a.titulo.toUpperCase();
+      const tituloB = b.titulo.toUpperCase();
       if (tituloA < tituloB) {
         return -1;
       }
@@ -148,32 +148,45 @@ export class VotacionListaComponent implements OnInit {
     setVoto(voto);
   }
 
-  //Para probar envio de transacciones
+  // Para probar envio de transacciones
   enviarTransaccion(): void {
     const numero: number = Date.now();
-    let transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
-    let mensaje = new Mensaje(environment.obtenerPk, transaccion);
-    this.registrarVoto(mensaje); //Generar aqui el voto con los datos nesesarios
-    this.votarService.obtenerValidadores()
-      .subscribe(
-        result => {
-          result.forEach(element => {
-            console.log(element);
-            console.log("Enviando mensaje a:", element.peerId);
-            console.log(mensaje);
-            enviarMensaje(mensaje, element.peerId);
-            enviarMensaje(mensaje, element.peerId);
-            enviarMensaje(mensaje, element.peerId);
-          });
-        }
-      );
+    const transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
+    const mensaje = new Mensaje(environment.obtenerPk, transaccion);
+
+    this.enviarVoto(mensaje);
   }
 
-  //Envio del voto
-  EnviarVoto(){
+  enviarTransaccion2(): void {
+    const numero: number = Date.now();
+    const transaccion2: Transaccion = new Transaccion(1, 2, "asd",["Voto Santiago"], numero);
+    const mensaje2 = new Mensaje(environment.obtenerPk, transaccion2);
 
-    let mensaje = new Mensaje(environment.votar, "");
-    enviarMensaje(mensaje, "");
+    this.enviarVoto(mensaje2);
+  }
+
+  enviarTransaccion3(): void {
+    const numero: number = Date.now();
+    const transaccion3: Transaccion = new Transaccion(1, 1, "asd",["1 Diego", "2 Santiago", "3 Brandonn", "4 candidato 1", "5 candidato 2"], numero);
+    const mensaje3 = new Mensaje(environment.obtenerPk, transaccion3);
+
+    this.enviarVoto(mensaje3);
+  }
+
+  // Envio del voto
+  enviarVoto(mensaje: Mensaje){
+    this.votarService.obtenerValidadores()
+    .subscribe(
+      result => {
+        result.forEach(element => {
+          console.log(element);
+          console.log("Enviando mensaje a:", element.peerId);
+          console.log(mensaje);
+          this.registrarVoto(mensaje);
+          enviarMensaje(mensaje, element.peerId);
+        });
+      }
+    );
 
   }
 

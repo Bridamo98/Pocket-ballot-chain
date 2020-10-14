@@ -28,6 +28,7 @@ export class AlgoritmoConsensoP2pService {
   bloquesPropuestos: Array<Bloque>;
   blockchain: Blockchain;
   tiempoMin: number = 5000;
+  probando = true;
 
   nuevosBloques = new Map<number, Array<string>>();
 
@@ -58,6 +59,7 @@ export class AlgoritmoConsensoP2pService {
     this.blockchain = this.blockchainService.retornarBlockchain();
 
     // Almacenar estado de recibimiento de la blockchain
+    // Comentario para el push
 
     console.log('Esperando el inicio del validador en la posición', this.miPosicion);
     console.log('Comenzando timer', Math.floor((this.inicio - Date.now()) / 1000));
@@ -65,7 +67,7 @@ export class AlgoritmoConsensoP2pService {
 
     // TO-DO: Validar tiempo
     setTimeout(this.crearBloque, (duracion * posicion) + (this.inicio - Date.now()), this);
-    setTimeout(this.vaciarBuffer, duracion - 100, this, 0);
+    setTimeout(this.vaciarBuffer, duracion - 100 + (this.inicio - Date.now()), this, 0);
     setTimeout(this.finalizarEra, (duracion * (this.validadoresActivos.length )) + (this.inicio - Date.now()), this);
     // TO-DO: reiniciar los votos
   }
@@ -85,7 +87,7 @@ export class AlgoritmoConsensoP2pService {
     servicio.conteoVotos = new Map<string, number>();
     servicio.votosBuffer = new Map<string, Array<Bloque>>();
     servicio.bloqueRecibido = false;
-    if (contador < servicio.validadoresActivos.length) {
+    if (contador < servicio.validadoresActivos.length - 1) {
       setTimeout(servicio.vaciarBuffer, servicio.duracion, servicio, contador++);
     }
   }
@@ -102,10 +104,11 @@ export class AlgoritmoConsensoP2pService {
   crearBloque(servicio: AlgoritmoConsensoP2pService) {
     console.log('Transacciones en la blockchain en crear:', servicio.blockchain.transacciones);
     console.log('Tiempo transcurrido:', Math.floor((Date.now() - servicio.inicio) / 1000));
+    servicio.blockchain.eliminarTxInsertadas();
     if (servicio.blockchain.transacciones.length > 0) {
       servicio.blockchain.ordenarTransacciones();
       let transacciones = servicio.blockchain.transacciones.filter(
-        (element) => Date.now() - element.timestamp > servicio.tiempoMin
+          (element) => true //Date.now() - element.timestamp > servicio.tiempoMin
       );
       let ulthash: string;
       let idVotacion: number;

@@ -19,7 +19,7 @@ export class VotacionClasificacion implements CalcularResultadoVotacion {
       opcion = opcion.trim();
       resultado += ' ' + opcion + ' ' + this.conteoVotos.get(opcion) + ';';
     }
-    resultado.trim();
+    resultado = resultado.trim();
     return resultado;
   }
 }

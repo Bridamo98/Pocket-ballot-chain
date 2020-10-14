@@ -203,6 +203,7 @@ export class SyncBlockchainP2pService {
       this.blockchain.blockchain,
       this.blockchain.ultHash
     );
+    this.blockchain.eliminarTxInsertadas();
     const transaccionesNuevas: Array<Transaccion> = ConvertersService.convertirTransacciones(contenido['transacciones']);
     this.blockchain.actualizarTransacciones(transaccionesNuevas);
 
