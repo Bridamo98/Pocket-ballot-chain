@@ -59,6 +59,7 @@ export class AlgoritmoConsensoP2pService {
     this.blockchain = this.blockchainService.retornarBlockchain();
 
     // Almacenar estado de recibimiento de la blockchain
+    // Comentario para el push
 
     console.log('Esperando el inicio del validador en la posición', this.miPosicion);
     console.log('Comenzando timer', Math.floor((this.inicio - Date.now()) / 1000));
