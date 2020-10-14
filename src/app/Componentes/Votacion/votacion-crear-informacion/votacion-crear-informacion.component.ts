@@ -6,9 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { trigger } from '@angular/animations';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
 import { Usuario } from 'src/app/Modelo/Usuario';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 declare var $: any;
-
 
 @Component({
   selector: 'app-votacion-crear-informacion',
@@ -17,6 +19,10 @@ declare var $: any;
 })
 export class VotacionCrearInformacionComponent implements OnInit {
 
+  //Autocompletado
+  myControl = new FormControl();
+  options: string[] = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
+  filteredOptions: Observable<string[]>;
   //errores
   msgErrorFecha = "<ul><li type = 'square'> El formato debe ser año-mes-dia </li></ul>";
   msgErrorCredenciales = "<ul><li type = 'square'> Debe ser un valor numérico </li><li type = 'square'> Debe contener menos de 8 cifras </li></ul>";
@@ -55,6 +61,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   ngOnInit(): void {
 
+    
+
     this.usuarioService.getUsuarios().subscribe(result => {
        let auxiliar = result;
        auxiliar.forEach(element => {
@@ -62,6 +70,11 @@ export class VotacionCrearInformacionComponent implements OnInit {
          this.nombreUsuarios.push(element.nombre);
        });
        console.log(this.nombreUsuarios);
+       //autocompletado
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
     });
 
     this.getUsuario();
@@ -293,5 +306,12 @@ export class VotacionCrearInformacionComponent implements OnInit {
       this.cantCredencialesValida = false;
     }
     this.validarFormulario();
+  }
+
+  //filtro para el autocompletado
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.nombreUsuarios.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 }

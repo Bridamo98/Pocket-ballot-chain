@@ -83,7 +83,21 @@
                 
 
                 <div class="form-group row">
-                    <input placeholder="Agregar persona o grupo" type="text" class="form-control col-sm-8" id="inputPersona" [(ngModel)]="participanteParaAgregar" [ngModelOptions]="{standalone: true}">
+                    <!--mat-form-field class="col-sm-8"-->
+                        <input type="text" class="form-control col-sm-8"
+                               placeholder="Agregar persona o grupo"
+                               matInput 
+                               [formControl]="myControl"
+                               [(ngModel)]="participanteParaAgregar"
+                               id="inputPersona"
+                               [matAutocomplete]="auto">
+                        <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+                          <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+                            {{option}}
+                          </mat-option>
+                        </mat-autocomplete>
+                      <!--/mat-form-field-->
+                    <!--input placeholder="Agregar persona o grupo" type="text" class="form-control col-sm-8" id="inputPersona" [(ngModel)]="participanteParaAgregar" [ngModelOptions]="{standalone: true}"-->
                     <button (click)="agregarParticipante()" class="btn btn-primary col-sm-4">Agregar</button>
                 </div>
             </form>

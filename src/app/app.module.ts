@@ -42,6 +42,10 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
 import { TokenInterceptorService } from './Servicios/token-interceptor.service';
 
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -64,9 +68,11 @@ import { TokenInterceptorService } from './Servicios/token-interceptor.service';
     CredencialComponent,
   ],
   imports: [
+    MatAutocompleteModule,
+    MatInputModule,
+    MatFormFieldModule,
     BrowserModule,
     AppRoutingModule,
-    FormsModule,
     BrowserAnimationsModule,
     DragDropModule,
     FormsModule,
