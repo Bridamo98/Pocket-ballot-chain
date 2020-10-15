@@ -21,7 +21,6 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   //Autocompletado
   myControl = new FormControl();
-  options: string[] = ['One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
   filteredOptions: Observable<string[]>;
   //errores
   msgErrorFecha = "<ul><li type = 'square'> El formato debe ser año-mes-dia </li></ul>";
@@ -115,7 +114,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   }
 
   crearOpcion(){
-    this.opciones.push({id:this.identificacion, nombre:this.nombre, descripcion:this.descripcion});
+    this.opciones.push({nombre:this.nombre, descripcion:this.descripcion});
     this.nombre = '';
     this.descripcion = '';
   }
@@ -138,10 +137,9 @@ export class VotacionCrearInformacionComponent implements OnInit {
       fechaLimite: this.fechaLimite,
       tipoDeVotacion: tipoDeVotacionID,
       descripcion: this.votacionDescripcion,
-      cantCredenciales: this.cantidadCredenciales,
       votos: this.cantiVotos,
-      participantes: this.participantes,
-      opciones: this.opciones
+      opciones: this.opciones,
+      participantes: this.participantes
     };
     
     this.votacionService.addVotacion(votacion).subscribe (Status => {
@@ -238,6 +236,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
         this.participantes.push(this.participanteParaAgregar);
       }
     }
+    this.participanteParaAgregar = '';
   }
 
   eliminarParticipante(i: number){
@@ -250,7 +249,6 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   validarFormulario(){
     if(!(this.tituloVotacion == null || this.tituloVotacion == '')){
-      if(this.cantCredencialesValida){
         if(this.fechaInicioValida){
           if(this.fechaLimiteValida){
             this.formularioValidado = true;
@@ -260,9 +258,6 @@ export class VotacionCrearInformacionComponent implements OnInit {
         } else{
           this.formularioValidado = false;
         }
-      } else{
-        this.formularioValidado = false;
-      }
     } else{
       this.formularioValidado = false;
     }
