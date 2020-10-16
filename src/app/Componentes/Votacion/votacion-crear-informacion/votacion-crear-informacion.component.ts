@@ -303,6 +303,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
     this.validarFormulario();
   }
 
+  
   //filtro para el autocompletado
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
