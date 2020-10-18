@@ -40,6 +40,10 @@ export class VotacionService {
     return this.http.post<Votacion>(this.URLbase + "votacionAdd", json, { headers: headers });
   }
 
+  validarAutorizacion(idVotacion: number){
+    return this.http.get<Votacion>(`${environment.serverUrl}/votar/${idVotacion}`);
+  }
+
   getVotacion(id: Number) {
     return this.http.get<Votacion>(`${environment.serverUrl}/votacion/${id}`);
   }
