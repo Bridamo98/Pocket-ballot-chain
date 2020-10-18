@@ -7,6 +7,7 @@ export class Votacion{
     titulo: string;
     autor: string;
     id : Number;
+    fechaInicio: Date;
     fechaLimite : Date;
     plantillaAsociada : String;
     tipoDeVotacion : Number;
