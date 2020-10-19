@@ -18,6 +18,7 @@ export class VotoPopularComponent implements OnInit {
   votacion: Votacion;
   opciones: Opcion[] = [];
   credencial: String;
+  mensaje: string = '';
 
   constructor(
     private credencialServicio: CredencialService,
@@ -27,12 +28,13 @@ export class VotoPopularComponent implements OnInit {
   ) {
     this.idVotacion = +this.rutaActiva.snapshot.params.id;
   }
-  cantVotos: number;
+  cantVotos: any = 'Ninguna';
   tituloVotacion: String = 'Titulo votacion'; // El modelo de votacion aun no tiene titulo
   // Quemar
   idVotacion: number = -1;
   // candidatos: String[]=['Santiago', 'Brandonn', 'Diego', 'Briam'];
   votos: number[] = [];
+  selectedIndex: number = -1;
 
   ngOnInit(): void {
     this.votacionServicio.validarAutorizacion(this.idVotacion).subscribe((res) => {
@@ -44,15 +46,14 @@ export class VotoPopularComponent implements OnInit {
     });
   }
   votar() {
-    console.log(this.opciones);
-    console.log(this.votos);
-  }
-  votar2(index) {
-    if (this.cantVotos > 0) {
-      this.votos[index] = this.votos[index] + 1;
-      this.cantVotos--;
+    if (+this.selectedIndex > -1 && +this.selectedIndex < this.opciones.length){
+      // enviar voto
+      console.log('Votación en progreso');
+    }else{
+      this.mensaje = 'Primero seleccione una de las opciones';
     }
   }
+
   getVotacion() {
     this.opcionServicio.getOpcion(Number(this.idVotacion)).subscribe((res) => {
       this.opciones = res;
@@ -69,7 +70,12 @@ export class VotoPopularComponent implements OnInit {
       }
       console.log(this.votacion);
       this.tituloVotacion = this.votacion.descripcion;
-      this.cantVotos = this.votacion.votos;
+      // this.cantVotos = this.votacion.votos;
     });
+  }
+
+  selectItem(index: number){
+    this.selectedIndex = index;
+    this.cantVotos = this.opciones[+this.selectedIndex].nombre;
   }
 }
