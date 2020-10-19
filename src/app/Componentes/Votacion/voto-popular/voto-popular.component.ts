@@ -1,14 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { Usuario } from '../../../Modelo/Usuario';
 import { Votacion } from '../../../Modelo/Votacion';
 import { Opcion } from '../../../Modelo/Opcion';
-import { Credencial } from '../../../Modelo/Credencial';
+import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
+import { Transaccion } from 'src/app/Modelo/Blockchain/transaccion';
 
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
 import { CredencialService } from '../../../Servicios/Credencial/credencial.service';
 
 import { Router, ActivatedRoute } from '@angular/router';
+import { environment } from 'src/environments/environment';
+
 @Component({
   selector: 'app-voto-popular',
   templateUrl: './voto-popular.component.html',
@@ -37,19 +39,34 @@ export class VotoPopularComponent implements OnInit {
   selectedIndex: number = -1;
 
   ngOnInit(): void {
-    this.votacionServicio.validarAutorizacion(this.idVotacion).subscribe((res) => {
-      if ( res.toString() === "error"){
-        window.location.href = 'Perfil';
-      }
-      this.votacion = res;
-      this.getVotacion();
-    });
+    this.votacionServicio
+      .validarAutorizacion(this.idVotacion)
+      .subscribe((res) => {
+        if (res.toString() === 'error') {
+          window.location.href = 'Perfil';
+        }
+        this.votacion = res;
+        this.getVotacion();
+      });
   }
   votar() {
-    if (+this.selectedIndex > -1 && +this.selectedIndex < this.opciones.length){
+    if (
+      +this.selectedIndex > -1 &&
+      +this.selectedIndex < this.opciones.length
+    ) {
       // enviar voto
       console.log('Votación en progreso');
-    }else{
+      const timestamp: number = Date.now();
+      const transaccion: Transaccion = new Transaccion(
+        1,
+        environment.popular,
+        'asd',
+        ['Voto Santiago'],
+        timestamp
+      );
+      const mensaje = new Mensaje(environment.obtenerPk, transaccion);
+
+    } else {
       this.mensaje = 'Primero seleccione una de las opciones';
     }
   }
@@ -74,7 +91,7 @@ export class VotoPopularComponent implements OnInit {
     });
   }
 
-  selectItem(index: number){
+  selectItem(index: number) {
     this.selectedIndex = index;
     this.cantVotos = this.opciones[+this.selectedIndex].nombre;
   }
