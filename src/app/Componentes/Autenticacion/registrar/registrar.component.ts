@@ -51,6 +51,8 @@ export class RegistrarComponent implements OnInit {
     this.disMissAlertDanger('contrasenia');
     this.disMissAlertDanger('verificar');
 
+    this.nombre = this.nombre.trim().toLocaleLowerCase();
+
     const usuarioYaExiste: boolean = await this.usuarioService.usuarioExiste(
       this.nombre
     );
@@ -59,6 +61,7 @@ export class RegistrarComponent implements OnInit {
       popName.ngbPopover = 'Este usuario ya existe en el sistema';
       popName.open();
       this.alertDanger('nombre');
+      return;
     }
     if (this.verificar === this.contrasenia) {
       this.htmlToAdd = 'Registrado';
