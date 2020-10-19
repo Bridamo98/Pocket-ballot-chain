@@ -30,9 +30,10 @@ export class VotacionReporteComponent implements OnInit {
   resultadoGanador: string = null;
   tipoVotacion: TipoVotacion = new TipoVotacion();
   private suscripcion: Subscription = null;
-  resultados: Map<string, number> = new Map();
+  resultados: Map<string, number> = null;
   totalVotos: number = 0;
   resultadosNombres: string[] = [];
+  numParticipantes: number = 0;
   //votos: number[] = [];
 
   //canvas
@@ -44,6 +45,10 @@ export class VotacionReporteComponent implements OnInit {
   maxX: number = 300;
   maxY: number = 300;
   maxVal: number = -1;
+
+  //constantes
+  primario = '#277ed6';
+  secundario = '#d9402b';
 
   constructor(
     private router: Router,
@@ -77,11 +82,14 @@ export class VotacionReporteComponent implements OnInit {
     this.tipoVotacion = await this.actualizarTipo(this.votacion);
     this.votacion.participantes = await this.actualizarParticipantes(this.votacion);
     this.votacion.opcionDeVotacion = await this.actualizarOpciones(this.votacion);
+    this.inicializarResultados(this.votacion.opcionDeVotacion);
+    this.dibujar();
     // inicializar();
     this.solicitarResultados(this.votacion.id.valueOf());
     this.suscripcion = this.obtenerResultadosService.observable.subscribe(() => {
       this.resultadoGanador = this.obtenerResultadosService.obtenerGanador();
       this.actualizarVotos(this.votacion);
+      this.numParticipantes = this.totalVotos; //Cambiar cuando no se hagan pruebas con 1 votante con múltiples votos
       this.dibujar();
     });
   }
@@ -110,14 +118,21 @@ export class VotacionReporteComponent implements OnInit {
     votacion.almacena = [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }];
     //votacion.almacena = [];
     votacion.votos = votacion.almacena.length;
-
-    this.resultados = this.resultsConverterService.obtenerResultadosPopular(this.resultadoGanador, this.votacion.opcionDeVotacion);
+    switch(this.votacion.tipoDeVotacion){
+      case environment.ranking:
+        this.resultados = this.resultsConverterService.obtenerResultadosRank(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        break;
+      case environment.popular:
+        this.resultados = this.resultsConverterService.obtenerResultadosPop(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        break;
+      case environment.clasificacion:
+        this.resultados = this.resultsConverterService.obtenerResultadosClas(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        break;
+    }
     for (const valor of this.resultados.values()) {
       this.totalVotos += valor;
     }
     this.resultadosNombres = Array.from(this.resultados.keys());
-    console.log('--------------Resultado Ganador------------', this.resultadoGanador);
-    console.log('----Mapa----', this.resultados);
   }
 
   actualizarOpciones(votacion: Votacion): Promise<Opcion[]> {
@@ -145,6 +160,15 @@ export class VotacionReporteComponent implements OnInit {
       );
   }
 
+  inicializarResultados(opciones: Opcion[]): void{
+    console.log('Inicializando resultados');
+    this.resultados = new Map();
+    for (const opcion of opciones) {
+      this.resultados.set(opcion.nombre.valueOf(), 0);
+    }
+    this.resultadosNombres = Array.from(this.resultados.keys());
+  }
+
   //Dibujar
   dibujar(): void {
     this.canvas.nativeElement.width = this.maxX;
@@ -160,9 +184,12 @@ export class VotacionReporteComponent implements OnInit {
       this.dibBarra(this.votacion.opcionDeVotacion[i].nombre.valueOf(), ancho * i, unidad * this.votos[i], ancho);
     } */
     let i = 0;
-    for (const opcion of this.votacion.opcionDeVotacion) {
-      const nombre = opcion.nombre.valueOf();
-      this.dibBarra(nombre, ancho * i, unidad * this.resultados.get(nombre), ancho);
+    let candidatos = Array.from(this.resultados.keys());
+    for (const nombre of candidatos) {
+      if (this.votacion.tipoDeVotacion === environment.clasificacion){
+        this.dibBarra(nombre, ancho * i, unidad * this.maxVal, ancho, this.secundario);
+      }
+      this.dibBarra(nombre, ancho * i, unidad * this.resultados.get(nombre), ancho, this.primario);
       i++;
     }
   }
@@ -175,8 +202,8 @@ export class VotacionReporteComponent implements OnInit {
     this.ctx.stroke();
   }
 
-  dibBarra(nombre: string, x: number, y: number, ancho: number): void {
-    this.ctx.fillStyle = "#277ed6";
+  dibBarra(nombre: string, x: number, y: number, ancho: number, color: string): void {
+    this.ctx.fillStyle = color;
     this.ctx.fillRect(x + this.dsp, this.maxY - y, ancho - 1, y);
     this.ctx.fillStyle = "#000000";
     this.ctx.font = "10px Arial";
@@ -199,11 +226,15 @@ export class VotacionReporteComponent implements OnInit {
         this.maxVal = this.votos[i];
       }
     } */
-    for (const opcion of this.votacion.opcionDeVotacion) {
-      let nombre = opcion.nombre.valueOf();
-      if (this.resultados.get(nombre) > this.maxVal){
-        this.maxVal = this.resultados.get(nombre);
+    if (this.votacion.tipoDeVotacion !== environment.clasificacion){
+      for (const opcion of this.votacion.opcionDeVotacion) {
+        let nombre = opcion.nombre.valueOf();
+        if (this.resultados.get(nombre) > this.maxVal){
+          this.maxVal = this.resultados.get(nombre);
+        }
       }
+    }else{
+      this.maxVal = this.numParticipantes;
     }
   }
 

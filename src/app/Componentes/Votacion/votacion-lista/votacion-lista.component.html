@@ -38,10 +38,10 @@
           </thead>
           <tbody>
             <tr #row *ngFor="let votacion of misVotaciones">
-              <td (click)="verVotacion(votacion.id)">{{ misVotaciones.indexOf(votacion)+1 }}</td>
-              <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
-              <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
-              <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+              <td (click)="verVotacion(votacion.id, misVotaciones)">{{ misVotaciones.indexOf(votacion)+1 }}</td>
+              <td (click)="verVotacion(votacion.id, misVotaciones)">{{ votacion.titulo }}</td>
+              <td (click)="verVotacion(votacion.id, misVotaciones)">{{ votacion.autor }}</td>
+              <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id, misVotaciones)">
                 {{ votacion.participantes.length }}
               </td>
               <td>
@@ -82,10 +82,10 @@
           </thead>
           <tbody>
             <tr #row *ngFor="let votacion of votacionesInscrito">
-              <td (click)="verVotacion(votacion.id)">{{ votacionesInscrito.indexOf(votacion)+1 }}</td>
-              <td (click)="verVotacion(votacion.id)">{{ votacion.titulo }}</td>
-              <td (click)="verVotacion(votacion.id)">{{ votacion.autor }}</td>
-              <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id)">
+              <td (click)="verVotacion(votacion.id, votacionesInscrito)">{{ votacionesInscrito.indexOf(votacion)+1 }}</td>
+              <td (click)="verVotacion(votacion.id, votacionesInscrito)">{{ votacion.titulo }}</td>
+              <td (click)="verVotacion(votacion.id, votacionesInscrito)">{{ votacion.autor }}</td>
+              <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id, votacionesInscrito)">
                 {{ votacion.participantes.length }}
               </td>
               <td>

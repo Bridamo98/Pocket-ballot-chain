@@ -12,6 +12,7 @@ import { VotarService } from '../../../Servicios/votar.service';//Para probar en
 import { element } from 'protractor';
 import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
 //import * as now from 'nano-time';
+import { resolve } from 'dns';
 
 declare var inicializar: any;
 declare var establecerConexion: any;
@@ -51,34 +52,51 @@ export class VotacionListaComponent implements OnInit {
     this.iniciarVista();
   }
 
-  iniciarVista(): void {
-    this.getUsuario();
-    this.getVotaciones();
+  async iniciarVista(): Promise<void> {
+    this.usuario = await this.getUsuario();
+    if (this.usuario === null || this.usuario === undefined) {
+      this.router.navigate(['/']);
+    }
+    this.votaciones = await this.getVotaciones();
+    this.misVotaciones = await this.getVotacionesAutor();
+    await this.actualizarParticipantes(this.votaciones);
+    await this.actualizarParticipantes(this.misVotaciones);
+    this.actualizarVotaciones(this.votaciones);
   }
 
   // Solicita al servicio el usuario
-  getUsuario(): void {
-    this.usuarioService.getUsuario()
-      .subscribe(
-        result => {
-          this.usuario = result;
-          if (this.usuario === null || this.usuario === undefined) {
-            this.router.navigate(['/']);
-          }
-        }
-      );
+  getUsuario(): Promise<Usuario> {
+    return new Promise<Usuario>((resolve, reject) =>
+      this.usuarioService.getUsuario().subscribe(resolve, reject)
+    );
   }
 
   // Solicita al servicio las votaciones
-  getVotaciones(): void {
-    this.votacionService.getVotacionesUsuario()
-      .subscribe(
-        result => {
-          this.votaciones = result;
-          this.actualizarParticipantes(this.votaciones);
-          this.actualizarVotaciones(this.votaciones);
-        }
-      );
+  getVotaciones(): Promise<Votacion[]> {
+    return new Promise<Votacion[]>((resolve, reject) =>
+      this.votacionService.getVotacionesUsuario().subscribe(resolve, reject)
+    );
+  }
+
+  // Solicita al servicio las votaciones
+  getVotacionesAutor(): Promise<Votacion[]> {
+    return new Promise<Votacion[]>((resolve, reject) =>
+      this.votacionService.getVotacionesAutor(this.usuario.nombre.valueOf()).subscribe(resolve, reject)
+    );
+  }
+
+  getParticipantes(id: number): Promise<Usuario[]>{
+    return new Promise<Usuario[]>((resolve, reject) =>
+      this.votacionService.getParticipanteVotacion(id).subscribe(resolve, reject)
+    );
+  }
+
+  actualizarParticipantes(votaciones: Votacion[]): Promise<void[]> {
+    return Promise.all(
+      votaciones.map(async votacion => {
+        votacion.participantes = await this.getParticipantes(votacion.id.valueOf());
+      })
+    );
   }
 
   salir(votacion: Votacion, votaciones: Votacion[]): void {
@@ -111,7 +129,6 @@ export class VotacionListaComponent implements OnInit {
   }
 
   crearVotacion(): void {
-    console.log('crearVotacion');
     this.router.navigate(['/CrearVotacion']);
   }
 
@@ -120,46 +137,48 @@ export class VotacionListaComponent implements OnInit {
     //this.router.navigate(['*/'+this.usuario.nombre]);
   }
 
-  verVotacion(titulo: string): void {
-    console.log('verVotacion ' + titulo);
-    this.router.navigate(['VotacionReporte/' + titulo]);
-  }
-
-  actualizarParticipantes(votaciones: Votacion[]): void {
-    for (const votacion of votaciones) {
-      this.votacionService.getParticipanteVotacion(votacion.id.valueOf())
-        .subscribe(
-          result => { votacion.participantes = result; }
-        );
+  verVotacion(idVotacion: string, votaciones: Votacion[]): void {
+    const votacion = votaciones.filter(v => v.id.valueOf() === +idVotacion)[0];
+    if (new Date().getTime() < new Date(votacion.fechaLimite).getTime()){
+      if (this.votaciones.filter(v => v.id.valueOf() === +idVotacion).length > 0){
+        switch(votacion.tipoDeVotacion.valueOf()){
+          case environment.ranking:
+            this.router.navigate(['VotoRanking/' + idVotacion]);
+            break;
+          case environment.popular:
+            this.router.navigate(['VotoPopular/' + idVotacion]);
+            break;
+          case environment.clasificacion:
+            this.router.navigate(['VotoClasificacion/' + idVotacion]);
+            break;
+        }
+      }else{
+        alert('La votación no ha finalizado y el usuario no es un participante');
+      }
+    }else {
+      this.router.navigate(['VotacionReporte/' + idVotacion]);
     }
   }
 
   actualizarVotaciones(votaciones: Votacion[]): void {
     for (const votacion of votaciones) {
-      if (votacion.autor.toString().localeCompare(this.usuario.nombre.toString()) === 0) {
-        this.misVotaciones.push(votacion);
-      } else {
-        this.votacionesInscrito.push(votacion);
-      }
+      //if (votacion.autor.toString().localeCompare(this.usuario.nombre.toString()) !== 0) {
+      this.votacionesInscrito.push(votacion);
+      //}
     }
   }
 
+  // Para probar envio de transacciones
   registrarVoto(voto){
     setVoto(voto);
   }
 
-  // Para probar envio de transacciones
   enviarTransaccion(): void {
-/*     const numero: number = Date.now();
+    const numero: number = Date.now();
     const transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
     const mensaje = new Mensaje(environment.obtenerPk, transaccion);
 
-    this.enviarVoto(mensaje); */
-    const numero: number = Date.now();
-    const transaccion2: Transaccion = new Transaccion(1, 2, "asd",["Voto Hernando"], numero);
-    const mensaje2 = new Mensaje(environment.obtenerPk, transaccion2);
-
-    this.enviarVoto(mensaje2);
+    this.enviarVoto(mensaje);
   }
 
   enviarTransaccion2(): void {
@@ -171,16 +190,11 @@ export class VotacionListaComponent implements OnInit {
   }
 
   enviarTransaccion3(): void {
-/*     const numero: number = Date.now();
+    const numero: number = Date.now();
     const transaccion3: Transaccion = new Transaccion(1, 1, "asd",["1 Diego", "2 Santiago", "3 Brandonn", "4 candidato 1", "5 candidato 2"], numero);
     const mensaje3 = new Mensaje(environment.obtenerPk, transaccion3);
 
-    this.enviarVoto(mensaje3); */
-    const numero: number = Date.now();
-    const transaccion2: Transaccion = new Transaccion(1, 2, "asd",["Voto Asaf"], numero);
-    const mensaje2 = new Mensaje(environment.obtenerPk, transaccion2);
-
-    this.enviarVoto(mensaje2);
+    this.enviarVoto(mensaje3);
   }
 
   // Envio del voto

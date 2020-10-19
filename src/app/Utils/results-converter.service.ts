@@ -8,7 +8,7 @@ export class ResultsConverterService {
 
   constructor() { }
 
-  obtenerResultadosPopular(resultados: string, opciones: Opcion[]): Map<string, number> {
+  obtenerResultadosPop(resultados: string, opciones: Opcion[]): Map<string, number> {
     let votos = new Map<string, number>();
     let arrayResultados = resultados.split(";");
     arrayResultados.pop();
@@ -18,6 +18,37 @@ export class ResultsConverterService {
     for (const string of arrayResultados) {
       let arrayString = string.split(" ");
       let nVotos = +arrayString.pop();
+      votos.set(this.obtenerNombre(arrayString), nVotos);
+    }
+    return votos;
+  }
+
+  obtenerResultadosClas(resultados: string, opciones: Opcion[]): Map<string, number> {
+    let votos = new Map<string, number>();
+    let arrayResultados = resultados.split(";");
+    arrayResultados.pop();
+    for (const opcion of opciones) {
+      votos.set(opcion.nombre.valueOf(), 0);
+    }
+    for (const string of arrayResultados) {
+      let arrayString = string.split(" ");
+      let nVotos = +arrayString.pop();
+      votos.set(this.obtenerNombre(arrayString), nVotos);
+    }
+    return votos;
+  }
+
+  obtenerResultadosRank(resultados: string, opciones: Opcion[]): Map<string, number> {
+    let votos = new Map<string, number>();
+    let arrayResultados = resultados.split("#");
+    arrayResultados.pop();
+    for (const opcion of opciones) {
+      votos.set(opcion.nombre.valueOf(), 0);
+    }
+    for (const string of arrayResultados) {
+      let arrayString = string.split(" ");
+      let nVotos = +arrayString[0];
+      arrayString = arrayString.slice(1, arrayString.length);
       votos.set(this.obtenerNombre(arrayString), nVotos);
     }
     return votos;
