@@ -37,7 +37,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   cantidadCredenciales;
   fechaLimite;
   fechaInicio;
-  votacionDescripcion = "falta colocar la descripcion";;
+  votacionDescripcion;
   tipo: string;
   cantiVotos: number;
   participantes = []
@@ -130,6 +130,9 @@ export class VotacionCrearInformacionComponent implements OnInit {
     } else if(this.tipo == 'Clasificacion'){
       tipoDeVotacionID = 3;
     }
+    if(this.descripcion == null || this.descripcion == undefined){
+      this.descripcion = '';
+    }
     let votacion = {
       titulo: this.tituloVotacion,
       autor: this.usuario.nombre,
@@ -147,7 +150,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
     
       if(!Status['Error']){
         console.log("Se creo con exito: " + idVotacion);
-        for (let index = 0; index < this.opciones.length; index++) {
+        console.log(Status);
+        /*for (let index = 0; index < this.opciones.length; index++) {
           //Aqui debo agregar cada opción
           this.votacionService.addOpcion(idVotacion, this.opciones[index]);
         }
@@ -155,7 +159,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
         for (let index = 0; index < this.participantes.length; index++){
           //Aqui debo agregar cada participante
           this.votacionService.addParticipante(idVotacion, this.participantes[index]);
-        }
+        }*/
+        this.router.navigate(['/VotacionLista']);
       }
       
     }); 

@@ -7,6 +7,11 @@ html{
 }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+textarea{
+  border-color: #2C3E50 !important;
+  background-color: #c5e5de !important;
+}
+
 .container{
     margin: 25px;
 }
@@ -71,7 +76,8 @@ table{
   margin-bottom: 25px;
   }
   .force-overflow {
-  min-height: 450px;
+  min-height: 
+    300px;
   }
   
   .scrollbar-primary::-webkit-scrollbar {

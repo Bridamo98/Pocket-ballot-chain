@@ -10,60 +10,46 @@
                 </div>
             </div>
 
-            <div class="scrollbar scrollbar-primary my-custom-scrollbar"><div class="force-overflow"><table class="table table-bordered table-striped">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Descripción</th>
-                        <th scope="col">Opcion</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let opcion of opciones; let i = index" [attr.data-index]="i">
-                        <th scope="row">{{i+1}}</th>
-                        <td>{{opcion.nombre}}</td>
-                        <td>{{opcion.descripcion}}</td>
-                        <td class="opcion-tabla"><button class="btn btn-danger" (click)="eliminarOpcion(i)"><i class='far fa-trash-alt'></i></button></td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="form-group">
+                <div class="input-group">
+                    <textarea rows="3" id="Descripción" class="form-control" [(ngModel)]="votacionDescripcion" (ngModelChange)="errorTitulo()" placeholder="Descripción"></textarea>
+                </div>
             </div>
+
+            <div>
+                <div class="scrollbar scrollbar-primary my-custom-scrollbar">
+                    <div class="force-overflow">
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Nombre</th>
+                                    <th scope="col">Descripción</th>
+                                    <th scope="col">Opcion</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let opcion of opciones; let i = index" [attr.data-index]="i">
+                                    <th scope="row">{{i+1}}</th>
+                                    <td>{{opcion.nombre}}</td>
+                                    <td>{{opcion.descripcion}}</td>
+                                    <td class="opcion-tabla"><button class="btn btn-danger" (click)="eliminarOpcion(i)"><i class='far fa-trash-alt'></i></button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12 text-center">
+                        <button class="btn btn-primary justify-content-center" (click)="showModal(opcion)">Nuevo candidato</button>
+                    </div>
+                </div>
             </div>
             
-            <div class="row">
-                <div class="col-lg-12 text-center">
-                    <button class="btn btn-primary justify-content-center" (click)="showModal(opcion)">Nuevo candidato</button>
-                </div>
-            </div>
+                
+            
 
-            <div class="row">
-                <div class="form-group col-lg-6">
-                    <div class="form-group">
-                        <label for="dateIni">Fecha inicio</label>
-                        <div class="input-group">
-                            <input id="dateIni" [(ngModel)]="fechaInicio" (ngModelChange)="fechaInicioError()" class="form-control" placeholder="yyyy-mm-dd" name="dp2" ngbDatepicker #dp2="ngbDatepicker" 
-                            data-toggle="popover" data-placement="top">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp2.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group col-lg-6">
-                    <div class="form-group">
-                        <label for="date">Fecha limite</label>
-                        <div class="input-group">
-                            <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
-                            data-toggle="popover" data-placement="top">
-                            <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            
 
 
             <!--div class="row">
@@ -121,10 +107,38 @@
                 </table></div></div>
             </div>
 
-            <div class = row>
-                <input id="credencial" [(ngModel)]="cantidadCredenciales" (ngModelChange)="credencialesError()" placeholder="cantidad de credenciales" type="text" class="form-control col-sm-8"
-                data-toggle="popover">
-                <button id="formularioEnviar" type="submit" class="btn btn-success col-sm-4" (click)="crearVotacion()" disabled>Crear votación</button>
+            <div class="row">
+                <div class="form-group col-lg-6">
+                    <div class="form-group">
+                        <label for="dateIni">Fecha inicio</label>
+                        <div class="input-group">
+                            <input id="dateIni" [(ngModel)]="fechaInicio" (ngModelChange)="fechaInicioError()" class="form-control" placeholder="yyyy-mm-dd" name="dp2" ngbDatepicker #dp2="ngbDatepicker" 
+                            data-toggle="popover" data-placement="top">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp2.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group col-lg-6">
+                    <div class="form-group">
+                        <label for="date">Fecha limite</label>
+                        <div class="input-group">
+                            <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
+                            data-toggle="popover" data-placement="top">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class = "row justify-content-center">
+                <!--input id="credencial" [(ngModel)]="cantidadCredenciales" (ngModelChange)="credencialesError()" placeholder="cantidad de credenciales" type="text" class="form-control col-sm-8"
+                data-toggle="popover"-->
+                <button id="formularioEnviar" type="submit" class="btn btn-success" (click)="crearVotacion()" disabled>Crear votación</button>
             </div>
 
         </div>
@@ -155,7 +169,6 @@
           </form>
     </div>
     <div class="modal-footer">
-        <input [(ngModel)]="formularioValidado" (ngModelChange)="validarFormulario()">
         <button ngbAutofocus class="btn btn-success" (click)="crearOpcion(); modalOpcion.close('Save click')">Crear opción</button>
     </div>
 </ng-template>

@@ -19,7 +19,6 @@
 }
 
 .boton-flotante{
-    position: inherit;
+    position: absolute;
     padding-left: 300px;
-    padding-top: 150px;
 }
