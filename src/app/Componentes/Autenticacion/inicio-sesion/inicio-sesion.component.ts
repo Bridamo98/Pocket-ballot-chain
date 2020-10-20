@@ -25,7 +25,7 @@ export class InicioSesionComponent implements OnInit {
   ) {
     this.usuarioService = usuarioService;
     if (this.usuarioService.estaLogeado()){
-      this.router.navigate(['/Perfil']);
+      this.router.navigate(['/Inicio']);
     }
   }
   correo: String;
@@ -68,7 +68,7 @@ export class InicioSesionComponent implements OnInit {
         try {
           await this.usuarioService.iniciarSesion(this.usuario);
           popUsuario.close();
-          this.router.navigate(['Perfil']);
+          this.router.navigate(['/Inicio']);
         } catch (error) {
           popUsuario.popoverTitle = '';
           popUsuario.ngbPopover = 'Usuario o contraseña no existe';

@@ -25,7 +25,7 @@ export class AppComponent implements OnInit{
   }
 
   toPerfil(){
-    this.router.navigate(['/Perfil']);
+    this.router.navigate(['/Inicio']);
   }
   toVotacionLista(){
     this.router.navigate(['/VotacionLista']);

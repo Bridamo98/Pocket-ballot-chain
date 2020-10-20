@@ -8,14 +8,14 @@
       </button>
       <div class="collapse navbar-collapse" id="myNavbar">
         <ul class="navbar-nav ml-auto">
-          <li class="nav-item"><a (click)="toPerfil()" class="nav-link">Mi perfil</a></li>
+          <li class="nav-item"><a (click)="toPerfil()" class="nav-link">Inicio</a></li>
           <li class="nav-item"><a (click)="toVotacionLista()" class="nav-link">Mis votaciones</a></li>
           <li class="nav-item"><a (click)="toListarGrupos()" class="nav-link">Grupos</a></li>
           <li class="nav-item dropdown">
             <a href="" class="nav-link dropdown-toggle" data-toggle="dropdown">Sesión</a>
             <div class="dropdown-menu">
               <a (click)="toPerfilEditar()" class="dropdown-item">Configuración</a>
-              <a href="#" class="dropdown-item">Salir</a>
+              <a href="#" class="dropdown-item" (click)="finalizarSesion()">Salir</a>
             </div>
           </li>
         </ul>

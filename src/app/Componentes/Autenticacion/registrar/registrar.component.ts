@@ -35,7 +35,7 @@ export class RegistrarComponent implements OnInit {
   ) {
     this.usuarioService = usuarioService2;
     if (this.usuarioService.estaLogeado()){
-      this.router.navigate(['/Perfil']);
+      this.router.navigate(['/Inicio']);
     }
   }
 
@@ -83,7 +83,7 @@ export class RegistrarComponent implements OnInit {
         localStorage.setItem('token', data.token);
         localStorage.setItem('nombre', this.nombre.toString());
       }
-      this.router.navigate(['Perfil']);
+      this.router.navigate(['/Inicio']);
     } else {
       popConfirm.popoverTitle = '';
       popConfirm.ngbPopover = 'Esta contraseña debe coincidir con la de arriba';
