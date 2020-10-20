@@ -37,7 +37,7 @@ export class VotacionService {
     let json = JSON.stringify(votacion);
     let headers = new HttpHeaders().set('Content-Type', 'application/json').set('Authorization', 'Bearer ' + localStorage.getItem('token'));
     console.log(json);
-    return this.http.post<Votacion>(this.URLbase + "votacionAdd", json, { headers: headers });
+    return this.http.post<any>(this.URLbase + "/votacionAdd", json, { headers: headers });
   }
 
   validarAutorizacion(idVotacion: number){
