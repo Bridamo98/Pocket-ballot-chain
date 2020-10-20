@@ -168,6 +168,13 @@ export class VotacionListaComponent implements OnInit {
     }
   }
 
+  verificarFecha(votacion: Votacion): string{
+    if (new Date().getTime() < new Date(votacion.fechaLimite).getTime()){
+      return "Votar";
+    }
+    return "Resultados";
+  }
+
   // Para probar envio de transacciones
   registrarVoto(voto){
     setVoto(voto);

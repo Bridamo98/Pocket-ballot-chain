@@ -10,12 +10,9 @@ import { VotarService } from 'src/app/Servicios/votar.service';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 import { Subscription } from 'rxjs';
 import { ResultsConverterService } from '../../../Utils/results-converter.service';
-import { resolve } from 'dns';
-import { rejects } from 'assert';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Opcion } from 'src/app/Modelo/Opcion';
 
-declare var inicializar: any;
 declare var setVoto: any;
 declare var enviarMensaje: any;
 
@@ -34,7 +31,6 @@ export class VotacionReporteComponent implements OnInit {
   totalVotos: number = 0;
   resultadosNombres: string[] = [];
   numParticipantes: number = 0;
-  //votos: number[] = [];
 
   //canvas
   @ViewChild('canvas', { static: true })
@@ -84,17 +80,16 @@ export class VotacionReporteComponent implements OnInit {
     this.votacion.opcionDeVotacion = await this.actualizarOpciones(this.votacion);
     this.inicializarResultados(this.votacion.opcionDeVotacion);
     this.dibujar();
-    // inicializar();
+
     this.solicitarResultados(this.votacion.id.valueOf());
     this.suscripcion = this.obtenerResultadosService.observable.subscribe(() => {
       this.resultadoGanador = this.obtenerResultadosService.obtenerGanador();
       this.actualizarVotos(this.votacion);
-      this.numParticipantes = this.totalVotos; //Cambiar cuando no se hagan pruebas con 1 votante con múltiples votos
+      //this.numParticipantes = this.totalVotos; //Cambiar cuando no se hagan pruebas con 1 votante con múltiples votos
       this.dibujar();
     });
   }
 
-  // Solicita al servicio la votación
   getVotacion(): Promise<Votacion>{
     return new Promise<Votacion>((resolve, reject) =>
       this.votacionService.getVotacion(this.votacion.id.valueOf()).subscribe(resolve, reject)
@@ -113,11 +108,7 @@ export class VotacionReporteComponent implements OnInit {
     );
   }
 
-  // Llama al servicio para leer los votos
   actualizarVotos(votacion: Votacion): void {
-    votacion.almacena = [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }];
-    //votacion.almacena = [];
-    votacion.votos = votacion.almacena.length;
     switch(this.votacion.tipoDeVotacion){
       case environment.ranking:
         this.resultados = this.resultsConverterService.obtenerResultadosRank(this.resultadoGanador, this.votacion.opcionDeVotacion);
@@ -180,9 +171,6 @@ export class VotacionReporteComponent implements OnInit {
     let unidad = this.ejeLong / this.maxVal;
     this.dibEjes(this.ejeLong, this.ejeLong);
     this.dibUnidades(unidad);
-/*     for (let i = 0; i < this.votos.length; i++) {
-      this.dibBarra(this.votacion.opcionDeVotacion[i].nombre.valueOf(), ancho * i, unidad * this.votos[i], ancho);
-    } */
     let i = 0;
     let candidatos = Array.from(this.resultados.keys());
     for (const nombre of candidatos) {
@@ -221,11 +209,6 @@ export class VotacionReporteComponent implements OnInit {
   }
 
   calcularMaximo(): void {
-/*     for (let i = 0; i < this.votos.length; i++) {
-      if (this.votos[i] > this.maxVal) {
-        this.maxVal = this.votos[i];
-      }
-    } */
     if (this.votacion.tipoDeVotacion !== environment.clasificacion){
       for (const opcion of this.votacion.opcionDeVotacion) {
         let nombre = opcion.nombre.valueOf();

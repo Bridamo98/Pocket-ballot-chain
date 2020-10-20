@@ -41,7 +41,7 @@ export class ResultsConverterService {
   obtenerResultadosRank(resultados: string, opciones: Opcion[]): Map<string, number> {
     let votos = new Map<string, number>();
     let arrayResultados = resultados.split("#");
-    arrayResultados.pop();
+    arrayResultados = arrayResultados.slice(1);
     for (const opcion of opciones) {
       votos.set(opcion.nombre.valueOf(), 0);
     }
@@ -51,6 +51,7 @@ export class ResultsConverterService {
       arrayString = arrayString.slice(1, arrayString.length);
       votos.set(this.obtenerNombre(arrayString), nVotos);
     }
+    console.log('mapa', votos);
     return votos;
   }
 

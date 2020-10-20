@@ -21,7 +21,7 @@
 
       <div class="table-responsive" id="custom-scroll">
         <table class="table table-hover table-bordered">
-          <thead class="thead-dark">
+          <thead class="thead-dark z-index-1 front">
             <tr>
               <th>No.</th>
               <th (click)="ordenarPorTitulo(misVotaciones)">
@@ -44,10 +44,15 @@
               <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id, misVotaciones)">
                 {{ votacion.participantes.length }}
               </td>
-              <td>
-                <button type="button" class="btn btn-danger" (click)="salir(votacion, misVotaciones)">
-                  Salir
-                </button>
+              <td class="p-0">
+                <div class="container d-flex m-0" role="group" aria-label="Button group">
+                  <button type="button" class="btn btn-danger" (click)="salir(votacion, misVotaciones)">
+                    Salir
+                  </button>
+                  <button type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, misVotaciones)">
+                    {{ verificarFecha(votacion) }}
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -88,10 +93,15 @@
               <td *ngIf="votacion.participantes != undefined" (click)="verVotacion(votacion.id, votacionesInscrito)">
                 {{ votacion.participantes.length }}
               </td>
-              <td>
-                <button type="button" class="btn btn-danger" (click)="salir(votacion, votacionesInscrito)">
-                  Salir
-                </button>
+              <td class="p-0">
+                <div class="container d-flex m-0" role="group" aria-label="Button group">
+                  <button type="button" class="btn btn-danger" (click)="salir(votacion, votacionesInscrito)">
+                    Salir
+                  </button>
+                  <button type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, votacionesInscrito)">
+                    {{ verificarFecha(votacion) }}
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
@@ -104,7 +114,7 @@
       </button> -->
     </div>
   </div>
-  <div class="row">
+<!--   <div class="row">
     <button type="button" class="btn btn-danger" (click)="enviarTransaccion()">
       Enviar voto 1
     </button>
@@ -114,6 +124,6 @@
     <button type="button" class="btn btn-danger" (click)="enviarTransaccion3()">
       Enviar voto 3
     </button>
-  </div>
+  </div> -->
 
 </div>
