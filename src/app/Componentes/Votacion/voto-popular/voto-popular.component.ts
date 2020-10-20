@@ -1,3 +1,4 @@
+import { envTipoTx } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { Votacion } from '../../../Modelo/Votacion';
 import { Opcion } from '../../../Modelo/Opcion';
@@ -58,7 +59,7 @@ export class VotoPopularComponent implements OnInit {
       console.log('Votación en progreso');
       const timestamp: number = Date.now();
       const transaccion: Transaccion = new Transaccion(
-        environment.popular,
+        envTipoTx.voto,
         +this.votacion.id,
         'asd',
         ['Voto ' + this.opciones[this.selectedIndex].nombre],

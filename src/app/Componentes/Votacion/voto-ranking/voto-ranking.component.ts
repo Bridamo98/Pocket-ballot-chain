@@ -1,3 +1,4 @@
+import { envTipoTx } from './../../../../environments/environment';
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from '../../../Modelo/Usuario';
 import { Votacion } from '../../../Modelo/Votacion';
@@ -65,7 +66,7 @@ export class VotoRankingComponent implements OnInit {
     }
     const timestamp: number = Date.now();
     const transaccion: Transaccion = new Transaccion(
-      environment.ranking,
+      envTipoTx.voto,
       +this.votacion.id,
       'asd',
       voto,
