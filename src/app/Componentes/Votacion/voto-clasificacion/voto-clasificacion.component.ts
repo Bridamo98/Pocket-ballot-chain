@@ -18,6 +18,10 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Transaccion } from 'src/app/Modelo/Blockchain/transaccion';
 import { environment } from 'src/environments/environment';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
+import { VotarService } from 'src/app/Servicios/votar.service';
+
+declare var enviarMensaje: any;
+declare var setVoto: any;
 @Component({
   selector: 'app-voto-clasificacion',
   templateUrl: './voto-clasificacion.component.html',
@@ -31,6 +35,7 @@ export class VotoClasificacionComponent implements OnInit {
   auxiliar: Opcion;
   credencial: String;
   constructor(
+    private votarService: VotarService,
     private credencialServicio: CredencialService,
     private votacionServicio: VotacionService,
     private opcionServicio: OpcionService,
@@ -128,5 +133,24 @@ export class VotoClasificacionComponent implements OnInit {
       console.log(this.votacion);
       this.tituloVotacion = this.votacion.descripcion;
     });
+  }
+
+  enviarVoto(mensaje: Mensaje){
+    this.votarService.obtenerValidadores()
+    .subscribe(
+      result => {
+        result.forEach(element => {
+          console.log(element);
+          console.log("Enviando mensaje a:", element.peerId);
+          console.log(mensaje);
+          this.registrarVoto(mensaje);
+          enviarMensaje(mensaje, element.peerId);
+        });
+      }
+    );
+
+  }
+  registrarVoto(voto){
+    setVoto(voto);
   }
 }

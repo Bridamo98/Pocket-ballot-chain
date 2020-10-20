@@ -14,6 +14,10 @@ import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { Transaccion } from 'src/app/Modelo/Blockchain/transaccion';
 import { environment } from 'src/environments/environment';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
+import { VotarService } from 'src/app/Servicios/votar.service';
+
+declare var enviarMensaje: any;
+declare var setVoto: any;
 @Component({
   selector: 'app-voto-ranking',
   templateUrl: './voto-ranking.component.html',
@@ -26,7 +30,7 @@ export class VotoRankingComponent implements OnInit {
   credencial: String;
 
   constructor(
-    private credencialServicio: CredencialService,
+    private votarService: VotarService,
     private votacionServicio: VotacionService,
     private opcionServicio: OpcionService,
     private rutaActiva: ActivatedRoute
@@ -95,5 +99,24 @@ export class VotoRankingComponent implements OnInit {
     }
     console.log(this.votacion);
     this.tituloVotacion = this.votacion.descripcion;
+  }
+
+  enviarVoto(mensaje: Mensaje){
+    this.votarService.obtenerValidadores()
+    .subscribe(
+      result => {
+        result.forEach(element => {
+          console.log(element);
+          console.log("Enviando mensaje a:", element.peerId);
+          console.log(mensaje);
+          this.registrarVoto(mensaje);
+          enviarMensaje(mensaje, element.peerId);
+        });
+      }
+    );
+
+  }
+  registrarVoto(voto){
+    setVoto(voto);
   }
 }
