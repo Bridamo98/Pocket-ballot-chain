@@ -51,4 +51,8 @@ export class AppComponent implements OnInit{
         }
       );
   }
+  finalizarSesion(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('nombre');
+  }
 }
