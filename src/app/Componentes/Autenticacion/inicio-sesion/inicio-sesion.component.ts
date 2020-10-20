@@ -10,6 +10,7 @@ import {
   FormControl,
   ValidatorFn,
 } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-inicio-sesion',
@@ -19,9 +20,13 @@ import {
 export class InicioSesionComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
+    private router: Router,
     usuarioService: UsuarioService
   ) {
     this.usuarioService = usuarioService;
+    if (this.usuarioService.estaLogeado()){
+      this.router.navigate(['/Perfil']);
+    }
   }
   correo: String;
   contrasena: String;
@@ -37,7 +42,7 @@ export class InicioSesionComponent implements OnInit {
 
   element: HTMLElement;
 
-  iniciarSesion(popContra, popUsuario) {
+  async iniciarSesion(popContra, popUsuario) {
     this.disMissAlertDanger('contrasena');
     this.disMissAlertDanger('nombre');
     if (this.correo != null && this.correo != '' && this.correo != undefined) {
@@ -60,14 +65,14 @@ export class InicioSesionComponent implements OnInit {
           bloqValidados: null,
           genera: null,
         };
-        this.usuarioService.iniciarSesion(this.usuario);
-        if (!this.usuarioService.estaLogeado()) {
+        try {
+          await this.usuarioService.iniciarSesion(this.usuario);
+          popUsuario.close();
+          this.router.navigate(['Perfil']);
+        } catch (error) {
           popUsuario.popoverTitle = '';
           popUsuario.ngbPopover = 'Usuario o contraseña no existe';
           popUsuario.open();
-        } else {
-          popUsuario.close();
-          //redirigir
         }
       } else {
         popUsuario.close();

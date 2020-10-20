@@ -18,12 +18,12 @@ import { VotacionReporteComponent } from './Componentes/Votacion/votacion-report
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
 import { VotacionCrearInformacionComponent } from './Componentes/Votacion/votacion-crear-informacion/votacion-crear-informacion.component';
 import { CredencialComponent } from './Componentes/Autenticacion/credencial/credencial.component';
-import { AuthGuard } from './auth.guard'
+import { AuthGuard } from './auth.guard';
 import { ValidadorComponent } from './Componentes/Validador/validador/validador.component';
 
 const routes: Routes = [
   {path: '', component: InicioSesionComponent},
-  {path: 'Registrar', component: RegistrarComponent},
+  {path: 'Registrar', component: RegistrarComponent },
   {path: 'CrearGrupo', component: GrupoCrearComponent, canActivate: [AuthGuard]},
   {path: 'VerGrupo/:origen/:id', component: GrupoVerComponent, canActivate: [AuthGuard]},
   {path: 'ListarGrupos', component: GrupoListarComponent, canActivate: [AuthGuard]},
@@ -40,11 +40,11 @@ const routes: Routes = [
   {path: 'CrearVotacion', component: VotacionCrearComponent, canActivate: [AuthGuard]},
   {path: 'CrearVotacion/:tipo', component: VotacionCrearInformacionComponent, canActivate: [AuthGuard]},
   {path: 'CrearVotacion/:tipo/:cantiVotos', component: VotacionCrearInformacionComponent, canActivate: [AuthGuard]},
-  {path: 'VotoRanking/:id', component: VotoRankingComponent, canActivate:[AuthGuard]},
-  {path: 'VotoClasificacion/:id', component: VotoClasificacionComponent},
-  {path: 'VotoPopular/:id', component: VotoPopularComponent},
-  {path: 'Credencial', component: CredencialComponent},
-  {path: 'Validador', component: ValidadorComponent}
+  {path: 'VotoRanking/:id', component: VotoRankingComponent, canActivate: [AuthGuard]},
+  {path: 'VotoClasificacion/:id', component: VotoClasificacionComponent, canActivate: [AuthGuard]},
+  {path: 'VotoPopular/:id', component: VotoPopularComponent, canActivate: [AuthGuard]},
+  {path: 'Credencial', component: CredencialComponent, canActivate: [AuthGuard]},
+  {path: 'Validador', component: ValidadorComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

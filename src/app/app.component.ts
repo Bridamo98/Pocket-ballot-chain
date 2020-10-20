@@ -21,4 +21,8 @@ export class AppComponent {
     //$('.btn-danger').html("");
     //document.getElementsByClassName('btn-danger').innerHtml = "<i class='far fa-trash-alt'></i>";
   }
+  finalizarSesion(){
+    localStorage.removeItem('token');
+    localStorage.removeItem('nombre');
+  }
 }
