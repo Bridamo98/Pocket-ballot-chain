@@ -6,9 +6,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { trigger } from '@angular/animations';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
 import { Usuario } from 'src/app/Modelo/Usuario';
+import { FormControl } from '@angular/forms';
+import { Observable } from 'rxjs';
+import {map, startWith} from 'rxjs/operators';
 
 declare var $: any;
-
 
 @Component({
   selector: 'app-votacion-crear-informacion',
@@ -17,6 +19,9 @@ declare var $: any;
 })
 export class VotacionCrearInformacionComponent implements OnInit {
 
+  //Autocompletado
+  myControl = new FormControl();
+  filteredOptions: Observable<string[]>;
   //errores
   msgErrorFecha = "<ul><li type = 'square'> El formato debe ser año-mes-dia </li></ul>";
   msgErrorCredenciales = "<ul><li type = 'square'> Debe ser un valor numérico </li><li type = 'square'> Debe contener menos de 8 cifras </li></ul>";
@@ -32,7 +37,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   cantidadCredenciales;
   fechaLimite;
   fechaInicio;
-  votacionDescripcion = "falta colocar la descripcion";;
+  votacionDescripcion;
   tipo: string;
   cantiVotos: number;
   participantes = []
@@ -55,6 +60,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   ngOnInit(): void {
 
+    
+
     this.usuarioService.getUsuarios().subscribe(result => {
        let auxiliar = result;
        auxiliar.forEach(element => {
@@ -62,6 +69,11 @@ export class VotacionCrearInformacionComponent implements OnInit {
          this.nombreUsuarios.push(element.nombre);
        });
        console.log(this.nombreUsuarios);
+       //autocompletado
+      this.filteredOptions = this.myControl.valueChanges.pipe(
+        startWith(''),
+        map(value => this._filter(value))
+      );
     });
 
     this.getUsuario();
@@ -102,7 +114,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   }
 
   crearOpcion(){
-    this.opciones.push({id:this.identificacion, nombre:this.nombre, descripcion:this.descripcion});
+    this.opciones.push({nombre:this.nombre, descripcion:this.descripcion});
     this.nombre = '';
     this.descripcion = '';
   }
@@ -118,6 +130,9 @@ export class VotacionCrearInformacionComponent implements OnInit {
     } else if(this.tipo == 'Clasificacion'){
       tipoDeVotacionID = 3;
     }
+    if(this.descripcion == null || this.descripcion == undefined){
+      this.descripcion = '';
+    }
     let votacion = {
       titulo: this.tituloVotacion,
       autor: this.usuario.nombre,
@@ -125,10 +140,9 @@ export class VotacionCrearInformacionComponent implements OnInit {
       fechaLimite: this.fechaLimite,
       tipoDeVotacion: tipoDeVotacionID,
       descripcion: this.votacionDescripcion,
-      cantCredenciales: this.cantidadCredenciales,
       votos: this.cantiVotos,
-      participantes: this.participantes,
-      opciones: this.opciones
+      opciones: this.opciones,
+      participantes: this.participantes
     };
     
     this.votacionService.addVotacion(votacion).subscribe (Status => {
@@ -136,7 +150,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
     
       if(!Status['Error']){
         console.log("Se creo con exito: " + idVotacion);
-        for (let index = 0; index < this.opciones.length; index++) {
+        console.log(Status);
+        /*for (let index = 0; index < this.opciones.length; index++) {
           //Aqui debo agregar cada opción
           this.votacionService.addOpcion(idVotacion, this.opciones[index]);
         }
@@ -144,7 +159,8 @@ export class VotacionCrearInformacionComponent implements OnInit {
         for (let index = 0; index < this.participantes.length; index++){
           //Aqui debo agregar cada participante
           this.votacionService.addParticipante(idVotacion, this.participantes[index]);
-        }
+        }*/
+        this.router.navigate(['/VotacionLista']);
       }
       
     }); 
@@ -225,6 +241,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
         this.participantes.push(this.participanteParaAgregar);
       }
     }
+    this.participanteParaAgregar = '';
   }
 
   eliminarParticipante(i: number){
@@ -237,7 +254,6 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   validarFormulario(){
     if(!(this.tituloVotacion == null || this.tituloVotacion == '')){
-      if(this.cantCredencialesValida){
         if(this.fechaInicioValida){
           if(this.fechaLimiteValida){
             this.formularioValidado = true;
@@ -247,9 +263,6 @@ export class VotacionCrearInformacionComponent implements OnInit {
         } else{
           this.formularioValidado = false;
         }
-      } else{
-        this.formularioValidado = false;
-      }
     } else{
       this.formularioValidado = false;
     }
@@ -293,5 +306,13 @@ export class VotacionCrearInformacionComponent implements OnInit {
       this.cantCredencialesValida = false;
     }
     this.validarFormulario();
+  }
+
+  
+  //filtro para el autocompletado
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.nombreUsuarios.filter(option => option.toLowerCase().indexOf(filterValue) === 0);
   }
 }

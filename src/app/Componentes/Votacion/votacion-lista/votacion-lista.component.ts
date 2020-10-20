@@ -3,13 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
-import { Validador } from 'src/app/Modelo/Validador';//Para probar envio de transacciones
 import { environment } from 'src/environments/environment';
 import { Router, ActivatedRoute } from '@angular/router';
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
-import { element } from 'protractor';
 import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
 //import * as now from 'nano-time';
 import { resolve } from 'dns';

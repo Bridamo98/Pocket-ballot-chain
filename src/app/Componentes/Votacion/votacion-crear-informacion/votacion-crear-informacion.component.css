@@ -17,3 +17,8 @@
 .opcion-tabla{
     width: 100px;
 }
+
+.boton-flotante{
+    position: absolute;
+    padding-left: 300px;
+}
