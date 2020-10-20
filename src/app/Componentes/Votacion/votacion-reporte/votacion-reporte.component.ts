@@ -60,6 +60,7 @@ export class VotacionReporteComponent implements OnInit {
       titulo: '',
       autor: '',
       id: this.votacion.id,
+      fechaInicio: new Date(),
       fechaLimite: new Date(),
       plantillaAsociada: '',
       tipoDeVotacion: -1,
