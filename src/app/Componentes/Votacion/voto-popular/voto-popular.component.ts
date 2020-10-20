@@ -58,10 +58,10 @@ export class VotoPopularComponent implements OnInit {
       console.log('Votación en progreso');
       const timestamp: number = Date.now();
       const transaccion: Transaccion = new Transaccion(
-        1,
         environment.popular,
+        +this.votacion.id,
         'asd',
-        ['Voto Santiago'],
+        ['Voto ' + this.opciones[this.selectedIndex].nombre],
         timestamp
       );
       const mensaje = new Mensaje(environment.obtenerPk, transaccion);

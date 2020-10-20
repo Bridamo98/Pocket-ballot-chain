@@ -3,9 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
 import { Validador } from 'src/app/Modelo/Validador'; //Para probar envio de transacciones
-import { Voto } from '../Modelo/Voto';
 import { environment } from 'src/environments/environment';
-import { Mensaje } from '../Modelo/Blockchain/mensaje';
 
 @Injectable({
   providedIn: 'root',

@@ -14,6 +14,9 @@ import {
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Transaccion } from 'src/app/Modelo/Blockchain/transaccion';
+import { environment } from 'src/environments/environment';
+import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 @Component({
   selector: 'app-voto-clasificacion',
   templateUrl: './voto-clasificacion.component.html',
@@ -76,8 +79,26 @@ export class VotoClasificacionComponent implements OnInit {
     //console.log(this.candidatos);
   }
   votar() {
-    console.log(this.candidatos);
-    console.log(this.otraLista);
+    // console.log(this.candidatos);
+    // console.log(this.otraLista);
+    const voto = new Array<string>();
+
+    for (let index = 1; index < this.candidatos.length; index++) {
+      const candidato = this.candidatos[index];
+      voto.push(candidato.nombre.toString());
+    }
+
+    const timestamp: number = Date.now();
+    const transaccion: Transaccion = new Transaccion(
+      environment.popular,
+      +this.votacion.id,
+      'asd',
+      voto,
+      timestamp
+    );
+    const mensaje = new Mensaje(environment.obtenerPk, transaccion);
+
+    // enviar voto
   }
 
   getVotacion() {

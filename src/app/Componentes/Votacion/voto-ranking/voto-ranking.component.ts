@@ -10,6 +10,9 @@ import { CredencialService } from '../../../Servicios/Credencial/credencial.serv
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Transaccion } from 'src/app/Modelo/Blockchain/transaccion';
+import { environment } from 'src/environments/environment';
+import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 @Component({
   selector: 'app-voto-ranking',
   templateUrl: './voto-ranking.component.html',
@@ -38,13 +41,12 @@ export class VotoRankingComponent implements OnInit {
     this.votacionServicio
       .validarAutorizacion(this.idVotacion)
       .subscribe((res) => {
-        if ( res.toString() === "error"){
+        if (res.toString() === 'error') {
           window.location.href = 'Perfil';
         }
         this.votacion = res;
         this.getVotacion();
       });
-
   }
   onDropped(event: CdkDragDrop<any>) {
     console.log(event);
@@ -55,6 +57,23 @@ export class VotoRankingComponent implements OnInit {
   }
   votar() {
     console.log(this.opciones);
+    const voto = new Array<string>();
+
+    for (let index = 0; index < this.opciones.length; index++) {
+      const opcion = this.opciones[index];
+      voto.push(((index + 1) + ' ' + opcion.nombre).trim());
+    }
+    const timestamp: number = Date.now();
+    const transaccion: Transaccion = new Transaccion(
+      environment.ranking,
+      +this.votacion.id,
+      'asd',
+      voto,
+      timestamp
+    );
+    const mensaje = new Mensaje(environment.obtenerPk, transaccion);
+
+    // enviar voto
   }
   getVotaciones() {
     this.votacionServicio.getVotaciones().subscribe((res) => {
