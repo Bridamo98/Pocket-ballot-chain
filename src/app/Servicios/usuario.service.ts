@@ -9,6 +9,9 @@ import { Usuario } from '../Modelo/Usuario';
 })
 export class UsuarioService {
 
+  navigateValid = false;
+  usuario: Usuario;
+
   constructor(private http: HttpClient) { }
 
   getUsuario() {
@@ -17,6 +20,22 @@ export class UsuarioService {
 
   getUsuarios() {
     return this.http.get<Usuario[]>(`${environment.serverUrl}/usuario`);
+  }
+
+  idUservalid(){
+    this.getUsuario()
+    .subscribe(
+      result => {
+        this.usuario = result;
+        if (this.usuario === null || this.usuario === undefined) {
+          this.navigateValid = false;
+        }
+        else{
+          this.navigateValid = true;
+        }
+      }
+    );
+    return this.navigateValid;
   }
 
   putUsuario(usuario: Usuario) {

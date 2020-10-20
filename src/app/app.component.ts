@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Usuario } from './Modelo/Usuario';
 import { Router } from '@angular/router';
-import { UsuarioService } from './Servicios/usuario.service';
+import { UsuarioService } from './Servicios/Usuario/usuario.service';
 
 declare var $: any;
 
@@ -19,9 +19,9 @@ export class AppComponent implements OnInit{
   navigateValid = false;
   usuario: Usuario;
 
-  constructor(private router: Router, private usuarioService: UsuarioService){}
+  constructor(private router: Router, public usuarioService: UsuarioService){}
   ngOnInit(): void {
-    this.getUsuario();
+    //this.getUsuario();
   }
 
   toPerfil(){
@@ -37,7 +37,7 @@ export class AppComponent implements OnInit{
     this.router.navigate(['/PerfilEditar']);
   }
 
-  getUsuario(): void {
+  /*getUsuario(): void {
     this.usuarioService.getUsuario()
       .subscribe(
         result => {
@@ -50,7 +50,9 @@ export class AppComponent implements OnInit{
           }
         }
       );
-  }
+  }*/
+
+
   finalizarSesion(){
     localStorage.removeItem('token');
     localStorage.removeItem('nombre');

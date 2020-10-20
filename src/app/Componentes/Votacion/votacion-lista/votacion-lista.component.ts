@@ -9,8 +9,6 @@ import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
 import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
-//import * as now from 'nano-time';
-import { resolve } from 'dns';
 
 declare var inicializar: any;
 declare var establecerConexion: any;

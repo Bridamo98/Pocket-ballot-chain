@@ -10,9 +10,21 @@ import { sha512 } from 'js-sha512';
 export class UsuarioService {
   URLbase = environment.serverUrl;
   httpClient: HttpClient;
+
+  userIsValid = false;
+
   constructor(private http: HttpClient) {
     this.httpClient = http;
   }
+
+  setUserIsValid(valid){
+    this.userIsValid = valid;
+  }
+
+  isUserValid(){
+    return this.userIsValid;
+  }
+
   addUsuario(usuario: Usuario) {
     usuario.contrasena =
       '' + sha512.create().update(usuario.contrasena.toString()).hex();

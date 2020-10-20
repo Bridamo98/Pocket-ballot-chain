@@ -30,7 +30,8 @@ export class VotoPopularComponent implements OnInit {
     private votarService: VotarService,
     private votacionServicio: VotacionService,
     private opcionServicio: OpcionService,
-    private rutaActiva: ActivatedRoute
+    private rutaActiva: ActivatedRoute,
+    private router: Router
   ) {
     this.idVotacion = +this.rutaActiva.snapshot.params.id;
   }
@@ -69,7 +70,8 @@ export class VotoPopularComponent implements OnInit {
         timestamp
       );
       const mensaje = new Mensaje(environment.obtenerPk, transaccion);
-
+      this.enviarVoto(mensaje);
+      this.router.navigate(['/Inicio']);
     } else {
       this.mensaje = 'Primero seleccione una de las opciones';
     }

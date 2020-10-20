@@ -9,6 +9,7 @@ import { Usuario } from 'src/app/Modelo/Usuario';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 declare var $: any;
 
@@ -124,11 +125,11 @@ export class VotacionCrearInformacionComponent implements OnInit {
     let RespuestaVotacion;
     let IdVotacion;
     if(this.tipo == 'Popular'){
-      tipoDeVotacionID = 1;
+      tipoDeVotacionID = environment.popular;
     } else if(this.tipo == 'Ranking'){
-      tipoDeVotacionID = 2;
+      tipoDeVotacionID = environment.ranking;
     } else if(this.tipo == 'Clasificacion'){
-      tipoDeVotacionID = 3;
+      tipoDeVotacionID = environment.clasificacion;
     }
     if(this.descripcion == null || this.descripcion == undefined){
       this.descripcion = '';

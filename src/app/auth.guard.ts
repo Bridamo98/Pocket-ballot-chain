@@ -14,10 +14,12 @@ export class AuthGuard implements CanActivate {
   constructor(private usuarioService: UsuarioService, private router: Router) {}
   canActivate() {
     if (this.usuarioService.estaLogeado()) {
+      this.usuarioService.setUserIsValid(true);
       return true;
     }
     this.router.navigate(['/']);
-    return false;
+      this.usuarioService.setUserIsValid(false);
+      return false;
   }
 
   isLoggedOut() {
