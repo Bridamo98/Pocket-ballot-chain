@@ -9,7 +9,7 @@
       <p>Tipo de votación: {{ tipoVotacion.nombre.toString() }}</p>
       <p *ngIf="votacion.participantes != undefined">Número de votantes: {{ votacion.participantes.length }}</p>
       <p *ngIf="votacion.opcionDeVotacion != undefined">Número de candidatos: {{ votacion.opcionDeVotacion.length }}</p>
-      <p *ngIf="votacion.almacena != undefined">Total de votos: {{ votacion.almacena.length }}</p>
+      <p *ngIf="votacion.almacena != undefined">Total de votos: {{ totalVotos }}</p>
     </div>
 
     <div class="col-sm-4">
@@ -44,9 +44,9 @@
       <h3>Resultados</h3>
       <table>
         <tbody>
-          <tr #row *ngFor="let total of votos">
+          <tr #row *ngFor="let nombre of resultadosNombres">
             <td>
-              {{ votacion.opcionDeVotacion[row.rowIndex].nombre }}: {{ total }}
+              {{ nombre }}: {{ resultados.get(nombre) }}
             </td>
           </tr>
         </tbody>

@@ -32,7 +32,7 @@ const routes: Routes = [
   {path: 'VerGrupo/:origen/:id', component: GrupoVerComponent},
   {path: 'ListarGrupos', component: GrupoListarComponent},
   {path: 'EditarGrupo/:id', component: GrupoEditarComponent},
-  {path: 'Perfil', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
+  {path: 'Inicio', component: UsuarioPerfilComponent, canActivate: [AuthGuard]},
   {path: 'PerfilEditar', component: UsuarioEditarComponent, canActivate: [AuthGuard]},
   {path: 'VotacionLista', component: VotacionListaComponent, canActivate: [AuthGuard]},
   {path: 'VotacionReporte/:id', component: VotacionReporteComponent},
