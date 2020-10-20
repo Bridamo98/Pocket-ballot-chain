@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Validador } from 'src/app/Modelo/Validador';
 
 @Injectable({
@@ -8,6 +9,8 @@ export class ObtenerResultadosService {
   resultadoGanador: string = null;
   conteoVotos = new Map<string, number>();
   validadores = new Array<Validador>();
+  private sujeto = new Subject<void>();
+  public observable = this.sujeto.asObservable();
 
   constructor() {}
   public inicializarResultados(validadores: Array<Validador>) {
@@ -48,5 +51,10 @@ export class ObtenerResultadosService {
 
   private actualizarGanador(): void {
     console.log('Resultados', this.resultadoGanador);
+    this.sujeto.next();
+  }
+
+  obtenerGanador(): string {
+    return this.resultadoGanador;
   }
 }

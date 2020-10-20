@@ -8,8 +8,11 @@ import { TipoVotacion } from '../../../Modelo/TipoVotacion';
 import { environment } from '../../../../environments/environment';
 import { VotarService } from 'src/app/Servicios/votar.service';
 import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
+import { Subscription } from 'rxjs';
+import { ResultsConverterService } from '../../../Utils/results-converter.service';
+import { Usuario } from 'src/app/Modelo/Usuario';
+import { Opcion } from 'src/app/Modelo/Opcion';
 
-declare var inicializar: any;
 declare var setVoto: any;
 declare var enviarMensaje: any;
 
@@ -21,6 +24,13 @@ declare var enviarMensaje: any;
 export class VotacionReporteComponent implements OnInit {
 
   votacion: Votacion = new Votacion();
+  resultadoGanador: string = null;
+  tipoVotacion: TipoVotacion = new TipoVotacion();
+  private suscripcion: Subscription = null;
+  resultados: Map<string, number> = null;
+  totalVotos: number = 0;
+  resultadosNombres: string[] = [];
+  numParticipantes: number = 0;
 
   //canvas
   @ViewChild('canvas', { static: true })
@@ -30,9 +40,11 @@ export class VotacionReporteComponent implements OnInit {
   dsp: number = 20;
   maxX: number = 300;
   maxY: number = 300;
-  votos: number[] = [];
   maxVal: number = -1;
-  tipoVotacion: TipoVotacion = new TipoVotacion();
+
+  //constantes
+  primario = '#277ed6';
+  secundario = '#d9402b';
 
   constructor(
     private router: Router,
@@ -41,6 +53,7 @@ export class VotacionReporteComponent implements OnInit {
     private opcionService: OpcionService,
     private votarService: VotarService,
     private obtenerResultadosService: ObtenerResultadosService,
+    private resultsConverterService: ResultsConverterService
   ) {
     this.votacion.id = this.rutaActiva.snapshot.params.id;
     this.votacion = {
@@ -60,121 +73,62 @@ export class VotacionReporteComponent implements OnInit {
     this.tipoVotacion = { id: -1, nombre: '', descripcion: '' };
   }
 
-  ngOnInit(): void {
-    this.getVotacion();
-    // inicializar();
-    this.solicitarResultados(this.votacion.id.valueOf());
-  }
-
-  // Solicita al servicio la votación
-  getVotacion(): void {
-    this.votacionService.getVotacion(this.votacion.id.valueOf()).subscribe(
-      result => {
-        this.votacion = result;
-        this.actualizarTipo(this.votacion);
-        this.actualizarParticipantes(this.votacion);
-        this.actualizarVotos(this.votacion);
-        this.actualizarOpciones(this.votacion);
-      }
-    );
-  }
-
-  // Seguramente debe ser reemplazada esta función si se hace la correción
-  contarVotos(): void {
-    for (let i = 0; i<this.votacion.opcionDeVotacion.length; i++) {
-      this.votos.push(0);
-    }
-    for (const v of this.votacion.almacena) {
-      this.votos[v.infoVoto.valueOf()]++;
-    }
+  async ngOnInit() {
+    this.votacion = await this.getVotacion();
+    this.tipoVotacion = await this.actualizarTipo(this.votacion);
+    this.votacion.participantes = await this.actualizarParticipantes(this.votacion);
+    this.votacion.opcionDeVotacion = await this.actualizarOpciones(this.votacion);
+    this.inicializarResultados(this.votacion.opcionDeVotacion);
     this.dibujar();
+
+    this.solicitarResultados(this.votacion.id.valueOf());
+    this.suscripcion = this.obtenerResultadosService.observable.subscribe(() => {
+      this.resultadoGanador = this.obtenerResultadosService.obtenerGanador();
+      this.actualizarVotos(this.votacion);
+      //this.numParticipantes = this.totalVotos; //Cambiar cuando no se hagan pruebas con 1 votante con múltiples votos
+      this.dibujar();
+    });
   }
 
-  dibujar(): void {
-    this.canvas.nativeElement.width = this.maxX;
-    this.canvas.nativeElement.height = this.maxY;
-    this.maxY -= this.dsp;
-    this.ctx = this.canvas.nativeElement.getContext("2d");
-    this.calcularMaximo();
-    let ancho = this.ejeLong / this.votacion.opcionDeVotacion.length;
-    let unidad = this.ejeLong / this.maxVal;
-    this.dibEjes(this.ejeLong, this.ejeLong);
-    this.dibUnidades(unidad);
-    for (let i = 0; i < this.votos.length; i++) {
-      this.dibBarra(this.votacion.opcionDeVotacion[i].nombre.valueOf(), ancho * i, unidad * this.votos[i], ancho);
-    }
-  }
-
-  dibEjes(ancho: number, alto: number): void {
-    this.ctx.moveTo(this.dsp, this.maxY);
-    this.ctx.lineTo(this.dsp, this.maxY - alto);
-    this.ctx.moveTo(this.dsp, this.maxY);
-    this.ctx.lineTo(ancho + this.dsp, this.maxY);
-    this.ctx.stroke();
-  }
-
-  dibBarra(nombre: string, x: number, y: number, ancho: number): void {
-    this.ctx.fillStyle = "#277ed6";
-    this.ctx.fillRect(x + this.dsp, this.maxY - y, ancho - 1, y);
-    this.ctx.fillStyle = "#000000";
-    this.ctx.font = "10px Arial";
-    this.ctx.fillText(nombre.slice(0, 3), x + this.dsp, this.maxY + this.dsp);
-  }
-
-  dibUnidades(unidad: number): void {
-    this.ctx.font = "8px Arial";
-    let nCeros = this.numCeros();
-    let numero = 0;
-    for (let i = 0; i <= this.ejeLong + 1; i += unidad * Math.pow(10, nCeros)) {
-      this.ctx.fillText(numero, 0, this.maxY - i);
-      numero += Math.pow(10, nCeros);
-    }
-  }
-
-  calcularMaximo(): void {
-    for (let i = 0; i < this.votos.length; i++) {
-      if (this.votos[i] > this.maxVal) {
-        this.maxVal = this.votos[i];
-      }
-    }
-  }
-
-  numCeros(): number {
-    let nCeros = 0;
-    let val = this.maxVal;
-    val /= 10;
-    while (val >= 1) {
-      nCeros++;
-      val /= 10;
-    }
-    return nCeros;
-  }
-
-  actualizarTipo(votacion: Votacion): void {
-    this.votacionService.getTipoVotacion(votacion.tipoDeVotacion.valueOf()).subscribe(
-      result => { this.tipoVotacion = result; }
+  getVotacion(): Promise<Votacion>{
+    return new Promise<Votacion>((resolve, reject) =>
+      this.votacionService.getVotacion(this.votacion.id.valueOf()).subscribe(resolve, reject)
     );
   }
 
-  actualizarParticipantes(votacion: Votacion): void {
-    this.votacionService.getParticipanteVotacion(votacion.id.valueOf())
-      .subscribe(
-        result => {
-          votacion.participantes = result;
-        }
-      );
+  actualizarTipo(votacion: Votacion): Promise<TipoVotacion> {
+    return new Promise<TipoVotacion>((resolve, reject) =>
+      this.votacionService.getTipoVotacion(votacion.tipoDeVotacion.valueOf()).subscribe(resolve, reject)
+    );
   }
 
-  // Llama al servicio para leer los votos
+  actualizarParticipantes(votacion: Votacion): Promise<Usuario[]> {
+    return new Promise<Usuario[]>((resolve, reject) =>
+      this.votacionService.getParticipanteVotacion(votacion.id.valueOf()).subscribe(resolve, reject)
+    );
+  }
+
   actualizarVotos(votacion: Votacion): void {
-    votacion.almacena = [{ infoVoto: 1 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 1 }, { infoVoto: 0 }, { infoVoto: 2 }];
-    //votacion.almacena = [];
-    votacion.votos = votacion.almacena.length;
+    switch(this.votacion.tipoDeVotacion){
+      case environment.ranking:
+        this.resultados = this.resultsConverterService.obtenerResultadosRank(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        break;
+      case environment.popular:
+        this.resultados = this.resultsConverterService.obtenerResultadosPop(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        break;
+      case environment.clasificacion:
+        this.resultados = this.resultsConverterService.obtenerResultadosClas(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        break;
+    }
+    for (const valor of this.resultados.values()) {
+      this.totalVotos += valor;
+    }
+    this.resultadosNombres = Array.from(this.resultados.keys());
   }
 
-  actualizarOpciones(votacion: Votacion): void {
-    this.opcionService.getOpcion(this.votacion.id.valueOf()).subscribe(
-      result => { votacion.opcionDeVotacion = result; this.contarVotos(); }
+  actualizarOpciones(votacion: Votacion): Promise<Opcion[]> {
+    return new Promise<Opcion[]>((resolve, reject) =>
+      this.opcionService.getOpcion(votacion.id.valueOf()).subscribe(resolve, reject)
     );
   }
 
@@ -195,5 +149,86 @@ export class VotacionReporteComponent implements OnInit {
           });
         }
       );
+  }
+
+  inicializarResultados(opciones: Opcion[]): void{
+    console.log('Inicializando resultados');
+    this.resultados = new Map();
+    for (const opcion of opciones) {
+      this.resultados.set(opcion.nombre.valueOf(), 0);
+    }
+    this.resultadosNombres = Array.from(this.resultados.keys());
+  }
+
+  //Dibujar
+  dibujar(): void {
+    this.canvas.nativeElement.width = this.maxX;
+    this.canvas.nativeElement.height = this.maxY;
+    this.maxY -= this.dsp;
+    this.ctx = this.canvas.nativeElement.getContext("2d");
+    this.calcularMaximo();
+    let ancho = this.ejeLong / this.votacion.opcionDeVotacion.length;
+    let unidad = this.ejeLong / this.maxVal;
+    this.dibEjes(this.ejeLong, this.ejeLong);
+    this.dibUnidades(unidad);
+    let i = 0;
+    let candidatos = Array.from(this.resultados.keys());
+    for (const nombre of candidatos) {
+      if (this.votacion.tipoDeVotacion === environment.clasificacion){
+        this.dibBarra(nombre, ancho * i, unidad * this.maxVal, ancho, this.secundario);
+      }
+      this.dibBarra(nombre, ancho * i, unidad * this.resultados.get(nombre), ancho, this.primario);
+      i++;
+    }
+  }
+
+  dibEjes(ancho: number, alto: number): void {
+    this.ctx.moveTo(this.dsp, this.maxY);
+    this.ctx.lineTo(this.dsp, this.maxY - alto);
+    this.ctx.moveTo(this.dsp, this.maxY);
+    this.ctx.lineTo(ancho + this.dsp, this.maxY);
+    this.ctx.stroke();
+  }
+
+  dibBarra(nombre: string, x: number, y: number, ancho: number, color: string): void {
+    this.ctx.fillStyle = color;
+    this.ctx.fillRect(x + this.dsp, this.maxY - y, ancho - 1, y);
+    this.ctx.fillStyle = "#000000";
+    this.ctx.font = "10px Arial";
+    this.ctx.fillText(nombre.slice(0, 3), x + this.dsp, this.maxY + this.dsp);
+  }
+
+  dibUnidades(unidad: number): void {
+    this.ctx.font = "8px Arial";
+    let nCeros = this.numCeros();
+    let numero = 0;
+    for (let i = 0; i <= this.ejeLong + 1; i += unidad * Math.pow(10, nCeros)) {
+      this.ctx.fillText(numero, 0, this.maxY - i);
+      numero += Math.pow(10, nCeros);
+    }
+  }
+
+  calcularMaximo(): void {
+    if (this.votacion.tipoDeVotacion !== environment.clasificacion){
+      for (const opcion of this.votacion.opcionDeVotacion) {
+        let nombre = opcion.nombre.valueOf();
+        if (this.resultados.get(nombre) > this.maxVal){
+          this.maxVal = this.resultados.get(nombre);
+        }
+      }
+    }else{
+      this.maxVal = this.numParticipantes;
+    }
+  }
+
+  numCeros(): number {
+    let nCeros = 0;
+    let val = this.maxVal;
+    val /= 10;
+    while (val >= 1) {
+      nCeros++;
+      val /= 10;
+    }
+    return nCeros;
   }
 }

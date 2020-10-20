@@ -75,6 +75,8 @@ export class UsuarioEditarComponent implements OnInit {
           {
             localStorage.removeItem('token');
             localStorage.setItem('token', token);
+            localStorage.removeItem('nombre');
+            localStorage.setItem('nombre', this.usuario.nombre.toString());
           }
           this.obtenerNombres();
           this.msgActualizacion = "Información actualizada!";
