@@ -4,6 +4,7 @@ import { Votacion } from '../Votacion';
 import { stringify } from 'querystring';
 import { sha512 } from 'js-sha512';
 import { CalcularResultadoVotacion } from 'src/app/LogicaP2P/ResultadoVotacion/calcular-resultado-votacion';
+import { envTipoTx } from '../../../environments/environment';
 
 export class Blockchain {
   blockchain: Map<number, Map<string, Bloque>> = new Map();
@@ -54,6 +55,13 @@ export class Blockchain {
 
   validadorBloque(bloque: Bloque): boolean {
     const transacciones = bloque.transacciones;
+    if (bloque.hashBloqueAnterior === undefined &&
+      bloque.transacciones[0].tipoTransaccion !== envTipoTx.inicioVotacion){
+      return false;
+    }
+    if (bloque.hashBloqueAnterior !== this.ultHash.get(bloque.transacciones[0].idVotacion)){
+      return false;
+    }
 
     for (const transaccionPendiente of transacciones) {
       const resultado = this.transacciones.filter((transaccionEnLista) => {
@@ -186,5 +194,9 @@ export class Blockchain {
         }
       }
     }
+  }
+
+  buscarResultadosEnTx(idVotacion: number): Array<Transaccion> {
+    return this.transacciones.filter(tx => tx.idVotacion === idVotacion && tx.tipoTransaccion === envTipoTx.resultado);
   }
 }

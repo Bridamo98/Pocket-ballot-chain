@@ -19,7 +19,7 @@ var usuarioPeer;
 var inicializar = function() {
     peer = new Peer({
       host: location.hostname,
-      port: (location.protocol === 'https:' ? 443 : 9000),
+      port: (location.protocol === 'https:' ? 443 : 5000),
       path: '/peerjs'
     });
     peer.on('open', function () {

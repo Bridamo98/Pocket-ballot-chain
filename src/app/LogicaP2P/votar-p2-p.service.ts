@@ -48,9 +48,22 @@ export class VotarP2PService {
         this.blockchain.votaciones.get(
           transaccion.idVotacion
         ).opcionDeVotacion = result;
-        this.validarVoto(transaccion);
+        this.actualizarParticipantes(transaccion);
       }else{
         console.log('Error: opciones no encontradas');
+      }
+    });
+  }
+
+  actualizarParticipantes(transaccion: Transaccion) {
+    this.votacionService.getParticipanteVotacion(transaccion.idVotacion).subscribe((result) => {
+      if (result !== undefined && result != null){
+        this.blockchain.votaciones.get(
+          transaccion.idVotacion
+        ).participantes = result;
+        this.validarVoto(transaccion);
+      }else{
+        console.log('Error: no hay participantes');
       }
     });
   }
@@ -60,8 +73,7 @@ export class VotarP2PService {
       transaccion.idVotacion
     );
     if (
-      new Date(votacion.fechaLimite).getTime() > new Date().getTime() &&
-      votacion.votos > 0
+      new Date(votacion.fechaLimite).getTime() > new Date().getTime() // TO-DO: validar votos en la blockchain y validar los participantes
     ) {
       this.validarFormatoVoto(transaccion, votacion);
     }
@@ -88,7 +100,7 @@ export class VotarP2PService {
         transaccion.idVotacion);
       if (txInicial == null || txInicial === undefined) {
         const timestamp = new Date(votacion.fechaInicio).getTime();
-        transaccion.hashIn = this.crearVotacionP2PService.crearVotacion(votacion, timestamp);
+        transaccion.hashIn = this.crearVotacionP2PService.crearVotacion(votacion, timestamp, votacion.participantes.length);
       }else{
         transaccion.hashIn = txInicial.hash;
       }
@@ -143,7 +155,7 @@ export class VotarP2PService {
 
   validarPopular(transaccion: Transaccion, votacion: Votacion): boolean {
     let answer = true;
-    if (transaccion.mensaje.length !== 1) {
+    if (transaccion.mensaje.length > votacion.votos) {
       return false;
     }
     transaccion.mensaje.forEach((element) => {

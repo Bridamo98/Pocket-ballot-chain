@@ -13,6 +13,7 @@ import { environment, envTipoTx } from 'src/environments/environment';
 import { Opcion } from '../Modelo/Opcion';
 import { VotacionPopular } from './ResultadoVotacion/TipoVotacion/votacion-popular';
 import { Mensaje } from '../Modelo/Blockchain/mensaje';
+import { Usuario } from '../Modelo/Usuario';
 
 declare var enviarMensaje: any;
 
@@ -43,16 +44,22 @@ export class CalcularResultadosP2pService {
     // if votacion no existe localmente
     if (votacion == null || votacion === undefined) {
       votacion = await this.solicitarVotacion(idVotacion);
+      votacion.opcionDeVotacion = null;
+      votacion.participantes = null;
+    }
+    votacion.fechaLimite = new Date(votacion.fechaLimite);
+    // if opcion no existe localmente
+    if (
+      votacion.opcionDeVotacion == null ||
+      votacion.opcionDeVotacion === undefined
+    ) {
       votacion.opcionDeVotacion = await this.solicitarOpcion(idVotacion);
-    } else {
-      votacion.fechaLimite = new Date(votacion.fechaLimite);
-      // if opcion no existe localmente
-      if (
-        votacion.opcionDeVotacion == null ||
-        votacion.opcionDeVotacion === undefined
-      ) {
-        votacion.opcionDeVotacion = await this.solicitarOpcion(idVotacion);
-      }
+    }
+    if (
+      votacion.participantes == null ||
+      votacion.participantes === undefined
+    ) {
+      votacion.participantes = await this.solicitarParticipantes(idVotacion);
     }
     console.log('Votación de los resultados terminada');
     // if votación terminó
@@ -61,34 +68,38 @@ export class CalcularResultadosP2pService {
       console.log('Última tx en resultados', ultTransaccion);
       // if blockchain no está cerrada
       if (ultTransaccion.tipoTransaccion !== envTipoTx.resultado) {
-        let calcularResultado: CalcularResultadoVotacion;
-        // calcular votos
-        switch (votacion.tipoDeVotacion) {
-          case environment.popular:
-            calcularResultado = new VotacionPopular();
-            break;
-          case environment.clasificacion:
-            calcularResultado = new VotacionClasificacion();
-            break;
-          case environment.ranking:
-            calcularResultado = new VotacionRanking();
-            break;
-          default:
-            break;
-        }
-        this.blockchain.calcularResultado(idVotacion, calcularResultado);
-        const mensaje: string[] = new Array<string>();
-        mensaje.push(calcularResultado.calcularResultados());
+        if (this.blockchain.buscarResultadosEnTx(idVotacion).length > 0){
+          ultTransaccion = this.blockchain.buscarResultadosEnTx(idVotacion)[0];
+        }else{
+          let calcularResultado: CalcularResultadoVotacion;
+          // calcular votos
+          switch (votacion.tipoDeVotacion) {
+            case environment.popular:
+              calcularResultado = new VotacionPopular();
+              break;
+            case environment.clasificacion:
+              calcularResultado = new VotacionClasificacion();
+              break;
+            case environment.ranking:
+              calcularResultado = new VotacionRanking();
+              break;
+            default:
+              break;
+          }
+          this.blockchain.calcularResultado(idVotacion, calcularResultado);
+          const mensaje: string[] = new Array<string>();
+          mensaje.push(calcularResultado.calcularResultados());
 
-        ultTransaccion = new Transaccion(
-          envTipoTx.resultado,
-          idVotacion,
-          ultTransaccion.hash,
-          mensaje,
-          votacion.fechaLimite.getTime() + 1
-        );
-        // cerrar blockchain
-        this.blockchain.transacciones.push(ultTransaccion);
+          ultTransaccion = new Transaccion(
+            envTipoTx.resultado,
+            idVotacion,
+            ultTransaccion.hash,
+            mensaje,
+            votacion.fechaLimite.getTime() + 1
+          );
+          // cerrar blockchain
+          this.blockchain.transacciones.push(ultTransaccion);
+        }
       }
       // TO-DO: enviar al servidor la transaccion de cierre
       this.enviarResultados(peerId, ultTransaccion.mensaje[ultTransaccion.mensaje.length - 1]);
@@ -116,5 +127,9 @@ export class CalcularResultadosP2pService {
         resolve(result);
       });
     });
+  }
+
+  solicitarParticipantes(idVotacion: number): Promise<Usuario[]> {
+    return this.votacionService.getParticipanteVotacion(idVotacion).toPromise();
   }
 }

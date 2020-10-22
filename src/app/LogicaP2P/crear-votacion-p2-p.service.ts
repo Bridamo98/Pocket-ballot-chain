@@ -16,12 +16,12 @@ export class CrearVotacionP2PService {
     this.blockchain = this.blockchainService.retornarBlockchain();
   }
 
-  crearVotacion(votacion: Votacion, timestamp: number) {
+  crearVotacion(votacion: Votacion, timestamp: number, participantes: number) {
     const transaccion: Transaccion = new Transaccion(
       envTipoTx.inicioVotacion,
       votacion.id.valueOf(),
       '',
-      [votacion.votos.toString()],
+      ['Votos por participante: '+votacion.votos.toString(), 'Participantes: '+participantes.toString()],
       timestamp
     );
     this.blockchain.transacciones.push(transaccion); //queda en el ultimo elemento de la lista

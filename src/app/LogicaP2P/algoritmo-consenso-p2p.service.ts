@@ -153,6 +153,8 @@ export class AlgoritmoConsensoP2pService {
     this.validarLider(peerId);
     for (const bloque of this.bloquesPropuestos) {
       if (!this.blockchain.validadorBloque(bloque)) {
+        this.votarService.reportarValidador(
+          this.validadoresActivos.filter(v => v.peerId === peerId)[0].id);
         return;
       }
     }

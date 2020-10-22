@@ -1,4 +1,4 @@
 export class Validador{
-    id: Number;
+    id: string;
     peerId: String;
 }
