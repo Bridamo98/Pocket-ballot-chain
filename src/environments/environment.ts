@@ -33,8 +33,12 @@ export const envTipoTx = {
     inicioVotacion: 0,
     voto: 1,
     resultado: 2,
-}
+};
 
+export const envEstatus = {
+  activo: 'Activo',
+  inactivo: 'Inactivo'
+};
 
 /*
  * For easier debugging in development mode, you can import the following file

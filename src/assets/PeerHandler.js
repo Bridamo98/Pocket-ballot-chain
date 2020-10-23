@@ -8,7 +8,7 @@ class Mensaje {
 }
 
 var voto;
-var peer;
+var peer = null;
 var connections = {};
 var peer_id;
 var mensajesServicio;
@@ -46,6 +46,10 @@ var inicializar = function() {
         console.log('Error: ' + err);
         console.log(err);
     })
+
+    peer.on('disconnected', function () {
+      console.log('peer desconectado');
+    })
 }
 
 
@@ -69,4 +73,11 @@ var enviarMensaje = function(msj, otro_peer_id) {
         console.log('Error: Ingresa un peerId');
         return false;
     }
+}
+
+var desconectar = function() {
+  if (peer != null){
+    peer.disconnect();
+    peer = null;
+  }
 }
