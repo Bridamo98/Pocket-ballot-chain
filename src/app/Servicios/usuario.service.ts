@@ -40,9 +40,9 @@ export class UsuarioService {
 
   putUsuario(usuario: Usuario) {
     return this.http.put(`${environment.serverUrl}/usuarioPut`, {
-      nombre: usuario.nombre.toString(),
+      nombre: usuario.nombre.toString().trim().toLowerCase(),
       saldo: usuario.saldo.valueOf(),
-      correo: usuario.correo.toString()
+      correo: usuario.correo.toString().trim().toLowerCase()
     });
   }
 }

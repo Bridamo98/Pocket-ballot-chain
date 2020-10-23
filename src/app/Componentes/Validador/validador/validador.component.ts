@@ -12,6 +12,7 @@ import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';
 import { Subscription } from 'rxjs';
+import { BlockchainService } from '../../../LogicaP2P/blockchain.service';
 
 // PeerHandler
 declare var inicializar: any;
@@ -39,6 +40,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
     private syncBlockchainP2pService: SyncBlockchainP2pService,
     private usuarioService: UsuarioService,
     private votarService: VotarService,
+    private blockchainService: BlockchainService,
     private router: Router
   ) { }
 
@@ -157,7 +159,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
   cerrarValidador(): void{
     desconectar();
     this.unsubscribe();
-    this.consensoService.cerrarValidador();
+    this.blockchainService.cerrarValidador();
   }
 
   unsubscribe(): void{
