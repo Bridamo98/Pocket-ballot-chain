@@ -12,6 +12,16 @@ textarea{
   background-color: #c5e5de !important;
 }
 
+select{
+    border-color: #2C3E50 !important;
+    background-color: #c5e5de !important;
+}
+
+.back{
+    border-color: #2C3E50 !important;
+    background-color: #c5e5de !important;
+}
+
 .container{
     margin: 25px;
 }

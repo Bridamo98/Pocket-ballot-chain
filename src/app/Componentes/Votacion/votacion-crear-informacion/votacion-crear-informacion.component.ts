@@ -51,8 +51,15 @@ export class VotacionCrearInformacionComponent implements OnInit {
   fechaLimiteValida = false;
   cantCredencialesValida = false;
   
+  horaFinal = -1;
+  minutoFinal = -1;
+  horaInicial = -1;
+  minutoInicial = -1;
+
   status;
 
+  horasPosibles = []
+  minutosPosibles = []
 
   constructor(public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal, private usuarioService: UsuarioService) {
     this.tipo = this.rutaActiva.snapshot.params.tipo;
@@ -61,7 +68,12 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
   ngOnInit(): void {
 
-    
+    for (let index = 0; index < 24; index++) {
+      this.horasPosibles[index] = index;
+    }
+    for (let index = 0; index < 60; index++) {
+      this.minutosPosibles[index] = index;
+    }
 
     this.usuarioService.getUsuarios().subscribe(result => {
        let auxiliar = result;
@@ -134,37 +146,78 @@ export class VotacionCrearInformacionComponent implements OnInit {
     if(this.descripcion == null || this.descripcion == undefined){
       this.descripcion = '';
     }
-    let votacion = {
-      titulo: this.tituloVotacion,
-      autor: this.usuario.nombre,
-      fechaInicio: this.fechaInicio,
-      fechaLimite: this.fechaLimite,
-      tipoDeVotacion: tipoDeVotacionID,
-      descripcion: this.votacionDescripcion,
-      votos: this.cantiVotos,
-      opciones: this.opciones,
-      participantes: this.participantes
-    };
-    
-    this.votacionService.addVotacion(votacion).subscribe (Status => {
-      let idVotacion = Status['Id']
-    
-      if(!Status['Error']){
-        console.log("Se creo con exito: " + idVotacion);
-        console.log(Status);
-        /*for (let index = 0; index < this.opciones.length; index++) {
-          //Aqui debo agregar cada opción
-          this.votacionService.addOpcion(idVotacion, this.opciones[index]);
-        }
-    
-        for (let index = 0; index < this.participantes.length; index++){
-          //Aqui debo agregar cada participante
-          this.votacionService.addParticipante(idVotacion, this.participantes[index]);
-        }*/
-        this.router.navigate(['/VotacionLista']);
-      }
+
+    if(this.horaInicial == -1){
+      this.horaInicial = 0;
+    }   
+    if(this.horaFinal == -1){
+      this.horaFinal = 0;
+    }  
+    if(this.minutoFinal == -1){
+      this.minutoFinal = 0;
+    }  
+    if(this.minutoInicial == -1){
+      this.minutoInicial = 0;
+    }   
+
+    let dateInicio = new Date(this.fechaInicio['year']+'-'+this.fechaInicio['month']+'-'+this.fechaInicio['day']);
+    dateInicio.setDate(this.fechaInicio['day']);
+    dateInicio.setHours(this.horaInicial);
+    dateInicio.setMinutes(this.minutoInicial);
+    let dateFinal = new Date(this.fechaLimite['year']+'-'+this.fechaLimite['month']+'-'+this.fechaLimite['day']);
+    dateFinal.setDate(this.fechaLimite['day']);
+    dateFinal.setHours(this.horaFinal);
+    dateFinal.setMinutes(this.minutoFinal);
+    let fechaActual = new Date();
+    let valido = true;
+
+    if(dateInicio.getTime() >= dateFinal.getTime()){
+        alert("La fecha inicio debe ser menor a la fecha final");
+        valido = false;
+    }
+    if(dateInicio.getTime() <= fechaActual.getTime()){
+      alert("La fecha inicio debe ser mayor que la actual")
+      valido = false;
+    }
+    if(dateFinal.getTime() <= fechaActual.getTime()){
+      alert("La fecha final debe ser mayor que la actual")
+      valido = false;
+    }
+    if(valido){
+      let votacion = {
+        titulo: this.tituloVotacion,
+        autor: this.usuario.nombre,
+        fechaInicio: dateInicio,
+        fechaLimite: dateFinal,
+        tipoDeVotacion: tipoDeVotacionID,
+        descripcion: this.votacionDescripcion,
+        votos: this.cantiVotos,
+        opciones: this.opciones,
+        participantes: this.participantes
+      };
       
-    }); 
+      console.log("DateInicio:" + dateInicio);
+      console.log("DateFinal:" + dateFinal);
+      this.votacionService.addVotacion(votacion).subscribe (Status => {
+        let idVotacion = Status['Id']
+      
+        if(!Status['Error']){
+          console.log("Se creo con exito: " + idVotacion);
+          console.log(Status);
+          /*for (let index = 0; index < this.opciones.length; index++) {
+            //Aqui debo agregar cada opción
+            this.votacionService.addOpcion(idVotacion, this.opciones[index]);
+          }
+      
+          for (let index = 0; index < this.participantes.length; index++){
+            //Aqui debo agregar cada participante
+            this.votacionService.addParticipante(idVotacion, this.participantes[index]);
+          }*/
+          this.router.navigate(['/VotacionLista']);
+        }
+        
+      }); 
+    }
   }
 
   public changeListener(files: FileList){
