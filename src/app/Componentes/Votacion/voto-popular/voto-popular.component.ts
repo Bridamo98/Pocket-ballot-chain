@@ -115,8 +115,8 @@ export class VotoPopularComponent implements OnInit {
         });
       }
     );
-
   }
+
   registrarVoto(voto){
     setVoto(voto);
   }

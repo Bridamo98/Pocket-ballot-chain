@@ -123,14 +123,30 @@
 
                 <div class="form-group col-lg-6">
                     <div class="form-group">
-                        <label for="date">Fecha limite</label>
+                        <!--<label for="date">Fecha limite</label>
                         <div class="input-group">
                             <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
-                            data-toggle="popover" data-placement="top">
+                            data-toggle="popover" data-placement="top">-->
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
+
+                                <div class="md-form">
+                                    <input
+                                      mdbInput
+                                      type="text"
+                                      id="form1"
+                                      class="form-control"
+                                      [mdbTimePicker]="timepicker"
+                                    />
+                                    <label for="form1">Example label</label>
+                                    <mdb-timepicker-toggle
+                                      [mdbTimePickerToggle]="timepicker"
+                                    ></mdb-timepicker-toggle>
+                                    <mdb-timepicker #timepicker></mdb-timepicker>
+                                  </div>
+
+                                <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp.toggle()" type="button"><i class='fas fa-calendar-alt'></i></button>
                             </div>
-                        </div>
+                        <!--/div-->
                     </div>
                 </div>
             </div>

@@ -106,7 +106,8 @@ export class ManejadorMensajesService {
           firma: firmaVoto,
           firmaKey: this.cifradoService.getSignaturePublic(),
           peerValidador: mensaje.contenido['peerValidador'],
-          seudonimo: 'AliasBrandonn'
+          seudonimo: 'AliasBrandonn',
+          votacion: this.voto['contenido'].idVotacion
         };
         // let votoToServer;
         // console.log(this.votarService.enviarVoto(votoToServer));
