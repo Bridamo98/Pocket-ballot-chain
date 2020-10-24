@@ -1,4 +1,3 @@
-import { VotacionService } from './../Servicios/votacion.service';
 import { Injectable } from '@angular/core';
 import { Blockchain } from '../Modelo/Blockchain/blockchain';
 
@@ -6,8 +5,9 @@ import { Blockchain } from '../Modelo/Blockchain/blockchain';
   providedIn: 'root',
 })
 export class BlockchainService {
+  estatus = false; // valor de verdad de si es validador
   blockchain: Blockchain = new Blockchain();
-  constructor(private votacionService: VotacionService) {}
+  constructor() {}
 
   retornarBlockchain(): Blockchain{
     return this.blockchain;
@@ -19,5 +19,13 @@ export class BlockchainService {
 
   resetearBlockchain(): void {
     this.blockchain.resetearBlockchain();
+  }
+
+  activarValidador(): void{
+    this.estatus = true;
+  }
+
+  cerrarValidador(): void{
+    this.estatus = false;
   }
 }

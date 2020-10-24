@@ -40,7 +40,6 @@ export class UsuarioService {
 
   iniciarSesion(usuario: Usuario) {
     usuario.contrasena = '' + sha512.create().update(usuario.contrasena.toString()).hex();
-    usuario.contrasena = usuario.contrasena.substr(0, 64);
     console.log(usuario);
     usuario.nombre = usuario.nombre.trim().toLocaleLowerCase();
     return new Promise((resolve, reject) => {

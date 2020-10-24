@@ -87,4 +87,20 @@ export class VotarService {
       });
     return returned;
   }
+
+  reportarValidador(validadorReportado: string): any {
+    let returned;
+    let json = JSON.stringify({ validadorReportado: validadorReportado });
+    let headers = new HttpHeaders()
+      .set('Content-Type', 'application/json')
+      .set('Authorization', 'Bearer ' + localStorage.getItem('token'));
+    this.http
+      .post<any>(this.URLbase + '/reportarValidador', json, {
+        headers: headers,
+      })
+      .subscribe((data) => {
+        returned = data['Status'];
+      });
+    return returned;
+  }
 }

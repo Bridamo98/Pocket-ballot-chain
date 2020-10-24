@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  serverUrl: 'http://186.81.169.18:3000',
-  socketUrl: 'http://186.81.169.18:4000',
+  serverUrl: 'http://localhost:3000',
+  socketUrl: 'http://localhost:4000',
 
   // Constantes de Blockchain
   votar: 1,
@@ -33,8 +33,12 @@ export const envTipoTx = {
     inicioVotacion: 0,
     voto: 1,
     resultado: 2,
-}
+};
 
+export const envEstatus = {
+  activo: 'Activo',
+  inactivo: 'Inactivo'
+};
 
 /*
  * For easier debugging in development mode, you can import the following file

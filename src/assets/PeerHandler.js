@@ -8,7 +8,7 @@ class Mensaje {
 }
 
 var voto;
-var peer;
+var peer = null;
 var connections = {};
 var peer_id;
 var mensajesServicio;
@@ -18,9 +18,9 @@ var usuarioPeer;
 
 var inicializar = function() {
     peer = new Peer({
-        host: '186.81.169.18',
-        port: 5000,
-        path: '/peerjs'
+      host: location.hostname,
+      port: (location.protocol === 'https:' ? 443 : 5000),
+      path: '/peerjs'
     });
     peer.on('open', function () {
         peer_id = peer.id;
@@ -46,6 +46,10 @@ var inicializar = function() {
         console.log('Error: ' + err);
         console.log(err);
     })
+
+    peer.on('disconnected', function () {
+      console.log('peer desconectado');
+    })
 }
 
 
@@ -69,4 +73,11 @@ var enviarMensaje = function(msj, otro_peer_id) {
         console.log('Error: Ingresa un peerId');
         return false;
     }
+}
+
+var desconectar = function() {
+  if (peer != null){
+    peer.disconnect();
+    peer = null;
+  }
 }

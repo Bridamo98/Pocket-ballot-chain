@@ -112,7 +112,8 @@ export class UsuarioEditarComponent implements OnInit {
 
   alreadyExists(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
-      if (this.verificarNombre(control.value) && control.value.localeCompare(this.usuario.nombre) !== 0) {
+      const nombre: string = control.value;
+      if (this.verificarNombre(nombre.trim().toLowerCase()) && control.value.localeCompare(this.usuario.nombre) !== 0) {
         return { 'alreadyExists': true };
       } else {
         return null;

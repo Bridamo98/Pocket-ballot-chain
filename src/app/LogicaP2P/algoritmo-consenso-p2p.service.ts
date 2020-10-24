@@ -51,6 +51,7 @@ export class AlgoritmoConsensoP2pService {
     inicio: number,
     duracion: number
   ) {
+    this.blockchainService.activarValidador();
     this.validadoresActivos = validadoresActivos;
     this.validadores = validadores;
     this.miPosicion = posicion;
@@ -74,9 +75,12 @@ export class AlgoritmoConsensoP2pService {
 
   finalizarEra(servicio: AlgoritmoConsensoP2pService) {
     console.log('Finalizando era luego de', Math.floor((Date.now() - servicio.inicio) / 1000));
-    servicio.confirmarBlockchain(servicio);
-    servicio.enviarUltimaBlockchain(servicio);
+    if (servicio.blockchainService.estatus){
+      servicio.confirmarBlockchain(servicio);
+      servicio.enviarUltimaBlockchain(servicio);
+    }
     servicio.nuevosBloques = new Map<number, Array<string>>();
+    servicio.blockchainService.cerrarValidador();
   }
 
   confirmarBlockchain(servicio: AlgoritmoConsensoP2pService) {
@@ -102,6 +106,9 @@ export class AlgoritmoConsensoP2pService {
   }
 
   crearBloque(servicio: AlgoritmoConsensoP2pService) {
+    if (!servicio.blockchainService.estatus){
+      return;
+    }
     console.log('Transacciones en la blockchain en crear:', servicio.blockchain.transacciones);
     console.log('Tiempo transcurrido:', Math.floor((Date.now() - servicio.inicio) / 1000));
     servicio.blockchain.eliminarTxInsertadas();
@@ -149,10 +156,15 @@ export class AlgoritmoConsensoP2pService {
   // TO-DO: Validar bloque
   // TO-DO: Enviar mensajes de aprobación o reporte
   validarBloque(bloques: Array<Bloque>, peerId) {
+    if (!this.blockchainService.estatus){
+      return;
+    }
     this.bloquesPropuestos = bloques;
     this.validarLider(peerId);
     for (const bloque of this.bloquesPropuestos) {
       if (!this.blockchain.validadorBloque(bloque)) {
+        this.votarService.reportarValidador(
+          this.validadoresActivos.filter(v => v.peerId === peerId)[0].id);
         return;
       }
     }
@@ -182,6 +194,9 @@ export class AlgoritmoConsensoP2pService {
   aprobarBloque(bloques: Array<Bloque>): void {
     // NICE TO HAVE: Ver si los bloques corresponden al step
     // Bloques estan bien construidos, tienen los hash bien
+    if (!this.blockchainService.estatus){
+      return;
+    }
     for (const bloque of bloques) {
       if (Bloque.estaBienConstruido(bloque) === -1) {
         return;
