@@ -101,16 +101,15 @@ export class ValidadorComponent implements OnInit, OnDestroy {
 
         if (this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
           console.log('FIRMA CORRECTA');
+          let voto = this.mensajeServicio.decrypt(data['voto']);
+          let mensaje = JSON.parse(voto.toString());
+          if (mensaje.tipoPeticion === 7){
+            mensaje.tipoPeticion = environment.votar;
+            this.almacenarVoto(mensaje);
+          }
         }
         else{
           console.log('FIRMA ERRADA');
-        }
-
-        let voto = this.mensajeServicio.decrypt(data['voto']);
-        let mensaje = JSON.parse(voto.toString());
-        if (mensaje.tipoPeticion === 7){
-          mensaje.tipoPeticion = environment.votar;
-          this.almacenarVoto(mensaje);
         }
       }
     });
