@@ -50,7 +50,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   fechaInicioValida = false;
   fechaLimiteValida = false;
   cantCredencialesValida = false;
-  
+
   horaFinal = -1;
   minutoFinal = -1;
   horaInicial = -1;
@@ -149,16 +149,16 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
     if(this.horaInicial == -1){
       this.horaInicial = 0;
-    }   
+    }
     if(this.horaFinal == -1){
       this.horaFinal = 0;
-    }  
+    }
     if(this.minutoFinal == -1){
       this.minutoFinal = 0;
-    }  
+    }
     if(this.minutoInicial == -1){
       this.minutoInicial = 0;
-    }   
+    }
 
     let dateInicio = new Date(this.fechaInicio['year']+'-'+this.fechaInicio['month']+'-'+this.fechaInicio['day']);
     dateInicio.setDate(this.fechaInicio['day']);
@@ -171,7 +171,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
     let fechaActual = new Date();
     let valido = true;
 
-    if(dateInicio.getTime() >= dateFinal.getTime()){
+/*     if(dateInicio.getTime() >= dateFinal.getTime()){
         alert("La fecha inicio debe ser menor a la fecha final");
         valido = false;
     }
@@ -182,7 +182,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
     if(dateFinal.getTime() <= fechaActual.getTime()){
       alert("La fecha final debe ser mayor que la actual")
       valido = false;
-    }
+    } */
     if(valido){
       let votacion = {
         titulo: this.tituloVotacion,
@@ -195,35 +195,35 @@ export class VotacionCrearInformacionComponent implements OnInit {
         opciones: this.opciones,
         participantes: this.participantes
       };
-      
+
       console.log("DateInicio:" + dateInicio);
       console.log("DateFinal:" + dateFinal);
       this.votacionService.addVotacion(votacion).subscribe (Status => {
         let idVotacion = Status['Id']
-      
+
         if(!Status['Error']){
           console.log("Se creo con exito: " + idVotacion);
           console.log(Status);
-          /*for (let index = 0; index < this.opciones.length; index++) {
+          for (let index = 0; index < this.opciones.length; index++) {
             //Aqui debo agregar cada opción
             this.votacionService.addOpcion(idVotacion, this.opciones[index]);
           }
-      
+
           for (let index = 0; index < this.participantes.length; index++){
             //Aqui debo agregar cada participante
             this.votacionService.addParticipante(idVotacion, this.participantes[index]);
-          }*/
+          }
           this.router.navigate(['/VotacionLista']);
         }
-        
-      }); 
+
+      });
     }
   }
 
   public changeListener(files: FileList){
     console.log(files);
     if(files && files.length > 0) {
-       let file : File = files.item(0); 
+       let file : File = files.item(0);
          console.log(file.name);
          console.log(file.size);
          console.log(file.type);
@@ -362,7 +362,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
     this.validarFormulario();
   }
 
-  
+
   //filtro para el autocompletado
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();

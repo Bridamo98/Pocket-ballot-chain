@@ -1,22 +1,17 @@
 import { ManejadorMensajesService } from './../../../Controladores/manejador-mensajes.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Votacion } from 'src/app/Modelo/Votacion';
-import { Mensaje } from 'src/app/Modelo/Blockchain/mensaje';
 import { environment } from 'src/environments/environment';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router } from '@angular/router';
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';//Para probar envio de transacciones
-import { Transaccion } from '../../../Modelo/Blockchain/transaccion';
 
 declare var inicializar: any;
-declare var establecerConexion: any;
-declare var enviarMensaje: any;
-declare var peer: any;
-declare var setVoto: any;
 declare var mensajesServicio: any;
 declare var votarServicio: any;
+declare var desconectar: any;
 
 
 @Component({
@@ -24,16 +19,16 @@ declare var votarServicio: any;
   templateUrl: './votacion-lista.component.html',
   styleUrls: ['./votacion-lista.component.css']
 })
-export class VotacionListaComponent implements OnInit {
+export class VotacionListaComponent implements OnInit, OnDestroy {
 
   usuario: Usuario = new Usuario('', 0, '', '');
   votaciones: Votacion[];
   misVotaciones: Votacion[] = [];
   votacionesInscrito: Votacion[] = [];
+  vota = false; // Indica si la siguiente pantalla a la que si dirige es para votar
 
   constructor(
     private router: Router,
-    private rutaActiva: ActivatedRoute,
     private votacionService: VotacionService,
     private usuarioService: UsuarioService,
     private mensajeServicio: ManejadorMensajesService,
@@ -46,6 +41,12 @@ export class VotacionListaComponent implements OnInit {
     inicializar();
     mensajesServicio = this.mensajeServicio;
     this.iniciarVista();
+  }
+
+  ngOnDestroy(): void {
+    if (!this.vota){
+      this.cerrarValidador();
+    }
   }
 
   async iniciarVista(): Promise<void> {
@@ -139,12 +140,15 @@ export class VotacionListaComponent implements OnInit {
       if (this.votaciones.filter(v => v.id.valueOf() === +idVotacion).length > 0){
         switch(votacion.tipoDeVotacion.valueOf()){
           case environment.ranking:
+            this.vota = true;
             this.router.navigate(['VotoRanking/' + idVotacion]);
             break;
           case environment.popular:
+            this.vota = true;
             this.router.navigate(['VotoPopular/' + idVotacion]);
             break;
           case environment.clasificacion:
+            this.vota = true;
             this.router.navigate(['VotoClasificacion/' + idVotacion]);
             break;
         }
@@ -171,50 +175,7 @@ export class VotacionListaComponent implements OnInit {
     return "Resultados";
   }
 
-  // Para probar envio de transacciones
-  registrarVoto(voto){
-    setVoto(voto);
+  cerrarValidador(): void{
+    desconectar();
   }
-
-  enviarTransaccion(): void {
-    const numero: number = Date.now();
-    const transaccion: Transaccion = new Transaccion(1, 3, "asd",["Diego", "Santiago"], numero);
-    const mensaje = new Mensaje(environment.obtenerPk, transaccion);
-
-    this.enviarVoto(mensaje);
-  }
-
-  enviarTransaccion2(): void {
-    const numero: number = Date.now();
-    const transaccion2: Transaccion = new Transaccion(1, 2, "asd",["Voto Santiago"], numero);
-    const mensaje2 = new Mensaje(environment.obtenerPk, transaccion2);
-
-    this.enviarVoto(mensaje2);
-  }
-
-  enviarTransaccion3(): void {
-    const numero: number = Date.now();
-    const transaccion3: Transaccion = new Transaccion(1, 1, "asd",["1 Diego", "2 Santiago", "3 Brandonn", "4 candidato 1", "5 candidato 2"], numero);
-    const mensaje3 = new Mensaje(environment.obtenerPk, transaccion3);
-
-    this.enviarVoto(mensaje3);
-  }
-
-  // Envio del voto
-  enviarVoto(mensaje: Mensaje){
-    this.votarService.obtenerValidadores()
-    .subscribe(
-      result => {
-        result.forEach(element => {
-          console.log(element);
-          console.log("Enviando mensaje a:", element.peerId);
-          console.log(mensaje);
-          this.registrarVoto(mensaje);
-          enviarMensaje(mensaje, element.peerId);
-        });
-      }
-    );
-
-  }
-
 }
