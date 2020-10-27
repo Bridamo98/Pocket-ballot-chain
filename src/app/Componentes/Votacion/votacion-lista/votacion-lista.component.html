@@ -49,7 +49,7 @@
                   <button type="button" class="btn btn-danger" (click)="salir(votacion, misVotaciones)">
                     Salir
                   </button>
-                  <button type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, misVotaciones)">
+                  <button *ngIf="verificarFechaInicial(votacion)" type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, misVotaciones)">
                     {{ verificarFecha(votacion) }}
                   </button>
                 </div>
@@ -98,7 +98,7 @@
                   <button type="button" class="btn btn-danger" (click)="salir(votacion, votacionesInscrito)">
                     Salir
                   </button>
-                  <button type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, votacionesInscrito)">
+                  <button *ngIf="verificarFechaInicial(votacion)" type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, votacionesInscrito)">
                     {{ verificarFecha(votacion) }}
                   </button>
                 </div>
