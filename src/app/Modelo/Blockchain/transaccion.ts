@@ -7,21 +7,23 @@ export class Transaccion {
   hashIn: string;
   timestamp: number;
   mensaje: string[];
+  alias: string;
 
 
 
-  constructor(tipoTransaccion: number, idVotacion: number, hashIn: string, mensaje: string[], timestamp: number){
+  constructor(tipoTransaccion: number, idVotacion: number, hashIn: string, mensaje: string[], timestamp: number, alias: string){
     this.tipoTransaccion = tipoTransaccion;
     this.idVotacion = idVotacion;
     this.hashIn = hashIn;
     this.mensaje = mensaje;
     this.timestamp = timestamp;
+    this.alias = alias;
     if (hashIn != null && hashIn !== undefined){
-      this.hash = sha512.create().update(this.tipoTransaccion + this.idVotacion + this.hashIn + this.mensaje + this.timestamp).hex();
+      this.hash = sha512.create().update(this.tipoTransaccion + this.idVotacion + this.hashIn + this.mensaje + this.timestamp + this.alias).hex();
     }
   }
 
-  static igual(transaccion1: Transaccion, transaccion2 : Transaccion): boolean{
+  static igual(transaccion1: Transaccion, transaccion2: Transaccion): boolean{
     const keys1 = Object.keys(transaccion2);
     const keys2 = Object.keys(transaccion1);
     if (keys1.length !== keys2.length) {

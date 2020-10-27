@@ -32,7 +32,8 @@ export class ConvertersService {
         tx.idVotacion,
         tx.hashIn,
         mensaje,
-        tx.timestamp
+        tx.timestamp,
+        tx.alias
       );
       transaccion.hash = tx.hash;
       transacciones.push(transaccion);

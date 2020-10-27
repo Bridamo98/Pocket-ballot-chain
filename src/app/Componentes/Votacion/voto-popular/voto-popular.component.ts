@@ -67,7 +67,8 @@ export class VotoPopularComponent implements OnInit {
         +this.votacion.id,
         'asd',
         ['Voto ' + this.opciones[this.selectedIndex].nombre],
-        timestamp
+        timestamp,
+        ''
       );
       const mensaje = new Mensaje(environment.obtenerPk, transaccion);
       this.enviarVoto(mensaje);

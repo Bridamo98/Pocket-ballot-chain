@@ -98,7 +98,8 @@ export class CalcularResultadosP2pService {
             idVotacion,
             ultTransaccion.hash,
             mensaje,
-            votacion.fechaLimite.getTime() + 1
+            votacion.fechaLimite.getTime() + 1,
+            ''
           );
           // cerrar blockchain
           this.blockchain.transacciones.push(ultTransaccion);
