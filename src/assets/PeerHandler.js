@@ -32,7 +32,6 @@ var inicializar = function() {
         };
 
         votarServicio.setUsuario(usuarioValidador);
-
     });
 
     peer.on('connection', function (connection) {
@@ -79,5 +78,6 @@ var desconectar = function() {
   if (peer != null){
     peer.disconnect();
     peer = null;
+    usuarioPeer = null;
   }
 }

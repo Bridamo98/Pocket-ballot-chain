@@ -50,7 +50,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   fechaInicioValida = false;
   fechaLimiteValida = false;
   cantCredencialesValida = false;
-  
+
   horaFinal = -1;
   minutoFinal = -1;
   horaInicial = -1;
@@ -149,16 +149,16 @@ export class VotacionCrearInformacionComponent implements OnInit {
 
     if(this.horaInicial == -1){
       this.horaInicial = 0;
-    }   
+    }
     if(this.horaFinal == -1){
       this.horaFinal = 0;
-    }  
+    }
     if(this.minutoFinal == -1){
       this.minutoFinal = 0;
-    }  
+    }
     if(this.minutoInicial == -1){
       this.minutoInicial = 0;
-    }   
+    }
 
     let dateInicio = new Date(this.fechaInicio['year']+'-'+this.fechaInicio['month']+'-'+this.fechaInicio['day']);
     dateInicio.setDate(this.fechaInicio['day']);
@@ -187,43 +187,39 @@ export class VotacionCrearInformacionComponent implements OnInit {
       let votacion = {
         titulo: this.tituloVotacion,
         autor: this.usuario.nombre,
-        fechaInicio: dateInicio,
-        fechaLimite: dateFinal,
+        fechaInicio: this.fechaToString(this.fechaInicio, dateInicio),
+        fechaLimite: this.fechaToString(this.fechaLimite, dateFinal),
         tipoDeVotacion: tipoDeVotacionID,
         descripcion: this.votacionDescripcion,
         votos: this.cantiVotos,
         opciones: this.opciones,
         participantes: this.participantes
       };
-      
+
       console.log("DateInicio:" + dateInicio);
       console.log("DateFinal:" + dateFinal);
       this.votacionService.addVotacion(votacion).subscribe (Status => {
         let idVotacion = Status['Id']
-      
+
         if(!Status['Error']){
           console.log("Se creo con exito: " + idVotacion);
           console.log(Status);
-          /*for (let index = 0; index < this.opciones.length; index++) {
-            //Aqui debo agregar cada opción
-            this.votacionService.addOpcion(idVotacion, this.opciones[index]);
-          }
-      
-          for (let index = 0; index < this.participantes.length; index++){
-            //Aqui debo agregar cada participante
-            this.votacionService.addParticipante(idVotacion, this.participantes[index]);
-          }*/
           this.router.navigate(['/VotacionLista']);
         }
-        
-      }); 
+
+      });
     }
+  }
+
+  private fechaToString(fecha, date: Date): string{
+    return fecha['year']+'-'+fecha['month']+'-'+fecha['day']+' '
+    +date.getHours()+':'+date.getMinutes()+':00';
   }
 
   public changeListener(files: FileList){
     console.log(files);
     if(files && files.length > 0) {
-       let file : File = files.item(0); 
+       let file : File = files.item(0);
          console.log(file.name);
          console.log(file.size);
          console.log(file.type);
@@ -362,7 +358,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
     this.validarFormulario();
   }
 
-  
+
   //filtro para el autocompletado
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
