@@ -35,6 +35,9 @@ export class CalcularResultadosP2pService {
     console.log('Calculando resultados de la votación', idVotacion);
     this.blockchain = this.blockchainService.retornarBlockchain();
     this.subBlockchain = this.blockchain.blockchain.get(idVotacion);
+    if (this.subBlockchain === undefined){
+      return;
+    }
     const ultBloque = this.subBlockchain.get(
       this.blockchain.ultHash.get(idVotacion)
     );

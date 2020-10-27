@@ -25,7 +25,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   votaciones: Votacion[];
   misVotaciones: Votacion[] = [];
   votacionesInscrito: Votacion[] = [];
-  vota = false; // Indica si la siguiente pantalla a la que si dirige es para votar
+  pasa = false; // Indica si la siguiente pantalla a la que si dirige debe mantener la conexión con los peer
 
   constructor(
     private router: Router,
@@ -44,7 +44,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (!this.vota){
+    if (!this.pasa){
       this.cerrarValidador();
     }
   }
@@ -136,19 +136,23 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
 
   verVotacion(idVotacion: string, votaciones: Votacion[]): void {
     const votacion = votaciones.filter(v => v.id.valueOf() === +idVotacion)[0];
+    if (new Date().getTime() < new Date(votacion.fechaInicio).getTime()){
+      alert('La votación no ha iniciado');
+      return;
+    }
     if (new Date().getTime() < new Date(votacion.fechaLimite).getTime()){
       if (this.votaciones.filter(v => v.id.valueOf() === +idVotacion).length > 0){
         switch(votacion.tipoDeVotacion.valueOf()){
           case environment.ranking:
-            this.vota = true;
+            this.pasa = true;
             this.router.navigate(['VotoRanking/' + idVotacion]);
             break;
           case environment.popular:
-            this.vota = true;
+            this.pasa = true;
             this.router.navigate(['VotoPopular/' + idVotacion]);
             break;
           case environment.clasificacion:
-            this.vota = true;
+            this.pasa = true;
             this.router.navigate(['VotoClasificacion/' + idVotacion]);
             break;
         }
@@ -156,6 +160,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
         alert('La votación no ha finalizado y el usuario no es un participante');
       }
     }else {
+      this.pasa = true;
       this.router.navigate(['VotacionReporte/' + idVotacion]);
     }
   }
@@ -173,6 +178,13 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
       return "Votar";
     }
     return "Resultados";
+  }
+
+  verificarFechaInicial(votacion: Votacion): boolean{
+    if (new Date().getTime() < new Date(votacion.fechaInicio).getTime()){
+      return false;
+    }
+    return true;
   }
 
   cerrarValidador(): void{

@@ -73,7 +73,8 @@ export class VotarP2PService {
       transaccion.idVotacion
     );
     if (
-      new Date(votacion.fechaLimite).getTime() > new Date().getTime() // TO-DO: validar votos en la blockchain y validar los participantes
+      new Date(votacion.fechaLimite).getTime() > new Date().getTime() &&
+      new Date().getTime() > new Date(votacion.fechaInicio).getTime() // TO-DO: validar votos en la blockchain y validar los participantes
     ) {
       this.validarFormatoVoto(transaccion, votacion);
     }
