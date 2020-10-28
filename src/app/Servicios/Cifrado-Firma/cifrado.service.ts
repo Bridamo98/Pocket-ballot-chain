@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import rsa from 'js-crypto-rsa';
+import { sha512 } from 'js-sha512';
 import * as nodeRSA from 'node-rsa';
 
 @Injectable({
@@ -21,7 +22,7 @@ export class CifradoService {
     this.key = new nodeRSA({b: 1024});
     this.encryptPrivateKey = this.key.exportKey('private');
     this.encryptPublicKey = this.key.exportKey('public');
-  
+
     this.signature = new nodeRSA({b: 1024});
     this.signaturePrivate = this.signature.exportKey('private');
     this.signaturePublic = this.signature.exportKey('public');
@@ -60,4 +61,7 @@ export class CifradoService {
     return temporalSignature.verify(objectUnsigned, objectSigned, 'base64', 'base64');
   }
 
+  getHashSha256(texto: string): string{
+    return sha512.create().update(texto).hex();
+  }
 }
