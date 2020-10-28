@@ -101,7 +101,8 @@ export class VotoClasificacionComponent implements OnInit {
       +this.votacion.id,
       'asd',
       voto,
-      timestamp
+      timestamp,
+      ''
     );
     const mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.enviarVoto(mensaje);

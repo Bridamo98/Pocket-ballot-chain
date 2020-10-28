@@ -7,6 +7,7 @@ import { Transaccion } from '../Modelo/Blockchain/transaccion';
 import { Votacion } from '../Modelo/Votacion';
 import { environment, envTipoTx } from 'src/environments/environment';
 import { CrearVotacionP2PService } from './crear-votacion-p2-p.service';
+import { AliasService } from '../Servicios/Alias/alias.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,14 +19,18 @@ export class VotarP2PService {
     private votacionService: VotacionService,
     private blockchainService: BlockchainService,
     private opcionService: OpcionService,
-    private crearVotacionP2PService: CrearVotacionP2PService
+    private crearVotacionP2PService: CrearVotacionP2PService,
+    private aliasService: AliasService
   ) {
     this.blockchain = this.blockchainService.retornarBlockchain();
   }
 
   private actualizarVotaciones(transaccion: Transaccion) {
     transaccion.tipoTransaccion = envTipoTx.voto;
-    const resultado = Array.from(this.blockchain.votaciones.values()).filter(v => v.id === transaccion.idVotacion);
+    const resultado =
+    Array.from(this.blockchain.votaciones.values()).filter(v => (
+      v.id === transaccion.idVotacion && v.opcionDeVotacion !== undefined && v.participantes !== undefined)
+    );
     if (resultado.length === 0) {
       this.votacionService
         .getVotacion(transaccion.idVotacion)
@@ -68,13 +73,17 @@ export class VotarP2PService {
     });
   }
 
-  validarVoto(transaccion: Transaccion) {
+  async validarVoto(transaccion: Transaccion) {
     const votacion: Votacion = this.blockchain.votaciones.get(
       transaccion.idVotacion
     );
+    const estatus = await this.aliasService.consultarAlias(transaccion);
+    const aliasValido = estatus['status'];
+    console.log('Resultado de consultar alias', aliasValido);
     if (
       new Date(votacion.fechaLimite).getTime() > new Date().getTime() &&
-      new Date().getTime() > new Date(votacion.fechaInicio).getTime() // TO-DO: validar votos en la blockchain y validar los participantes
+      new Date().getTime() > new Date(votacion.fechaInicio).getTime() &&
+      aliasValido // TO-DO: validar votos en la blockchain y validar los participantes
     ) {
       this.validarFormatoVoto(transaccion, votacion);
     }

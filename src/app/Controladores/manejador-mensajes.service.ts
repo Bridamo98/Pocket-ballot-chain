@@ -91,6 +91,7 @@ export class ManejadorMensajesService {
           this.voto
         );
         const firmaVoto = this.cifradoService.sign(votoCifrado);
+        const idVoto = this.cifradoService.getHashSha256(JSON.stringify(this.voto));
 
         console.log(
           'Firmado?: ' +
@@ -106,8 +107,10 @@ export class ManejadorMensajesService {
           firma: firmaVoto,
           firmaKey: this.cifradoService.getSignaturePublic(),
           peerValidador: mensaje.contenido['peerValidador'],
-          seudonimo: '',
-          idVotacion: this.voto['contenido'].idVotacion
+          alias: '',
+          idVotacion: this.voto['contenido'].idVotacion,
+          usuario: localStorage.getItem('nombre'),
+          idVoto: idVoto
         };
         // let votoToServer;
         // console.log(this.votarService.enviarVoto(votoToServer));

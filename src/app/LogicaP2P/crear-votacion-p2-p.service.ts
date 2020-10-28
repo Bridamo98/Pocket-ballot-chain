@@ -22,7 +22,8 @@ export class CrearVotacionP2PService {
       votacion.id.valueOf(),
       '',
       ['Votos por participante: '+votacion.votos.toString(), 'Participantes: '+participantes.toString()],
-      timestamp
+      timestamp,
+      ''
     );
     this.blockchain.transacciones.push(transaccion); //queda en el ultimo elemento de la lista
     this.blockchain.votaciones.set(votacion.id.valueOf(), votacion);

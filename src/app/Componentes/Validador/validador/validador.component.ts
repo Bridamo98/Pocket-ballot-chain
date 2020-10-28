@@ -98,14 +98,13 @@ export class ValidadorComponent implements OnInit, OnDestroy {
 
     this.suscripcionVotos = this.listenerSocket.listen('voto').subscribe((data) => {
       if(peer.id === data['peerValidador']){
-
         if (this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
           console.log('FIRMA CORRECTA');
           let voto = this.mensajeServicio.decrypt(data['voto']);
           let mensaje = JSON.parse(voto.toString());
           if (mensaje.tipoPeticion === 7){
             mensaje.tipoPeticion = environment.votar;
-            this.almacenarVoto(mensaje);
+            this.almacenarVoto(mensaje, data['alias']);
           }
         }
         else{
@@ -115,14 +114,15 @@ export class ValidadorComponent implements OnInit, OnDestroy {
     });
   }
 
-  almacenarVoto(msj): void{
+  almacenarVoto(msj, alias): void{
     const tx = msj.contenido;
     const transaccion = new Transaccion(
       tx.tipoTransaccion,
       tx.idVotacion,
       tx.hashIn,
       tx.mensaje,
-      tx.timestamp
+      tx.timestamp,
+      alias
     );
     const mensaje = new Mensaje(msj.tipoPeticion, transaccion);
     this.mensajeServicio.redirigirMensaje(mensaje, null);
