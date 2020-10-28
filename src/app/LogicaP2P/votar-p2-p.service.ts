@@ -27,7 +27,10 @@ export class VotarP2PService {
 
   private actualizarVotaciones(transaccion: Transaccion) {
     transaccion.tipoTransaccion = envTipoTx.voto;
-    const resultado = Array.from(this.blockchain.votaciones.values()).filter(v => v.id === transaccion.idVotacion);
+    const resultado =
+    Array.from(this.blockchain.votaciones.values()).filter(v => (
+      v.id === transaccion.idVotacion && v.opcionDeVotacion !== undefined && v.participantes !== undefined)
+    );
     if (resultado.length === 0) {
       this.votacionService
         .getVotacion(transaccion.idVotacion)

@@ -98,7 +98,6 @@ export class ValidadorComponent implements OnInit, OnDestroy {
 
     this.suscripcionVotos = this.listenerSocket.listen('voto').subscribe((data) => {
       if(peer.id === data['peerValidador']){
-        console.log('---Alias recibido---', data['alias']);
         if (this.mensajeServicio.checkSing(data['voto'], data['firma'], data['firmaKey'])){
           console.log('FIRMA CORRECTA');
           let voto = this.mensajeServicio.decrypt(data['voto']);
