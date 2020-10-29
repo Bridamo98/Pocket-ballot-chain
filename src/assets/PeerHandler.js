@@ -15,6 +15,7 @@ var mensajesServicio;
 var votarServicio;
 var nombreUsuario;
 var usuarioPeer;
+var peerID;
 
 var inicializar = function() {
     peer = new Peer({
@@ -38,16 +39,23 @@ var inicializar = function() {
         console.log(connection.metadata.p_msj);
         console.log('conexion establecida');
         mensajesServicio.redirigirMensaje(connection.metadata.p_msj, connection.peer);
+        peerID = connection.peer;
         connection.close();
     });
 
     peer.on('error', function (err) {
         console.log('Error: ' + err);
+/*
+        if(err.disconnect){
+            console.log('se desconecto el peer');
+        }
+*/
         console.log(err);
     })
 
     peer.on('disconnected', function () {
       console.log('peer desconectado');
+      votarServicio.eliminarValidador(peerID);
     })
 }
 

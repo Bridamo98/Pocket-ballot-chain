@@ -58,6 +58,18 @@ export class VotarService {
     });
   }
 
+  eliminarValidador(id): Observable<any> {
+    //Manejar una clase Validador
+    let headers = new HttpHeaders().set(
+      'Authorization',
+      'Bearer ' + localStorage.getItem('token')
+    );
+    console.log('get: ', this.URLbase + '/desactivarValidador/' + id);
+    return this.http.get<any>(this.URLbase + '/desactivarValidador/' + id, {
+      headers: headers,
+    });
+  }
+
   setUsuario(usuarioValidador): any {
     let returned;
     let json = JSON.stringify(usuarioValidador);

@@ -4,7 +4,7 @@ export class VotacionRanking implements CalcularResultadoVotacion {
 
   procesarVoto(voto: string[]): void {
     for (const op of voto) {
-      const posicion: number = +op.substring(0 , op.indexOf(''));
+      const posicion: number = +op.substring(0 , op.indexOf(' '));
       const opcion: string = op.substring(op.indexOf(' ') + 1).trim();
       if (this.conteoVotos.has(opcion)) {
         const cantVotos = this.conteoVotos.get(opcion);
