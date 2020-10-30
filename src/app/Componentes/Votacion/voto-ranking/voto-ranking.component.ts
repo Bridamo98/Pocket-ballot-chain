@@ -47,7 +47,7 @@ export class VotoRankingComponent implements OnInit {
       .validarAutorizacion(this.idVotacion)
       .subscribe((res) => {
         if (res.toString() === 'error') {
-          window.location.href = 'Perfil';
+          this.router.navigate(['/Inicio']);
         }
         this.votacion = res;
         this.getVotacion();

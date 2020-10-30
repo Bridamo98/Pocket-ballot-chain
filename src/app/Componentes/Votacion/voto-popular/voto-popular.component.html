@@ -14,34 +14,28 @@
     <p>¡Reparte los votos asignados a los candidatos que quieras!</p>
   </div>
   <ul class="list-group">
-    <ul class="list-group-item" style="user-select: none; border-color: black;border-style: solid;"
+    <ul class="list-group-item"
       *ngFor="let opcion of opciones; let index= index" (click)="votar2(index)">
-      <div class="row justify-content-center">
+      <div class="row justify-content-center nombre-votacion">
         {{opciones[index].nombre}}
       </div>
       <div class="row justify-content-center">
         {{opciones[index].descripcion}}
       </div>
       <div class="row justify-content-center">
-        votos: {{votos[index]}}
+        VOTOS ASIGNADOS: {{votos[index]}}
       </div>
     </ul>
   </ul>
-  <div class="row justify-content-center">
-    <p>Cantidad de votos: {{cantVotos}} </p>
+  <div id = "cant-votos" class="row justify-content-center">
+    <p>CANTIDAD DE VOTOS: {{cantVotos}} </p>
   </div>
   <div style="color: red;" class="row justify-content-center">
     <p>{{mensaje}}</p>
   </div>
   <div class="row justify-content-center" >
-    <button class="btn btn-primary"  style="font-size: large; width: 160px; height: 70px; margin: 20px;" (click)="votar()">Votar</button>
+    <button class="btn btn-primary" (click)="votar()">Votar</button>
   </div>
 </div>
 
-<style>
-  .list-group-item {
-    user-select: none;
-    border-color: black;
-    border-style: solid;
-  }
-</style>
+

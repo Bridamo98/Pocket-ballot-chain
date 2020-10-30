@@ -14,8 +14,8 @@
   </div>
   <ul class="list-group" cdkDropList (cdkDropListDropped)="onDropped($event)">
     <div class="candidatos">
-      <ul class="list-group-item" *ngFor="let opcion of opciones; let i= index" cdkDrag style="user-select: none; border-color: black;border-style: solid;">
-        <div class="row justify-content-center">
+      <ul class="list-group-item" *ngFor="let opcion of opciones; let i= index" cdkDrag >
+        <div class="row justify-content-center nombre-votacion">
           #{{i+1}} {{opcion.nombre}}
         </div>
         <div class="row justify-content-center"  style = "margin: 1px;" class="row">
@@ -25,7 +25,7 @@
     </div>
   </ul>
   <div class="row justify-content-center">
-    <button class="btn btn-primary"  style="font-size: large; width: 160px; height: 70px; margin: 20px;" (click)="votar()">Votar</button>
+    <button class="btn btn-primary" (click)="votar()">Votar</button>
   </div>
 </div>
 

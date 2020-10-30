@@ -54,7 +54,7 @@ export class VotoClasificacionComponent implements OnInit {
       .validarAutorizacion(this.idVotacion)
       .subscribe((res) => {
         if ( res.toString() === "error"){
-          console.log('waaaa');
+          this.router.navigate(['/Inicio']);
         }
         this.votacion = res;
         this.getVotacion();
