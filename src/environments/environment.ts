@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  serverUrl: 'localhost:3000', // 'http://186.81.169.18:3000',
-  socketUrl: 'localhost:4000', // 'http://186.81.169.18:4000',
+  serverUrl: 'http://localhost:3000', // 'http://186.81.169.18:3000',
+  socketUrl: 'http://localhost:4000', // 'http://186.81.169.18:4000',
 
   // Constantes de Blockchain
   votar: 1,

@@ -7,11 +7,11 @@ import { Transaccion } from 'src/app/Modelo/Blockchain/transaccion';
 
 import { VotacionService } from '../../../Servicios/votacion.service';
 import { OpcionService } from '../../../Servicios/Opcion/opcion.service';
-import { CredencialService } from '../../../Servicios/Credencial/credencial.service';
+import { VotarService } from 'src/app/Servicios/votar.service';
+
 
 import { Router, ActivatedRoute } from '@angular/router';
 import { environment } from 'src/environments/environment';
-import { VotarService } from 'src/app/Servicios/votar.service';
 
 declare var enviarMensaje: any;
 declare var setVoto: any;
@@ -37,9 +37,7 @@ export class VotoPopularComponent implements OnInit {
   }
   cantVotos: any = 'Ninguna';
   tituloVotacion: String = 'Titulo votacion'; // El modelo de votacion aun no tiene titulo
-  // Quemar
   idVotacion: number = -1;
-  // candidatos: String[]=['Santiago', 'Brandonn', 'Diego', 'Briam'];
   votos: number[] = [];
   selectedIndex: number = -1;
 
@@ -56,25 +54,32 @@ export class VotoPopularComponent implements OnInit {
   }
   votar() {
     if (
-      +this.selectedIndex > -1 &&
-      +this.selectedIndex < this.opciones.length
+      this.cantVotos < this.votacion.votos
     ) {
-      // enviar voto
+      const respuesta =[];
+
+      for (let numeroOpcion = 0; numeroOpcion < this.opciones.length; numeroOpcion++) {
+        const opcion = this.opciones[numeroOpcion];
+        for (let index = 0; index < this.votos[numeroOpcion]; index++) {
+          respuesta.push('Voto ' + opcion.nombre);
+        }
+      }
+
       console.log('Votación en progreso');
       const timestamp: number = Date.now();
       const transaccion: Transaccion = new Transaccion(
         envTipoTx.voto,
         +this.votacion.id,
         'asd',
-        ['Voto ' + this.opciones[this.selectedIndex].nombre],
+        respuesta,
         timestamp,
         ''
       );
       const mensaje = new Mensaje(environment.obtenerPk, transaccion);
-      this.enviarVoto(mensaje);
+//    TO-DO: Descomentar -->  this.enviarVoto(mensaje);
       this.router.navigate(['/Inicio']);
     } else {
-      this.mensaje = 'Primero seleccione una de las opciones';
+      this.mensaje = 'Primero seleccione por lo menos una de las opciones';
     }
   }
 
@@ -93,8 +98,8 @@ export class VotoPopularComponent implements OnInit {
         window.location.href = 'VotoClasificacion/' + this.idVotacion;
       }
       console.log(this.votacion);
-      this.tituloVotacion = this.votacion.descripcion;
-      // this.cantVotos = this.votacion.votos;
+      this.tituloVotacion = this.votacion.titulo;
+      this.cantVotos = this.votacion.votos;
     });
   }
 
@@ -103,22 +108,26 @@ export class VotoPopularComponent implements OnInit {
     this.cantVotos = this.opciones[+this.selectedIndex].nombre;
   }
 
-  enviarVoto(mensaje: Mensaje){
-    this.votarService.obtenerValidadores()
-    .subscribe(
-      result => {
-        result.forEach(element => {
-          console.log(element);
-          console.log("Enviando mensaje a:", element.peerId);
-          console.log(mensaje);
-          this.registrarVoto(mensaje);
-          enviarMensaje(mensaje, element.peerId);
-        });
-      }
-    );
+  enviarVoto(mensaje: Mensaje) {
+    this.votarService.obtenerValidadores().subscribe((result) => {
+      result.forEach((element) => {
+        console.log(element);
+        console.log('Enviando mensaje a:', element.peerId);
+        console.log(mensaje);
+        this.registrarVoto(mensaje);
+        enviarMensaje(mensaje, element.peerId);
+      });
+    });
   }
 
-  registrarVoto(voto){
+  registrarVoto(voto) {
     setVoto(voto);
+  }
+
+  votar2(index) {
+    if (this.cantVotos > 0) {
+      this.votos[index] = this.votos[index] + 1;
+      this.cantVotos--;
+    }
   }
 }

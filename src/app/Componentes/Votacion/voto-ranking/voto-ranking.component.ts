@@ -41,7 +41,6 @@ export class VotoRankingComponent implements OnInit {
   tituloVotacion: String = 'Titulo votacion'; // El modelo de votacion aun no tiene titulo
   // Quemar
   idVotacion: number = -1;
-  candidatos: string[] = [];
 
   ngOnInit(): void {
     this.votacionServicio
@@ -59,7 +58,6 @@ export class VotoRankingComponent implements OnInit {
     const before = event.previousIndex;
     const actual = event.currentIndex;
     moveItemInArray(this.opciones, before, actual);
-    // console.log(this.candidatos);
   }
   votar() {
     console.log(this.opciones);
@@ -81,7 +79,6 @@ export class VotoRankingComponent implements OnInit {
     const mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.enviarVoto(mensaje);
     this.router.navigate(['/Inicio']);
-    // enviar voto
   }
   getVotaciones() {
     this.votacionServicio.getVotaciones().subscribe((res) => {
@@ -101,7 +98,7 @@ export class VotoRankingComponent implements OnInit {
       window.location.href = 'VotoClasificacion/' + this.idVotacion;
     }
     console.log(this.votacion);
-    this.tituloVotacion = this.votacion.descripcion;
+    this.tituloVotacion = this.votacion.titulo;
   }
 
   enviarVoto(mensaje: Mensaje){
