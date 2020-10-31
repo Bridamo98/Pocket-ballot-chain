@@ -4,12 +4,14 @@ export class VotacionPopular implements CalcularResultadoVotacion {
   // Map < nombreOpcion , votos >
   conteoVotos: Map<string, number> = new Map();
   procesarVoto(voto: string[]): void {
-    const opcion = voto[0].substring(voto[0].indexOf(' ') + 1).trim();
-    if (this.conteoVotos.has(opcion)) {
-      const cantVotos = this.conteoVotos.get(opcion);
-      this.conteoVotos.set(opcion, cantVotos + 1);
-    } else {
-      this.conteoVotos.set(opcion, 1);
+    for (const v of voto) {
+      const opcion = v.substring(v.indexOf(' ') + 1).trim();
+      if (this.conteoVotos.has(opcion)) {
+        const cantVotos = this.conteoVotos.get(opcion);
+        this.conteoVotos.set(opcion, cantVotos + 1);
+      } else {
+        this.conteoVotos.set(opcion, 1);
+      }
     }
   }
 
