@@ -128,10 +128,12 @@ export class VotoClasificacionComponent implements OnInit {
     this.votacionServicio.getVotacion(this.idVotacion).subscribe((res) => {
       this.votacion = res;
       if (this.votacion.tipoDeVotacion === 1) {
-        window.location.href = 'VotoRanking/' + this.idVotacion;
+        //window.location.href = 'VotoRanking/' + this.idVotacion;
+        this.router.navigate(['VotoRanking/' + this.idVotacion]);
       }
       if (this.votacion.tipoDeVotacion === 2) {
-        window.location.href = 'VotoPopular/' + this.idVotacion;
+        //window.location.href = 'VotoPopular/' + this.idVotacion;
+        this.router.navigate(['VotoPopular/' + this.idVotacion]);
       }
       console.log(this.votacion);
       this.tituloVotacion = this.votacion.descripcion;

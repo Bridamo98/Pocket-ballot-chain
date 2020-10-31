@@ -48,7 +48,8 @@ export class VotoPopularComponent implements OnInit {
       .validarAutorizacion(this.idVotacion)
       .subscribe((res) => {
         if (res.toString() === 'error') {
-          window.location.href = 'Perfil';
+          //window.location.href = 'Perfil';
+          this.router.navigate(['/Perfil']);
         }
         this.votacion = res;
         this.getVotacion();
