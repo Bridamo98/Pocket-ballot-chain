@@ -134,13 +134,17 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
     //this.router.navigate(['*/'+this.usuario.nombre]);
   }
 
-  verVotacion(idVotacion: string, votaciones: Votacion[]): void {
+  async verVotacion(idVotacion: string, votaciones: Votacion[]): Promise<void> {
     const votacion = votaciones.filter(v => v.id.valueOf() === +idVotacion)[0];
     if (new Date().getTime() < new Date(votacion.fechaInicio).getTime()){
       alert('La votación no ha iniciado');
       return;
     }
     if (new Date().getTime() < new Date(votacion.fechaLimite).getTime()){
+      if (!await this.comprobarVotos(+idVotacion, this.usuario.nombre.valueOf())){
+        alert('No hay votos disponibles');
+        return;
+      }
       if (this.votaciones.filter(v => v.id.valueOf() === +idVotacion).length > 0){
         switch(votacion.tipoDeVotacion.valueOf()){
           case environment.ranking:
@@ -167,9 +171,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
 
   actualizarVotaciones(votaciones: Votacion[]): void {
     for (const votacion of votaciones) {
-      //if (votacion.autor.toString().localeCompare(this.usuario.nombre.toString()) !== 0) {
       this.votacionesInscrito.push(votacion);
-      //}
     }
   }
 
@@ -185,6 +187,18 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
       return false;
     }
     return true;
+  }
+
+  async comprobarVotos(idVotacion: number, nombre: string): Promise<boolean>{
+    const votos = await this.getVotosDisponibles(idVotacion, nombre);
+    if (votos['votosDisponibles'] > 0){
+      return true;
+    }
+    return false;
+  }
+
+  getVotosDisponibles(idVotacion: number, nombre: string): Promise<object>{
+    return this.votacionService.getVotosDisponibles(idVotacion, nombre).toPromise();
   }
 
   cerrarValidador(): void{

@@ -23,19 +23,24 @@ export class ResultsConverterService {
     return votos;
   }
 
-  obtenerResultadosClas(resultados: string, opciones: Opcion[]): Map<string, number> {
+  obtenerResultadosClas(resultados: string, opciones: Opcion[]): Map<string, number>[] {
     let votos = new Map<string, number>();
+    let votosNo = new Map<string, number>();
     let arrayResultados = resultados.split(";");
     arrayResultados.pop();
     for (const opcion of opciones) {
       votos.set(opcion.nombre.valueOf(), 0);
+      votos.set(opcion.nombre.valueOf(), 0);
     }
     for (const string of arrayResultados) {
       let arrayString = string.split(" ");
+      let nVotosNo = +arrayString.pop();
       let nVotos = +arrayString.pop();
-      votos.set(this.obtenerNombre(arrayString), nVotos);
+      let nombre = this.obtenerNombre(arrayString);
+      votos.set(nombre, nVotos);
+      votosNo.set(nombre, nVotosNo);
     }
-    return votos;
+    return [votos, votosNo];
   }
 
   obtenerResultadosRank(resultados: string, opciones: Opcion[]): Map<string, number> {

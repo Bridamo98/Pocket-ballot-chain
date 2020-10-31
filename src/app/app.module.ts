@@ -2,6 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AuthGuard } from './auth.guard';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 
 import { ReactiveFormsModule } from '@angular/forms';
@@ -31,6 +33,7 @@ import { UsuarioEditarComponent } from './Componentes/Usuario/usuario-editar/usu
 import { VotacionListaComponent } from './Componentes/Votacion/votacion-lista/votacion-lista.component';
 import { VotacionReporteComponent } from './Componentes/Votacion/votacion-reporte/votacion-reporte.component';
 import { ValidadorPostularseComponent } from './Componentes/Validador/validador-postularse/validador-postularse.component';
+import { ValidadorComponent } from './Componentes/Validador/validador/validador.component';
 
 //servicios
 import { VotacionService } from './Servicios/votacion.service';
@@ -45,6 +48,7 @@ import { TokenInterceptorService } from './Servicios/token-interceptor.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { Validador } from './Modelo/Validador';
 
 @NgModule({
   declarations: [
@@ -64,6 +68,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     VotacionListaComponent,
     VotacionReporteComponent,
     ValidadorPostularseComponent,
+    ValidadorComponent,
     VotacionCrearInformacionComponent,
     CredencialComponent,
   ],
@@ -78,7 +83,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     FormsModule,
     ReactiveFormsModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     VotacionService,

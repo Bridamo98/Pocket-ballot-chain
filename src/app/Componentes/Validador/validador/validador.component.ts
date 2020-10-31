@@ -30,6 +30,7 @@ declare var desconectar: any;
 export class ValidadorComponent implements OnInit, OnDestroy {
   usuario: Usuario = new Usuario('', 0, '', '');
   estatus: string = envEstatus.inactivo;
+  activo = false;
   suscripcionTorneo: Subscription;
   suscripcionVotos: Subscription;
 
@@ -45,6 +46,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.estatusInactivo();
     votarServicio = this.votarService;
     mensajesServicio = this.mensajeServicio;
     this.iniciarVista();
@@ -129,7 +131,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
   }
 
   iniciarValidador(validadoresAct, validadores, posicion, respuesta): void{
-    this.estatus = envEstatus.activo;
+    this.estatusActivo();
     this.consensoService.inicializarValidador(
       validadoresAct,
       validadores,
@@ -140,7 +142,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
   }
 
   pausarValidador(validadoresAct, respuesta): void{
-    this.estatus = envEstatus.inactivo;
+    this.estatusInactivo();
     this.syncBlockchainP2pService.prepararSync(validadoresAct,
       respuesta['inicio'],
       respuesta['tiempo']);
@@ -165,5 +167,17 @@ export class ValidadorComponent implements OnInit, OnDestroy {
     this.suscripcionTorneo.unsubscribe();
     this.suscripcionVotos.unsubscribe();
     this.estatus = envEstatus.inactivo;
+  }
+
+  estatusActivo(): void{
+    this.estatus = envEstatus.activo;
+    this.activo = true;
+    document.getElementById("estatus").style.color = "green";
+  }
+
+  estatusInactivo(): void{
+    this.estatus = envEstatus.inactivo;
+    this.activo = false;
+    document.getElementById("estatus").style.color = "#ffb10a";
   }
 }

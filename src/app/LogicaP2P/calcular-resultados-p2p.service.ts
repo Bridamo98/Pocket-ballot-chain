@@ -81,7 +81,9 @@ export class CalcularResultadosP2pService {
               calcularResultado = new VotacionPopular();
               break;
             case environment.clasificacion:
-              calcularResultado = new VotacionClasificacion();
+              let clasificacion = new VotacionClasificacion();
+              clasificacion.totalVotos = await this.votacionService.getVotosEmitidosVotacion(idVotacion).toPromise();
+              calcularResultado = clasificacion;
               break;
             case environment.ranking:
               calcularResultado = new VotacionRanking();
