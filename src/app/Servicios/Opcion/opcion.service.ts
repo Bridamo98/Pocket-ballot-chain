@@ -14,14 +14,15 @@ export class OpcionService {
   prueba(){
     console.log('funciona');
   }
-  
+
   getOpciones() {
     console.log('get: ', this.URLbase + '/opcion');
     return this.http.get<Opcion[]>(this.URLbase + '/votacion');
   }
-  getOpcion(id:number) {
+
+  getOpcion(id: number) {
     console.log('get: ', this.URLbase + '/opcion/votacion');
-    return this.http.get<Opcion[]>(this.URLbase + '/opcion/votacion/'+id);
+    return this.http.get<Opcion[]>(this.URLbase + '/opcion/votacion/' + id);
   }
-  
+
 }

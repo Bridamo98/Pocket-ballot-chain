@@ -1,3 +1,38 @@
 .list-group{
 	width: 50%;
 }
+.list-group-item {
+  user-select: none;
+  border-color: black;
+  border-style: solid;
+}
+.btn{
+  font-size: large;
+  width: 160px;
+  height: 70px;
+  margin: 20px;
+}
+
+row.justify-content-center{
+  margin: 1px;
+}
+
+.list-group{
+  width: 100%
+}
+
+.columna {
+  font-weight: bold;
+}
+
+.aceptado{
+  color: green;
+}
+
+.rechazado{
+  color: red;
+}
+
+.nombre-votacion{
+  font-weight: bold;
+}
