@@ -76,7 +76,7 @@ export class VotoPopularComponent implements OnInit {
         ''
       );
       const mensaje = new Mensaje(environment.obtenerPk, transaccion);
-//    TO-DO: Descomentar -->  this.enviarVoto(mensaje);
+      this.enviarVoto(mensaje);
       this.router.navigate(['/Inicio']);
     } else {
       this.mensaje = 'Primero seleccione por lo menos una de las opciones';
