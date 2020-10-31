@@ -1,6 +1,7 @@
 import { CalcularResultadoVotacion } from './../calcular-resultado-votacion';
 export class VotacionClasificacion implements CalcularResultadoVotacion {
   conteoVotos: Map<string, number> = new Map();
+  totalVotos: number = -1;
 
     // Map < nombreOpcion , votos >
   procesarVoto(voto: string[]): void {
@@ -17,7 +18,9 @@ export class VotacionClasificacion implements CalcularResultadoVotacion {
     let resultado = '';
     for (let opcion of this.conteoVotos.keys()) {
       opcion = opcion.trim();
-      resultado += ' ' + opcion + ' ' + this.conteoVotos.get(opcion) + ';';
+      let favor = this.conteoVotos.get(opcion);
+      let contra = this.totalVotos - favor;
+      resultado += ' ' + opcion + ' ' + favor + ' ' + contra + ';';
     }
     resultado = resultado.trim();
     return resultado;

@@ -28,9 +28,12 @@ export class VotacionReporteComponent implements OnInit {
   tipoVotacion: TipoVotacion = new TipoVotacion();
   private suscripcion: Subscription = null;
   resultados: Map<string, number> = null;
-  totalVotos: number = 0;
+  resultadosNo: Map<string, number> = null;
   resultadosNombres: string[] = [];
   numParticipantes: number = 0;
+  fechaInicio: string;
+  fechaLimite: string;
+  maxVotos: number = -1;
 
   //canvas
   @ViewChild('canvas', { static: true })
@@ -79,6 +82,10 @@ export class VotacionReporteComponent implements OnInit {
     this.tipoVotacion = await this.actualizarTipo(this.votacion);
     this.votacion.participantes = await this.actualizarParticipantes(this.votacion);
     this.votacion.opcionDeVotacion = await this.actualizarOpciones(this.votacion);
+    this.maxVotos = await this.getVotosEmitidos(this.votacion.id.valueOf());
+    this.fechaInicio = new Date(this.votacion.fechaInicio).toLocaleString();
+    this.fechaLimite = new Date(this.votacion.fechaLimite).toLocaleString();
+    this.numParticipantes = this.votacion.participantes.length * this.votacion.votos;
     this.inicializarResultados(this.votacion.opcionDeVotacion);
     this.dibujar();
 
@@ -86,7 +93,6 @@ export class VotacionReporteComponent implements OnInit {
     this.suscripcion = this.obtenerResultadosService.observable.subscribe(() => {
       this.resultadoGanador = this.obtenerResultadosService.obtenerGanador();
       this.actualizarVotos(this.votacion);
-      //this.numParticipantes = this.totalVotos; //Cambiar cuando no se hagan pruebas con 1 votante con múltiples votos
       this.dibujar();
     });
   }
@@ -118,11 +124,10 @@ export class VotacionReporteComponent implements OnInit {
         this.resultados = this.resultsConverterService.obtenerResultadosPop(this.resultadoGanador, this.votacion.opcionDeVotacion);
         break;
       case environment.clasificacion:
-        this.resultados = this.resultsConverterService.obtenerResultadosClas(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        let resClas = this.resultsConverterService.obtenerResultadosClas(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        this.resultados = resClas[0];
+        this.resultadosNo = resClas[1];
         break;
-    }
-    for (const valor of this.resultados.values()) {
-      this.totalVotos += valor;
     }
     this.resultadosNombres = Array.from(this.resultados.keys());
   }
@@ -155,10 +160,16 @@ export class VotacionReporteComponent implements OnInit {
   inicializarResultados(opciones: Opcion[]): void{
     console.log('Inicializando resultados');
     this.resultados = new Map();
+    this.resultadosNo = new Map();
     for (const opcion of opciones) {
       this.resultados.set(opcion.nombre.valueOf(), 0);
+      this.resultadosNo.set(opcion.nombre.valueOf(), 0);
     }
     this.resultadosNombres = Array.from(this.resultados.keys());
+  }
+
+  getVotosEmitidos(idVotacion: number): Promise<number>{
+    return this.votacionService.getVotosEmitidosVotacion(idVotacion).toPromise();
   }
 
   //Dibujar
@@ -175,10 +186,11 @@ export class VotacionReporteComponent implements OnInit {
     let i = 0;
     let candidatos = Array.from(this.resultados.keys());
     for (const nombre of candidatos) {
+      let resultado = this.resultados.get(nombre);
       if (this.votacion.tipoDeVotacion === environment.clasificacion){
-        this.dibBarra(nombre, ancho * i, unidad * this.maxVal, ancho, this.secundario);
+        this.dibBarra(nombre, ancho * i, unidad * (this.resultadosNo.get(nombre) + resultado), ancho, this.secundario);
       }
-      this.dibBarra(nombre, ancho * i, unidad * this.resultados.get(nombre), ancho, this.primario);
+      this.dibBarra(nombre, ancho * i, unidad * resultado, ancho, this.primario);
       i++;
     }
   }
@@ -210,16 +222,7 @@ export class VotacionReporteComponent implements OnInit {
   }
 
   calcularMaximo(): void {
-    if (this.votacion.tipoDeVotacion !== environment.clasificacion){
-      for (const opcion of this.votacion.opcionDeVotacion) {
-        let nombre = opcion.nombre.valueOf();
-        if (this.resultados.get(nombre) > this.maxVal){
-          this.maxVal = this.resultados.get(nombre);
-        }
-      }
-    }else{
-      this.maxVal = this.numParticipantes;
-    }
+    this.maxVal = this.numParticipantes;
   }
 
   numCeros(): number {

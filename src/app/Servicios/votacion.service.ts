@@ -67,4 +67,12 @@ export class VotacionService {
   getTipoVotacion(id: number) {
     return this.http.get<TipoVotacion>(`${environment.serverUrl}/tipoVotacion/${id}`);
   }
+
+  getVotosDisponibles(id: number, nombre: string) {
+    return this.http.get<object>(`${environment.serverUrl}/participanteVotos/${id}/${nombre}`);
+  }
+
+  getVotosEmitidosVotacion(id: number) {
+    return this.http.get<number>(`${environment.serverUrl}/votosEmitidosVotacion/${id}`);
+  }
 }

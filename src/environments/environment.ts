@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  serverUrl: 'http://localhost:3000', // 'http://186.81.169.18:3000',
-  socketUrl: 'http://localhost:4000', // 'http://186.81.169.18:4000',
+  production: true,
+  serverUrl: 'http://localhost:3000',//'http://186.81.169.18:3000',
+  socketUrl: 'http://localhost:4000',//'http://186.81.169.18:4000',
 
   // Constantes de Blockchain
   votar: 1,

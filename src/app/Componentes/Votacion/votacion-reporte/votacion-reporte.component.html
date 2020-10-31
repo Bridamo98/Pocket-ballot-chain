@@ -1,19 +1,72 @@
-<div class="container">
-  <h1 class="text-center">Reporte de votación: {{ votacion.titulo }}</h1>
+<div class="container pt-5 pt-md-0">
+  <h4 class="text-center mt-5 pt-md-0">Reporte</h4>
+  <h1 class="display-4 text-center">{{ votacion.titulo }}</h1>
+  <div class="row my-3">
+    <div class="col"></div>
+    <div class="col-sm-10 col-lg-8">
+      <h2 class="text-center">Acerca de la votación</h2>
+      <table class="table table-light">
+        <tbody>
+          <tr>
+            <td>Autor:</td>
+            <td>{{ votacion.autor }}</td>
+          </tr>
+          <tr>
+            <td>Tipo de votación:</td>
+            <td>{{ tipoVotacion.nombre.toString() }}</td>
+          </tr>
+          <tr>
+            <td>Inicio de la votación:</td>
+            <td>{{ fechaInicio }}</td>
+          </tr>
+          <tr>
+            <td>Fin de la votación:</td>
+            <td>{{ fechaLimite }}</td>
+          </tr>
+          <tr *ngIf="votacion.participantes != undefined">
+            <td>Número de votantes:</td>
+            <td>{{ votacion.participantes.length }}</td>
+          </tr>
+          <tr *ngIf="votacion.opcionDeVotacion != undefined">
+            <td>Número de candidatos:</td>
+            <td>{{ votacion.opcionDeVotacion.length }}</td>
+          </tr>
+          <tr>
+            <td>Número de votos por votante:</td>
+            <td>{{ votacion.votos }}</td>
+          <tr *ngIf="maxVotos !== -1">
+            <td>Total votos emitidos:</td>
+            <td>{{ maxVotos }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="col"></div>
+  </div>
+
   <div class="row">
     <div class="col"></div>
-    <div class="col-sm-4">
-      <h2>Información de la votación</h2>
-      <p>Nombre de la votación: {{ votacion.titulo }}</p>
-      <p>Autor: {{ votacion.autor }}</p>
-      <p>Tipo de votación: {{ tipoVotacion.nombre.toString() }}</p>
-      <p *ngIf="votacion.participantes != undefined">Número de votantes: {{ votacion.participantes.length }}</p>
-      <p *ngIf="votacion.opcionDeVotacion != undefined">Número de candidatos: {{ votacion.opcionDeVotacion.length }}</p>
-      <p *ngIf="votacion.almacena != undefined">Total de votos: {{ totalVotos }}</p>
+    <div class="col-sm-5 col-lg-4">
+      <h3 class="text-center">Resultados</h3>
+      <table>
+        <tbody>
+          <tr #row *ngFor="let nombre of resultadosNombres">
+            <td>
+              {{ nombre }}: {{ resultados.get(nombre) }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-
-    <div class="col-sm-4">
-      <h2>Votantes</h2>
+    <div class="col-sm-5 col-lg-4">
+      <canvas #canvas></canvas>
+    </div>
+    <div class="col"></div>
+  </div>
+  <div class="row">
+    <div class="col"></div>
+    <div class="col-sm-10 col-lg-8">
+      <h2 class="text-center">Votantes</h2>
       <div id="custom-scroll">
         <div class="table-responsive">
           <table class="table table-hover table-bordered">
@@ -34,26 +87,6 @@
           </table>
         </div>
       </div>
-    </div>
-    <div class="col"></div>
-  </div>
-
-  <div class="row">
-    <div class="col"></div>
-    <div class="col-sm-4">
-      <h3>Resultados</h3>
-      <table>
-        <tbody>
-          <tr #row *ngFor="let nombre of resultadosNombres">
-            <td>
-              {{ nombre }}: {{ resultados.get(nombre) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-    <div class="col-sm-4">
-      <canvas #canvas></canvas>
     </div>
     <div class="col"></div>
   </div>

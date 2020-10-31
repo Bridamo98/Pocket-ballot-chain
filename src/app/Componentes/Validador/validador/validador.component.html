@@ -1,7 +1,12 @@
 <div class="row h-100">
+  <div class="col-sm-2">
+  </div>
   <div class="col-sm-8 my-auto text-center content">
+    <mat-spinner *ngIf="activo" class="mx-auto my-2"></mat-spinner>
     <h1>Estatus del validador</h1>
-    <h1>{{ estatus }}</h1>
-    <button class="btn btn-primary m-3" (click)="dejarSerValidador()">Dejar de ser validador</button>
+    <h1 id="estatus">{{ estatus }}</h1>
+    <button class="btn btn-danger m-3" (click)="dejarSerValidador()">Dejar de ser validador</button>
+  </div>
+  <div class="col-sm-2">
   </div>
 </div>
