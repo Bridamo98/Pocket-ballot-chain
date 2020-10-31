@@ -57,7 +57,23 @@ export class UsuarioService {
         });
     });
   }
-  estaLogeado() {
-    return !!localStorage.getItem('token');
+
+  tokenEsValido(token: string){
+    return this.http
+      .get<any>(this.URLbase + '/validar-token')
+      .toPromise();
+  }
+  async estaLogeado() {
+    if (!!localStorage.getItem('token') && !!localStorage.getItem('nombre')){
+      try {
+        const esValido = await this.tokenEsValido(localStorage.getItem('token'));
+        if (esValido === 'Solicitud autorizada'){
+          return true;
+        }
+      } catch (error) {
+      }
+      }
+    localStorage.clear();
+    return false;
   }
 }
