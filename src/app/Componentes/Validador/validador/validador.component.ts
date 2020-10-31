@@ -13,7 +13,6 @@ import { UsuarioService } from '../../../Servicios/usuario.service';
 import { VotarService } from '../../../Servicios/votar.service';
 import { Subscription } from 'rxjs';
 import { BlockchainService } from '../../../LogicaP2P/blockchain.service';
-
 // PeerHandler
 declare var inicializar: any;
 declare var peer: any;

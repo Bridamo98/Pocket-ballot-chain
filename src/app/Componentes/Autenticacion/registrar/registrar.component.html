@@ -44,8 +44,8 @@
         <button class="btn btn-primary m-2" type="submit" [disabled]="!formulario.valid"
         (click)="registrarse(popCorreo, popName, popContra, popConfirm  )" value="Registrarse">Registrarse</button>
       </div>
-      <div class="row justify-content-sm-center">
-        <a href="/">Volver a inicio de sesión </a>
+      <div class="row justify-content-sm-center inicio-sesion">
+        <a (click)="irAInicioSesion()" >Volver a inicio de sesión </a>
       </div>
     </form>
 

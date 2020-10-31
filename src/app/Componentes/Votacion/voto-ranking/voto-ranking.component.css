@@ -1,0 +1,15 @@
+.list-group-item {
+  user-select: none;
+  border-color: black;
+  border-style: solid;
+}
+.btn{
+  font-size: large;
+  width: 160px;
+  height: 70px;
+  margin: 20px;
+}
+
+.nombre-votacion{
+  font-weight: bold;
+}

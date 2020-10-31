@@ -1,36 +1,41 @@
 <div class="container">
   <div class="row justify-content-center">
-    <h1 [innerHtml]="tituloVotacion"> </h1>
+    <h1> {{votacion.titulo}} </h1>
   </div>
   <div class="row justify-content-center">
-    <p>¡Selecciona tu opción preferida!</p>
+    <h4>DESCRIPCIÓN</h4>
+    <p>{{votacion.descripcion}}</p>
   </div>
-  <div class="row justify-content-center">
-    <ul class="list-group" >
-      <style>
-        input {
-          border: none;
-          border-color: transparent;
-        }
-      </style>
-  <ul class="list-group-item" *ngFor="let opcion of opciones; let index= index" (click)="selectItem(index)">
-    <div class="row">
 
-      {{opciones[index].nombre}}
-    </div>
+  <div class="row justify-content-center">
+    <h4>OPCIONES</h4>
+  </div>
+  <div class="row justify-content-center">
+    <p>¡Reparte los votos asignados a los candidatos que quieras!</p>
+  </div>
+  <ul class="list-group">
+    <ul class="list-group-item"
+      *ngFor="let opcion of opciones; let index= index" (click)="votar2(index)">
+      <div class="row justify-content-center nombre-votacion">
+        {{opciones[index].nombre}}
+      </div>
+      <div class="row justify-content-center">
+        {{opciones[index].descripcion}}
+      </div>
+      <div class="row justify-content-center">
+        VOTOS ASIGNADOS: {{votos[index]}}
+      </div>
+    </ul>
   </ul>
-  </ul>
-</div>
-  <div class="row justify-content-center">
-    <p>Opcion Seleccionada: {{cantVotos}}</p>
-
+  <div id = "cant-votos" class="row justify-content-center">
+    <p>CANTIDAD DE VOTOS: {{cantVotos}} </p>
   </div>
-
   <div style="color: red;" class="row justify-content-center">
     <p>{{mensaje}}</p>
   </div>
-  <div class="row justify-content-center">
+  <div class="row justify-content-center" >
     <button class="btn btn-primary" (click)="votar()">Votar</button>
   </div>
-
 </div>
+
+

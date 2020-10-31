@@ -105,7 +105,8 @@ export class InicioSesionComponent implements OnInit {
       }
     };
   }
-  toRegistro(){
+
+  irARegistro(){
     this.router.navigate(['/Registrar']);
   }
 }
