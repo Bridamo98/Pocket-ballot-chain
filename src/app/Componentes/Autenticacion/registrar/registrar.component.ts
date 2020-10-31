@@ -132,4 +132,7 @@ export class RegistrarComponent implements OnInit {
       }
     };
   }
+  irAInicioSesion(){
+    this.router.navigate(['/']);
+  }
 }

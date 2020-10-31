@@ -16,10 +16,13 @@ export class AuthGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return new Observable<boolean>((observer) => {
       this.usuarioService.estaLogeado().then(
-        (res) =>{
+        (res) =>  {
           if (res) {
             this.usuarioService.setUserIsValid(true);
             observer.next(true);
+            return;
+          }
+          if (this.router.url.includes('Registrar')){
             return;
           }
           this.router.navigate(['/']);
@@ -28,9 +31,7 @@ export class AuthGuard implements CanActivate {
           return;
         }
       )
-
     });
-
   }
 
   isLoggedOut() {
