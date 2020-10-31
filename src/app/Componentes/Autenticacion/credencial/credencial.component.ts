@@ -4,6 +4,7 @@ import { VotacionService } from '../../../Servicios/votacion.service';
 import { Credencial } from '../../../Modelo/Credencial';
 import { Votacion } from '../../../Modelo/Votacion';
 import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-credencial',
@@ -18,7 +19,7 @@ export class CredencialComponent implements OnInit {
   credencial: Credencial;
   votacion: Votacion;
   formulario;
-  constructor(private formBuilder: FormBuilder, private credencialServicio: CredencialService, private votacionService: VotacionService) { }
+  constructor(private router:Router, private formBuilder: FormBuilder, private credencialServicio: CredencialService, private votacionService: VotacionService) { }
 
   ngOnInit(): void {
     this.formulario = this.formBuilder.group({
@@ -53,7 +54,6 @@ export class CredencialComponent implements OnInit {
             if (this.votacion.tipoDeVotacion == 3) {
               // window.location.href = 'VotoClasificacion/' + this.credencial.clave;
             }
-
           });
           //window.location.href='Credencial';
         }
@@ -64,5 +64,8 @@ export class CredencialComponent implements OnInit {
     }
   }
 
+  toInicio() {
+    this.router.navigate(['']);
+  }
 
 }
