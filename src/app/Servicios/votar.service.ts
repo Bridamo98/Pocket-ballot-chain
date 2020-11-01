@@ -25,39 +25,6 @@ export class VotarService {
     });
   }
 
-  enviarVoto(mensaje, peerId): any {
-    let obj = {
-      peerValidador: peerId,
-      mensaje: mensaje,
-    };
-    let returned;
-    let json = JSON.stringify(obj);
-    console.log('El JSON enviado es:', json);
-    let headers = new HttpHeaders()
-      .set('Content-Type', 'application/json')
-      .set('Authorization', 'Bearer ' + localStorage.getItem('token'));
-
-    //return this.http.post<any>(this.URLbase + '/redirigir', json, { headers: headers });
-    this.http
-      .post<any>(this.URLbase + '/redirigir', json, { headers: headers })
-      .subscribe((data) => {
-        returned = data['Status'];
-      });
-    return returned;
-  }
-
-  activarValidador(id): Observable<any> {
-    //Manejar una clase Validador
-    let headers = new HttpHeaders().set(
-      'Authorization',
-      'Bearer ' + localStorage.getItem('token')
-    );
-    console.log('get: ', this.URLbase + '/activarValidador/' + id);
-    return this.http.get<any>(this.URLbase + '/activarValidador/' + id, {
-      headers: headers,
-    });
-  }
-
   eliminarValidador(id): Observable<any> {
     //Manejar una clase Validador
     let headers = new HttpHeaders().set(
