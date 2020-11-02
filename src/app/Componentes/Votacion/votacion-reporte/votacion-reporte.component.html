@@ -59,7 +59,19 @@
       </table>
     </div>
     <div class="col-sm-5 col-lg-4">
-      <canvas #canvas></canvas>
+      <canvas [hidden]="votacion.tipoDeVotacion.valueOf() === 1" #canvas></canvas>
+      <table *ngIf="votacion.tipoDeVotacion.valueOf() === 1" class="table table-light">
+        <tbody>
+          <tr #row *ngFor="let escalafon of rankTable">
+            <td>
+              {{ escalafon[1] }}
+            </td>
+            <td>
+              {{ escalafon[0] }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
     <div class="col"></div>
   </div>

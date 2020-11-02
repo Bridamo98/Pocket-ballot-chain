@@ -34,6 +34,7 @@ export class VotacionReporteComponent implements OnInit {
   fechaInicio: string;
   fechaLimite: string;
   maxVotos: number = -1;
+  rankTable = [];
 
   //canvas
   @ViewChild('canvas', { static: true })
@@ -87,13 +88,19 @@ export class VotacionReporteComponent implements OnInit {
     this.fechaLimite = new Date(this.votacion.fechaLimite).toLocaleString();
     this.numParticipantes = this.votacion.participantes.length * this.votacion.votos;
     this.inicializarResultados(this.votacion.opcionDeVotacion);
-    this.dibujar();
+    if (this.votacion.tipoDeVotacion.valueOf() !== environment.ranking){
+      this.dibujar();
+    }
 
     this.solicitarResultados(this.votacion.id.valueOf());
     this.suscripcion = this.obtenerResultadosService.observable.subscribe(() => {
       this.resultadoGanador = this.obtenerResultadosService.obtenerGanador();
       this.actualizarVotos(this.votacion);
-      this.dibujar();
+      if (this.votacion.tipoDeVotacion.valueOf() !== environment.ranking){
+        this.dibujar();
+      }else{
+        this.generarTablaRanking();
+      }
     });
   }
 
@@ -235,5 +242,15 @@ export class VotacionReporteComponent implements OnInit {
       val /= 10;
     }
     return nCeros;
+  }
+
+  // Ranking
+  generarTablaRanking(): void{
+    this.rankTable = Array.from(this.resultados.entries());
+    this.rankTable.sort(this.comparar);
+  }
+
+  comparar(a, b) {
+    return a[1] - b[1];
   }
 }

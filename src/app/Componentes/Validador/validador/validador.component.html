@@ -2,7 +2,18 @@
   <div class="col-sm-2">
   </div>
   <div class="col-sm-8 my-auto text-center content">
-    <mat-spinner *ngIf="activo" class="mx-auto my-2"></mat-spinner>
+    <mat-spinner *ngIf="!activo" class="mx-auto my-2" diameter="65"></mat-spinner>
+    <div *ngIf="activo">
+      <div class="spinner-grow text-secondary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-info" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+      <div class="spinner-grow text-primary" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
     <h1>Estatus del validador</h1>
     <h1 id="estatus">{{ estatus }}</h1>
     <button class="btn btn-danger m-3" (click)="dejarSerValidador()">Dejar de ser validador</button>
