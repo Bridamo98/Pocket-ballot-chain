@@ -124,7 +124,8 @@ export class VotacionReporteComponent implements OnInit {
         this.resultados = this.resultsConverterService.obtenerResultadosPop(this.resultadoGanador, this.votacion.opcionDeVotacion);
         break;
       case environment.clasificacion:
-        let resClas = this.resultsConverterService.obtenerResultadosClas(this.resultadoGanador, this.votacion.opcionDeVotacion);
+        let resClas =
+        this.resultsConverterService.obtenerResultadosClas(this.resultadoGanador, this.votacion.opcionDeVotacion, this.maxVotos);
         this.resultados = resClas[0];
         this.resultadosNo = resClas[1];
         break;
