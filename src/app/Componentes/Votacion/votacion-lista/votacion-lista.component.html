@@ -46,10 +46,11 @@
               </td>
               <td class="p-0">
                 <div class="container d-flex m-0" role="group" aria-label="Button group">
-                  <button type="button" class="btn btn-danger" (click)="salir(votacion, misVotaciones)">
+<!--                   <button type="button" class="btn btn-danger" (click)="salir(votacion, misVotaciones)">
                     Salir
-                  </button>
-                  <button *ngIf="verificarFechaInicial(votacion)" type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, misVotaciones)">
+                  </button> -->
+                  <button *ngIf="verificarFechaInicial(votacion)" type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, misVotaciones)"
+                    [disabled] = "verificarFecha(votacion) === 'Finalizando'">
                     {{ verificarFecha(votacion) }}
                   </button>
                 </div>
@@ -98,7 +99,8 @@
                   <button type="button" class="btn btn-danger" (click)="salir(votacion, votacionesInscrito)">
                     Salir
                   </button>
-                  <button *ngIf="verificarFechaInicial(votacion)" type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, votacionesInscrito)">
+                  <button *ngIf="verificarFechaInicial(votacion)" type="button" class="btn btn-success btn-block" (click)="verVotacion(votacion.id, votacionesInscrito)"
+                    [disabled] = "verificarFecha(votacion) === 'Finalizando'">
                     {{ verificarFecha(votacion) }}
                   </button>
                 </div>

@@ -26,6 +26,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   misVotaciones: Votacion[] = [];
   votacionesInscrito: Votacion[] = [];
   pasa = false; // Indica si la siguiente pantalla a la que si dirige debe mantener la conexión con los peer
+  desfase = 20000;
 
   constructor(
     private router: Router,
@@ -163,7 +164,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
       }else{
         alert('La votación no ha finalizado y el usuario no es un participante');
       }
-    }else {
+    }else if (new Date().getTime() >= new Date(votacion.fechaLimite).getTime() + this.desfase) {
       this.pasa = true;
       this.router.navigate(['VotacionReporte/' + idVotacion]);
     }
@@ -176,8 +177,12 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   }
 
   verificarFecha(votacion: Votacion): string{
-    if (new Date().getTime() < new Date(votacion.fechaLimite).getTime()){
+    const tiempo: number = new Date().getTime();
+    const tiempoLimite: number = new Date(votacion.fechaLimite).getTime();
+    if (tiempo < tiempoLimite){
       return "Votar";
+    }else if (tiempo >= tiempoLimite && tiempo <= tiempoLimite + this.desfase){
+      return "Finalizando";
     }
     return "Resultados";
   }

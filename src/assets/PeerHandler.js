@@ -14,10 +14,11 @@ var peer_id;
 var mensajesServicio;
 var votarServicio;
 var nombreUsuario;
-var usuarioPeer;
+var usuarioPeer = null;
 var peerID;
 
 var inicializar = function() {
+    desconectar();
     peer = new Peer({
       host: location.hostname,
       port: (location.protocol === 'https:' ? 443 : 5000),
@@ -32,7 +33,9 @@ var inicializar = function() {
             nombre: usuarioPeer
         };
 
-        votarServicio.setUsuario(usuarioValidador);
+        if (usuarioValidador.nombre !== null){
+          votarServicio.setUsuario(usuarioValidador);
+        }
     });
 
     peer.on('connection', function (connection) {
@@ -55,7 +58,9 @@ var inicializar = function() {
 
     peer.on('disconnected', function () {
       console.log('peer desconectado');
-      votarServicio.eliminarValidador(peerID);
+      //votarServicio.eliminarValidador(peerID);
+      peer = null;
+      usuarioPeer = null;
     })
 }
 
@@ -85,7 +90,5 @@ var enviarMensaje = function(msj, otro_peer_id) {
 var desconectar = function() {
   if (peer != null){
     peer.disconnect();
-    peer = null;
-    usuarioPeer = null;
   }
 }
