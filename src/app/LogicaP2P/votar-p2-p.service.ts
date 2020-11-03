@@ -83,9 +83,13 @@ export class VotarP2PService {
     if (
       new Date(votacion.fechaLimite).getTime() > new Date().getTime() &&
       new Date().getTime() > new Date(votacion.fechaInicio).getTime() &&
-      aliasValido // TO-DO: validar votos en la blockchain y validar los participantes
+      aliasValido // TO-DO: validar votos en la blockchain
     ) {
-      this.validarFormatoVoto(transaccion, votacion);
+      if (votacion.participantes.length > this.blockchain.contarVotos(+votacion.id, votacion.participantes.length)){
+        this.validarFormatoVoto(transaccion, votacion);
+      }else{
+        alert('BASE DE DATOS CORRUPTA DETECTADA');
+      }
     }
   }
 
