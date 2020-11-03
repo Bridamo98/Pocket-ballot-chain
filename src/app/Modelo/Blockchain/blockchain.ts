@@ -199,4 +199,18 @@ export class Blockchain {
   buscarResultadosEnTx(idVotacion: number): Array<Transaccion> {
     return this.transacciones.filter(tx => tx.idVotacion === idVotacion && tx.tipoTransaccion === envTipoTx.resultado);
   }
+
+  contarVotos(idVotacion: number, longitudParticipantes): number{
+    try {
+    const bloques = Array.from(this.blockchain.get(idVotacion).values());
+    let cantVotos = 0;
+    for (const bloque of bloques) {
+      const votosBloque = bloque.transacciones.filter( (transaccion) =>  transaccion.tipoTransaccion === envTipoTx.voto).length;
+      cantVotos = cantVotos + votosBloque;
+    }
+    return cantVotos;
+    } catch (error) {
+      return 0;
+    }
+  }
 }

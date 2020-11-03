@@ -55,13 +55,6 @@ export class SyncBlockchainP2pService {
     return Math.floor((Date.now() - this.inicioStep) / this.duracionStep);
   }
 
-  esTiempoDeSync(): boolean {
-    return (
-      Math.floor((Date.now() - this.inicioStep) / this.duracionStep) ===
-      this.validadoresActivos.length
-    );
-  }
-
   vaciarBuffer() {
     this.hashGanador = null;
     this.peerIdHash = new Map<string, string>();
@@ -69,7 +62,6 @@ export class SyncBlockchainP2pService {
     this.votosBuffer = new Map<string, Map<number, Map<string, Bloque>>>();
   }
 
-  // TO-DO: BlockchainRecibida debe indicar si la blockchain fue modificada
   sincronizarBlockchain(
     hash: string,
     blockchain: Map<number, Map<string, Bloque>>,

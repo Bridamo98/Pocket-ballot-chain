@@ -21,7 +21,7 @@ export class CrearVotacionP2PService {
       envTipoTx.inicioVotacion,
       votacion.id.valueOf(),
       '',
-      ['Votos por participante: '+votacion.votos.toString(), 'Participantes: '+participantes.toString()],
+      ['Votos por participante: ' + votacion.votos.toString(), 'Participantes: ' + participantes.toString()],
       timestamp,
       ''
     );
