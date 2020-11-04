@@ -1,8 +1,9 @@
-<div class="container">
-  <h1 class="text-center">Información personal</h1>
+<div class="container mt-5 pt-md-0">
+  <h1 class="display-4 text-center mt-5 pt-md-0">Información personal</h1>
   <div class="row d-flex justify-content-center">
     <div class="col-sm-6">
       <form *ngIf="formulario !== undefined" [formGroup]="formulario">
+
         <div class="form-group">
           <label for="txtNombre">Nombre: </label>
           <input type="text" class="form-control" id="txtNombre" name="nombre" formControlName="nombre"

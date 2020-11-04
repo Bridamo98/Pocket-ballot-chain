@@ -4,8 +4,8 @@
 
 export const environment = {
   production: true,
-  serverUrl: 'https://pocketballotchain.webhop.me:3000',
-  socketUrl: 'https://pocketballotchain.webhop.me:4000',
+  serverUrl: 'http://localhost:3000',//'https://pocketballotchain.webhop.me:3000',
+  socketUrl: 'http://localhost:4000',//'https://pocketballotchain.webhop.me:4000',
 
   // Constantes de Blockchain
   votar: 1,
