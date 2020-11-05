@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Router, ActivatedRoute } from '@angular/router';
 import { NgForm, FormBuilder, Validators, AbstractControl, FormControl, ValidatorFn } from '@angular/forms';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
+import { CifradoService } from '../../../Servicios/Cifrado-Firma/cifrado.service';
 
 declare var $: any;
 
@@ -11,7 +12,7 @@ declare var $: any;
   templateUrl: './usuario-editar.component.html',
   styleUrls: ['./usuario-editar.component.css']
 })
-export class UsuarioEditarComponent implements OnInit {
+export class UsuarioEditarComponent implements OnInit, OnDestroy {
 
   usuario: Usuario = new Usuario('', 0, '', '');
   existeNombre = false;
@@ -21,9 +22,9 @@ export class UsuarioEditarComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private rutaActiva: ActivatedRoute,
     private formBuilder: FormBuilder,
-    private usuarioService: UsuarioService
+    private usuarioService: UsuarioService,
+    private cifradoService: CifradoService
   ) {  }
 
   ngOnInit(): void {
@@ -32,6 +33,10 @@ export class UsuarioEditarComponent implements OnInit {
     });
     this.getUsuario();
     this.obtenerNombres();
+  }
+
+  ngOnDestroy(): void{
+    $('#txtContrasenaConfirm').popover('dispose');
   }
 
   iniciarVista(): void {
@@ -44,6 +49,13 @@ export class UsuarioEditarComponent implements OnInit {
       correo: new FormControl(this.usuario.correo, [
         Validators.required,
         this.emailFormat()
+      ]),
+      contrasena: new FormControl('', [
+        this.contrasenaFormat()
+      ]),
+      contrasenaConfirm: new FormControl('', [
+        this.contrasenaFormat(),
+        this.coincidir()
       ])
     });
   }
@@ -64,32 +76,49 @@ export class UsuarioEditarComponent implements OnInit {
   }
 
   // Actualiza la información en la base de datos
-  actualizar(nombre: string, correo: string): void {
-    this.usuario.nombre = nombre;
-    this.usuario.correo = correo;
-    if (this.formulario.valid) {
-      this.usuarioService.putUsuario(this.usuario).subscribe(
-        result => {
-          const token = result['token'];
-          if(token != null && token != undefined)
-          {
-            localStorage.removeItem('token');
-            localStorage.setItem('token', token);
-            localStorage.removeItem('nombre');
-            localStorage.setItem('nombre', this.usuario.nombre.toString());
+  actualizar(nombre: string, correo: string, contrasena: string, contrasenaConfirm: string): void {
+    let auxUsuario: Usuario = new Usuario('', 0, '', '');
+    auxUsuario.nombre = nombre;
+    auxUsuario.correo = correo;
+    auxUsuario.saldo = this.usuario.saldo;
+    if (contrasena.length > 0){
+      auxUsuario.contrasena = this.cifradoService.getHashSha256(contrasena.trim());
+    }else{
+      auxUsuario.contrasena = this.usuario.contrasena;
+    }
+    if (contrasena.localeCompare(contrasenaConfirm) === 0){
+      if (this.formulario.valid) {
+        this.usuarioService.putUsuario(auxUsuario).subscribe(
+          result => {
+            const token = result['token'];
+            if (token != null && token !== undefined)
+            {
+              localStorage.removeItem('token');
+              localStorage.setItem('token', token);
+              localStorage.removeItem('nombre');
+              localStorage.setItem('nombre', this.usuario.nombre.toString());
+            }
+            this.obtenerNombres();
+            this.msgActualizacion = "Información actualizada!";
+            $('#confirmModal').modal('show');
           }
-          this.obtenerNombres();
-          this.msgActualizacion = "Información actualizada!";
-          $('#confirmModal').modal('show');
-        }
-      );
+        );
+      }
+    }else{
+      this.mostrarPopoverError('#txtContrasenaConfirm', 'contrasenaConfirm', 'No coincide con la contraseña');
     }
   }
 
+  cerrar(): void{
+    this.router.navigate(['Inicio']);
+  }
+
   cancelar(formulario: NgForm): void {
-    formulario.setValue({ nombre: this.usuario.nombre, correo: this.usuario.correo });
+    formulario.setValue({ nombre: this.usuario.nombre, correo: this.usuario.correo, contrasena: '', contrasenaConfirm: '' });
     $('#txtNombre').popover('dispose');
     $('#txtCorreo').popover('dispose');
+    $('#txtContrasena').popover('dispose');
+    $('#txtContrasenaConfirm').popover('dispose');
   }
 
   verificarNombre(nombre: string): boolean {
@@ -109,6 +138,10 @@ export class UsuarioEditarComponent implements OnInit {
   get nombre() { return this.formulario.get('nombre'); }
 
   get correo() { return this.formulario.get('correo'); }
+
+  get contrasena() { return this.formulario.get('contrasena'); }
+
+  get contrasenaConfirm() { return this.formulario.get('contrasenaConfirm'); }
 
   alreadyExists(): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } | null => {
@@ -135,7 +168,7 @@ export class UsuarioEditarComponent implements OnInit {
   mostrarPopover(campo: string, nombre: string): void {
     let error: string;
     $(campo).popover('dispose');
-    if(this.formulario.get(nombre).errors != undefined) {
+    if (this.formulario.get(nombre).errors !== undefined && this.formulario.get(nombre).errors !== null) {
       error = this.obtenerMsgPopover(Object.keys(this.formulario.get(nombre).errors)[0]);
       $(campo).popover({
         content: error
@@ -144,18 +177,62 @@ export class UsuarioEditarComponent implements OnInit {
     }
   }
 
+  mostrarPopoverError(campo: string, nombre: string, mensaje: string): void {
+    $(campo).popover('dispose');
+    if (mensaje.length > 0){
+      $(campo).popover({
+        content: mensaje
+      });
+      $(campo).popover('toggle');
+    }
+  }
+
   obtenerMsgPopover(error: string): string {
-    if(error === 'required') {
+    if (error === 'required') {
       return 'Campo requerido';
     }
-    if(error === 'minlength') {
+    if (error === 'minlength') {
       return 'El nombre debe tener al menos 4 caracteres';
     }
-    if(error === 'alreadyExists') {
+    if (error === 'alreadyExists') {
       return 'Nombre en uso';
     }
-    if(error === 'emailFormat') {
+    if (error === 'emailFormat') {
       return 'Formato incorrecto';
     }
+    if (error === 'emailFormat') {
+      return 'Formato incorrecto';
+    }
+    if (error === 'passwordFormat') {
+      return 'Contraseña incorrecta';
+    }
+    if (error === 'dontMatch') {
+      return 'No coincide con la contraseña';
+    }
+  }
+
+  contrasenaFormat(): ValidatorFn{
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (control.value.length < 4 && control.value.length > 0) {
+        return { 'passwordFormat': true };
+      } else {
+        return null;
+      }
+    };
+  }
+
+  coincidir(): ValidatorFn{
+    return (control: AbstractControl): { [key: string]: any } | null => {
+      if (this.formulario !== undefined){
+        let contrasena = this.formulario.get('contrasena').value;
+        console.log(contrasena);
+        if (control.value.localeCompare(contrasena) !== 0 &&
+          contrasena.length > 0) {
+          return { 'dontMatch': true };
+        }
+      } else{
+        return null;
+      }
+    };
   }
 }
