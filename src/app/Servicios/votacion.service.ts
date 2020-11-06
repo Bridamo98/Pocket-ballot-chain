@@ -75,4 +75,17 @@ export class VotacionService {
   getVotosEmitidosVotacion(id: number) {
     return this.http.get<number>(`${environment.serverUrl}/votosEmitidosVotacion/${id}`);
   }
+
+  //Disponible
+  getVotacionesUsuarioVis() {
+    return this.http.get<Votacion[]>(`${environment.serverUrl}/participanteUsuarioVis`);
+  }
+
+  deleteUsuarioVotacionVis(id: number, nombre: string) {
+    return this.http.put(`${environment.serverUrl}/participanteDeleteVis`,
+    {
+      id: id,
+      nombre: nombre
+    });
+  }
 }
