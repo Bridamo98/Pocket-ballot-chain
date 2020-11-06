@@ -6,6 +6,7 @@ import { environment } from '../../environments/environment';
 import { Usuario } from '../Modelo/Usuario';
 import { identifierModuleUrl } from '@angular/compiler';
 import { TipoVotacion } from '../Modelo/TipoVotacion';
+import { Participante } from '../Modelo/participante';
 
 @Injectable({
   providedIn: 'root'
@@ -74,6 +75,10 @@ export class VotacionService {
 
   getVotosEmitidosVotacion(id: number) {
     return this.http.get<number>(`${environment.serverUrl}/votosEmitidosVotacion/${id}`);
+  }
+
+  getParticipanteVotacionInfo(id: number) {
+    return this.http.get<Participante[]>(`${environment.serverUrl}/participanteVotacionInfo/${id}`);
   }
 
   //Disponible

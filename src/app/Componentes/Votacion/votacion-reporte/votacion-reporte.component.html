@@ -25,10 +25,6 @@
             <td>Fin de la votación:</td>
             <td>{{ fechaLimite }}</td>
           </tr>
-          <tr *ngIf="votacion.participantes != undefined">
-            <td>Número de votantes:</td>
-            <td>{{ votacion.participantes.length }}</td>
-          </tr>
           <tr *ngIf="votacion.opcionDeVotacion != undefined">
             <td>Número de candidatos:</td>
             <td>{{ votacion.opcionDeVotacion.length }}</td>
@@ -36,9 +32,6 @@
           <tr>
             <td>Número de votos por votante:</td>
             <td>{{ votacion.votos }}</td>
-          <tr *ngIf="maxVotos !== -1">
-            <td>Total votos emitidos:</td>
-            <td>{{ maxVotos }}</td>
           </tr>
         </tbody>
       </table>
@@ -106,6 +99,18 @@
     <div class="col"></div>
     <div class="col-sm-10 col-lg-8">
       <h2 class="text-center">Votantes Invitados</h2>
+      <table class="table table-light">
+        <tbody>
+          <tr *ngIf="votacion.participantes != undefined">
+            <td>Número de votantes invitados:</td>
+            <td>{{ votacion.participantes.length }}</td>
+          </tr>
+          <tr *ngIf="maxVotos !== -1">
+            <td>Total votos emitidos:</td>
+            <td>{{ maxVotos }}</td>
+          </tr>
+        </tbody>
+      </table>
       <div id="custom-scroll">
         <div class="table-responsive">
           <table class="table table-hover table-bordered">
@@ -114,13 +119,16 @@
                 <th>
                   Nombre
                 </th>
-                <th>No.</th>
+                <th>Voto</th>
               </tr>
             </thead>
             <tbody>
-              <tr #row *ngFor="let participante of votacion.participantes">
+              <tr #row *ngFor="let participante of participanteVotacionInfo">
                 <td>{{ participante.nombre }}</td>
-                <td>{{ votacion.participantes.indexOf(participante) + 1 }}</td>
+                <td>
+                  <span *ngIf="participante.votosDisponibles === 0" class="text-primary">Votó</span>
+                  <span *ngIf="participante.votosDisponibles !== 0">No Votó</span>
+                </td>
               </tr>
             </tbody>
           </table>

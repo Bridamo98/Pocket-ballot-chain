@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 import { ResultsConverterService } from '../../../Utils/results-converter.service';
 import { Usuario } from 'src/app/Modelo/Usuario';
 import { Opcion } from 'src/app/Modelo/Opcion';
+import { Participante } from '../../../Modelo/participante';
 
 declare var setVoto: any;
 declare var enviarMensaje: any;
@@ -35,6 +36,7 @@ export class VotacionReporteComponent implements OnInit {
   fechaLimite: string;
   maxVotos: number = -1;
   rankTable = [];
+  participanteVotacionInfo: Participante[] = [];
 
   //canvas
   @ViewChild('canvas', { static: true })
@@ -82,6 +84,7 @@ export class VotacionReporteComponent implements OnInit {
     this.votacion = await this.getVotacion();
     this.tipoVotacion = await this.actualizarTipo(this.votacion);
     this.votacion.participantes = await this.actualizarParticipantes(this.votacion);
+    this.participanteVotacionInfo = await this.getVotacionParticipanteInfo(this.votacion.id.valueOf());
     this.votacion.opcionDeVotacion = await this.actualizarOpciones(this.votacion);
     this.maxVotos = await this.getVotosEmitidos(this.votacion.id.valueOf());
     this.fechaInicio = new Date(this.votacion.fechaInicio).toLocaleString();
@@ -119,6 +122,12 @@ export class VotacionReporteComponent implements OnInit {
   actualizarParticipantes(votacion: Votacion): Promise<Usuario[]> {
     return new Promise<Usuario[]>((resolve, reject) =>
       this.votacionService.getParticipanteVotacion(votacion.id.valueOf()).subscribe(resolve, reject)
+    );
+  }
+
+  getVotacionParticipanteInfo(idVotacion: number): Promise<Participante[]>{
+    return new Promise<Participante[]>((resolve, reject) =>
+      this.votacionService.getParticipanteVotacionInfo(idVotacion).subscribe(resolve, reject)
     );
   }
 
