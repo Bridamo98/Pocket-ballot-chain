@@ -4,6 +4,10 @@
   text-decoration: underline;
 }
 
+.btn{
+  margin-top: 4px;
+}
+
 .home-cont {
   background-image: url("../../../../assets/PBC_transparency.png");
   height: 100%;
