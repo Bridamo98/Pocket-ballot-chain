@@ -63,6 +63,9 @@ export class UsuarioService {
       .get<any>(this.URLbase + '/validar-token')
       .toPromise();
   }
+  getUsuario() {
+    return this.http.get<Usuario>(`${environment.serverUrl}/usuarioId`);
+  }
   async estaLogeado() {
     if (!!localStorage.getItem('token') && !!localStorage.getItem('nombre')){
       try {

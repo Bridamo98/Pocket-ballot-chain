@@ -50,6 +50,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { Validador } from './Modelo/Validador';
 import { environment } from '../environments/environment';
+import { Usuario } from './Modelo/Usuario';
 
 @NgModule({
   declarations: [
