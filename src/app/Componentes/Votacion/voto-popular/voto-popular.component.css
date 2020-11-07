@@ -8,11 +8,15 @@
   border-style: solid;
 
 }
-.btn{
+.votar{
   font-size: large;
-  width: 160px;
+  width: 180px;
   height: 70px;
 }
 .nombre-votacion{
   font-weight: bold;
+}
+
+.eliminar-votos{
+  margin-bottom: 5px;
 }

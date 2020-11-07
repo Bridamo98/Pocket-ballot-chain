@@ -60,6 +60,13 @@ export class VotoRankingComponent implements OnInit {
     moveItemInArray(this.opciones, before, actual);
   }
   votar() {
+
+    if (new Date(this.votacion.fechaLimite).getTime() <= new Date().getTime()){
+      alert('El voto no se pudo enviar debido a que se vencio el tiempo de votación')
+      this.router.navigate(['/Inicio']);
+      return;
+    }
+
     console.log(this.opciones);
     const voto = new Array<string>();
 
@@ -78,6 +85,7 @@ export class VotoRankingComponent implements OnInit {
     );
     const mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.enviarVoto(mensaje);
+    alert('¡Voto enviado exitosamente!');
     this.router.navigate(['/Inicio']);
   }
   getVotaciones() {

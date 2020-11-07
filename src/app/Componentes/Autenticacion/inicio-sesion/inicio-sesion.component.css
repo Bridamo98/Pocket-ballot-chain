@@ -3,3 +3,19 @@
   color: blue;
   text-decoration: underline;
 }
+
+.btn{
+  margin-top: 4px;
+}
+
+.home-cont {
+  background-image: url("../../../../assets/PBC_transparency.png");
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: 60%;
+}
+
+.home-logo {
+  height: 200px;
+}

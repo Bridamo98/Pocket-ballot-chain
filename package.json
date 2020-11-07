@@ -25,6 +25,7 @@
     "@ng-bootstrap/ng-bootstrap": "^6.1.0",
     "bootstrap": "^4.5.0",
     "constants": "0.0.2",
+    "glyphicons": "^0.2.0",
     "jquery": "^3.5.1",
     "js-crypto-rsa": "^0.6.3",
     "js-sha512": "^0.8.0",

@@ -63,6 +63,13 @@ export class RegistrarComponent implements OnInit {
       this.alertDanger('nombre');
       return;
     }
+    const regexContrasena = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
+    if (!regexContrasena.test(this.contrasenia)){
+      popContra.popoverTitle = '';
+      popContra.ngbPopover = 'La contraseña debe tener por lo menos una mayuscula, una minuscula, un numero y un caracter especial';
+      popContra.open();
+      return;
+    }
     if (this.verificar === this.contrasenia) {
       this.htmlToAdd = 'Registrado';
       this.usuario = {
