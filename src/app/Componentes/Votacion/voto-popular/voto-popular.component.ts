@@ -53,6 +53,13 @@ export class VotoPopularComponent implements OnInit {
       });
   }
   votar() {
+
+    if (new Date(this.votacion.fechaLimite).getTime() <= new Date().getTime()){
+      alert('El voto no se pudo enviar debido a que se vencio el tiempo de votación')
+      this.router.navigate(['/Inicio']);
+      return;
+    }
+
     if (
       this.cantVotos < this.votacion.votos
     ) {
@@ -77,8 +84,8 @@ export class VotoPopularComponent implements OnInit {
       );
       const mensaje = new Mensaje(environment.obtenerPk, transaccion);
       this.enviarVoto(mensaje);
+      alert('¡Voto enviado exitosamente!');
       this.router.navigate(['/Inicio']);
-      alert('¡Voto enviado exitosamente!')
     } else {
       this.mensaje = 'Primero seleccione por lo menos una de las opciones';
     }

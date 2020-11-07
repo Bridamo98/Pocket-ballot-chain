@@ -78,8 +78,13 @@ export class VotoClasificacionComponent implements OnInit {
     //console.log(this.candidatos);
   }
   votar() {
-    // console.log(this.candidatos);
-    // console.log(this.otraLista);
+
+    if (new Date(this.votacion.fechaLimite).getTime() <= new Date().getTime()){
+      alert('El voto no se pudo enviar debido a que se vencio el tiempo de votación')
+      this.router.navigate(['/Inicio']);
+      return;
+    }
+
     const voto = new Array<string>();
 
     for (let index = 0; index < this.candidatos.length; index++) {
@@ -98,8 +103,8 @@ export class VotoClasificacionComponent implements OnInit {
     );
     const mensaje = new Mensaje(environment.obtenerPk, transaccion);
     this.enviarVoto(mensaje);
+    alert('¡Voto enviado exitosamente!');
     this.router.navigate(['/Inicio']);
-    // enviar voto
   }
 
   getVotacion() {
