@@ -52,6 +52,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
+    alert('Ha dejado de ser validador');
     this.cerrarValidador();
   }
 

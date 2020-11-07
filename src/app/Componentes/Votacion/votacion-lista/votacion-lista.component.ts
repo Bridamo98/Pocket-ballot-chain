@@ -72,7 +72,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   // Solicita al servicio las votaciones
   getVotaciones(): Promise<Votacion[]> {
     return new Promise<Votacion[]>((resolve, reject) =>
-      this.votacionService.getVotacionesUsuario().subscribe(resolve, reject)
+      this.votacionService.getVotacionesUsuarioVis().subscribe(resolve, reject)
     );
   }
 
@@ -100,7 +100,7 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   salir(votacion: Votacion, votaciones: Votacion[]): void {
     if (confirm('¿Está seguro de salir de esta votación?')) {
       votaciones.splice(votaciones.indexOf(votacion), 1);
-      this.votacionService.deleteUsuarioVotacion(votacion.id.valueOf(), this.usuario.nombre.toString()).subscribe(
+      this.votacionService.deleteUsuarioVotacionVis(votacion.id.valueOf(), this.usuario.nombre.toString()).subscribe(
         result => { console.log(result) }
       );
     }
