@@ -1,4 +1,7 @@
 
+.list-group-item{
+  cursor: pointer;
+}
 .btn{
   font-size: large;
   width: 160px;

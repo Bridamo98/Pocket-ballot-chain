@@ -59,14 +59,6 @@ export class VotoClasificacionComponent implements OnInit {
         this.votacion = res;
         this.getVotacion();
       });
-    this.auxiliar = {
-      descripcion: null,
-      id: null,
-      nombre: 'Arrastre los elementos que desaprueba aqui',
-      votacion: null,
-    };
-    this.otraLista.push(this.auxiliar);
-    //this.otraLista.push("Arrastre los elementos que desaprueba aqui");
   }
   onDropped(event: CdkDragDrop<any>) {
     if (event.previousContainer !== event.container) {
@@ -90,7 +82,7 @@ export class VotoClasificacionComponent implements OnInit {
     // console.log(this.otraLista);
     const voto = new Array<string>();
 
-    for (let index = 1; index < this.candidatos.length; index++) {
+    for (let index = 0; index < this.candidatos.length; index++) {
       const candidato = this.candidatos[index];
       voto.push(candidato.nombre.toString());
     }
@@ -113,16 +105,7 @@ export class VotoClasificacionComponent implements OnInit {
   getVotacion() {
     this.opcionServicio.getOpcion(Number(this.idVotacion)).subscribe((res) => {
       this.opciones = res;
-
-      this.auxiliar = {
-        descripcion: null,
-        id: null,
-        nombre: 'Arrastre los elementos que Aprueba aqui',
-        votacion: null,
-      };
       console.log(this.opciones);
-      this.opciones.push(this.opciones[0]);
-      this.opciones[0] = this.auxiliar;
       this.candidatos = this.opciones;
     });
     this.votacionServicio.getVotacion(this.idVotacion).subscribe((res) => {
@@ -155,5 +138,21 @@ export class VotoClasificacionComponent implements OnInit {
   }
   registrarVoto(voto){
     setVoto(voto);
+  }
+
+  rechazar(i){
+    this.otraLista.unshift(this.opciones[i]);
+    this.opciones.splice( i, i );
+    if (!i){
+      this.opciones.splice(0, 1);
+    }
+  }
+
+  aprobar(i){
+    this.opciones.unshift(this.otraLista[i]);
+    this.otraLista.splice( i, i );
+    if (!i){
+      this.otraLista.splice(0, 1);
+    }
   }
 }

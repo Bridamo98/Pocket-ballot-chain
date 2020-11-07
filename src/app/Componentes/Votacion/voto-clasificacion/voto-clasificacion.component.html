@@ -1,7 +1,7 @@
 <div class="container">
 
-	<div class="row justify-content-center">
-		<h1> {{votacion.titulo}} </h1>
+  <div class="row justify-content-center">
+    <h1> {{votacion.titulo}} </h1>
   </div>
   <div class="row justify-content-center">
     <h4>DESCRIPCIÓN</h4>
@@ -12,46 +12,61 @@
   <div class="row justify-content-center">
     <h4>OPCIONES</h4>
   </div>
-	<div class="row justify-content-center">
-		<p>¡Escoge con cuales opciones estas deacuerdo y con cuales estas en desacuerdo!</p>
-	</div>
-	<div class="row">
-		<div class="col">
-			<div class="row justify-content-center">
-				<p class = "columna aceptado">ACEPTADO </p>
-			</div>
-			<div  class="list-group"  cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="candidatos" [cdkDropListConnectedTo]="segundaLista" #primeraLista="cdkDropList"  >
-				<div class="list-group-item" *ngFor="let candidato of candidatos; let i= index" cdkDrag>
-          <div class="row justify-content-center nombre-votacion"  >
-            {{candidato.nombre}}
+  <div class="row justify-content-center">
+    <p>¡Escoge con cuales opciones estas deacuerdo y con cuales estas en desacuerdo!</p>
+  </div>
+  <div class="row">
+    <div class="col">
+      <div class="row justify-content-center">
+        <p class="columna aceptado"> ACEPTADO </p>
+      </div>
+      <div class="list-group" cdkDropList (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="candidatos"
+        [cdkDropListConnectedTo]="segundaLista" #primeraLista="cdkDropList">
+        <div class="list-group-item" *ngFor="let candidato of candidatos; let i = index">
+          <div class="row justify-content-center">
+            <div class="col border-right">
+              <div class="row justify-content-center nombre-votacion">
+                {{candidato.nombre}}
+              </div>
+              <div class="row justify-content-center">
+                {{candidato.descripcion}}
+              </div>
+            </div>
+            <div style="cursor:pointer;" (click)="rechazar(i)" class="col-1 my-auto">
+              <div>
+                <div class="fas fa-angle-right fa-2x"></div>
+              </div>
+            </div>
           </div>
-          <div class="row justify-content-center"  >
-            {{candidato.descripcion}}
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="row justify-content-center">
+        <p class="columna rechazado">RECHAZADO </p>
+      </div>
+      <div class="list-group" cdkDropList (cdkDropListDropped)="onDropped($event)" [cdkDropListData]="otraLista"
+        [cdkDropListConnectedTo]="primeraLista" #segundaLista="cdkDropList">
+        <div class="list-group-item" *ngFor="let candidato2 of otraLista; let i= index">
+          <div class="row justify-content-center">
+            <div style="cursor:pointer;" (click)="aprobar(i)" class="col-1 my-auto">
+              <div class="fas fa-angle-left fa-2x"></div>
+            </div>
+            <div class="col contenido border-left">
+              <div class="row justify-content-center nombre-votacion">
+                {{candidato2.nombre}}
+              </div>
+              <div class="row justify-content-center" style="margin-left: 1px;">
+                {{candidato2.descripcion}}
+              </div>
+            </div>
           </div>
-          <div class="row justify-content-center"  >
-
-          </div>
-				</div>
-			</div>
-		</div>
-		<div class="col">
-			<div class="row justify-content-center">
-				<p class = "columna rechazado">RECHAZADO </p>
-			</div>
-			<div class="list-group"   cdkDropList  (cdkDropListDropped)="onDropped($event)" [cdkDropListData]= "otraLista"  [cdkDropListConnectedTo]="primeraLista" #segundaLista="cdkDropList" >
-				<div class="list-group-item" *ngFor="let candidato2 of otraLista; let i= index" cdkDrag>
-					<div class="row justify-content-center nombre-votacion"  >
-            {{candidato2.nombre}}
-          </div>
-          <div class="row justify-content-center"  >
-            {{candidato2.descripcion}}
-          </div>
-				</div>
-			</div>
-		</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-	<div class="row justify-content-center">
-		<button class="btn btn-primary" (click)="votar()"> Votar </button>
-	</div>
+  <div class="row justify-content-center votar">
+    <button class="btn btn-primary" (click)="votar()"> Votar </button>
+  </div>
 </div>

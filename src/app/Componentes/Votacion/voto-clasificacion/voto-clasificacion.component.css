@@ -36,3 +36,10 @@ row.justify-content-center{
 .nombre-votacion{
   font-weight: bold;
 }
+
+.flecha{
+  font-size: large;
+  cursor: pointer;
+}
+
+
