@@ -1,42 +1,36 @@
-
 <div class="row justify-content-sm-center">
 
-	<div class="col-sm-4">
-		<div class="container">
-      <img src="../../../../assets/PBC_LOGO.png" class = "center" style="width: 50%;" alt="Logo de home">
-			<div class="row justify-content-sm-center">
-				<h1>Inicio de Sesión</h1>
-				<p>¡Bienvenido a Pocket Ballot Chain!</p>
+  <div class="col-sm-4 my-auto text-center content">
+    <div class="container">
+      <img src="../../../../assets/PBC_LOGO.png" class="home-logo mt-5 pt-md-0" alt="Logo de home">
+      <div class="row justify-content-sm-center">
+        <h1>Inicio de Sesión</h1>
+        <p>¡Bienvenido a Pocket Ballot Chain!</p>
         <p>El sistema de votación basado en Blockchain adaptado a tus necesidades.</p>
-			</div>
+      </div>
 
 
-			<form *ngIf="formulario !== undefined" [formGroup]="formulario">
-				<input  type="text" [(ngModel)]="correo"  size="50" maxlength="50" name="nombre" id="nombre"
-				class="form-control" placeholder="Nombre de usuario"
-
-				formControlName="correo"
-            	[ngClass]="{'is-invalid': formulario.get('correo').touched && formulario.get('correo').invalid}"
-
-				popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popUsuario="ngbPopover"   placement="right"
-				>
+      <form *ngIf="formulario !== undefined" [formGroup]="formulario">
+        <input type="text" [(ngModel)]="correo" size="50" maxlength="50" name="nombre" id="nombre" class="form-control"
+          placeholder="Nombre de usuario" formControlName="correo"
+          [ngClass]="{'is-invalid': formulario.get('correo').touched && formulario.get('correo').invalid}"
+          popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual"
+          #popUsuario="ngbPopover" placement="right">
 
 
-				<input id='contrasena' type="password" [(ngModel)]="contrasena" placeholder="Contraseña" name="" class="form-control"placeholder="Contraseña"
-
-				formControlName="contrasena"
-            	[ngClass]="{'is-invalid': formulario.get('contrasena').touched && formulario.get('contrasena').invalid}"
-
-				 popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual" #popContra="ngbPopover"  placement="right"
-				>
+        <input id='contrasena' type="password" [(ngModel)]="contrasena" placeholder="Contraseña" name=""
+          class="form-control" placeholder="Contraseña" formControlName="contrasena"
+          [ngClass]="{'is-invalid': formulario.get('contrasena').touched && formulario.get('contrasena').invalid}"
+          popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual"
+          #popContra="ngbPopover" placement="right">
         <div class="row justify-content-sm-center">
-          <input [disabled]="!formulario.valid" type="button" (click)="iniciarSesion(popContra, popUsuario)" value="Iniciar sesión" class="btn btn-primary" >
+          <input [disabled]="!formulario.valid" type="button" (click)="iniciarSesion(popContra, popUsuario)"
+            value="Iniciar sesión" class="btn btn-primary">
         </div>
 
       </form>
       <div class="row justify-content-sm-center registro">
-        <a  (click)="irARegistro()">Registrarse </a>
+        <a (click)="irARegistro()">Registrarse </a>
       </div>
-		</div>
-	</div>
-</div>
+    </div>
+  </div>
