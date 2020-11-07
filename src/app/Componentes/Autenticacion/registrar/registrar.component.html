@@ -1,21 +1,20 @@
-<div class="row justify-content-sm-center">
-
+<div style = "margin: 10px;" class = "row justify-content-sm-center">
   <div class="col-sm-4">
     <div class="container">
       <div class="row justify-content-sm-center">
         <h1>Registro</h1>
+
       </div>
     </div>
-    <p>Para poder registrarse en el sistema por favor diligenciar el siguiente formulario:</p>
-
+    <div class="row justify-content-sm-center">
+      <p>Para poder registrarse en el sistema por favor diligenciar el siguiente formulario:</p>
+    </div>
     <form *ngIf="formulario !== undefined" [formGroup]="formulario">
-
       <input id='correo' class="form-control " type="email" required="required" placeholder="Correo electronico"
         size="20" maxlength="50" name="" [(ngModel)]="correo" name="correo" formControlName="correo"
         [ngClass]="{'is-invalid': formulario.get('correo').touched && formulario.get('correo').invalid}"
         popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual"
         #popCorreo="ngbPopover" placement="right">
-
 
       <input id='nombre' class="form-control" type="text" required="required" placeholder="Nombre de usuario" size="20"
         maxlength="20" name="" [(ngModel)]="nombre" name="nombre" formControlName="nombre"
@@ -29,27 +28,20 @@
         popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual"
         #popContra="ngbPopover" placement="right">
 
-
       <input id='verificar' class="form-control" type="password" required="required" placeholder="Confirmar contraseña"
         name="" [(ngModel)]="verificar" name="verificar" formControlName="contrasenia2"
         [ngClass]="{'is-invalid': formulario.get('contrasenia2').touched && formulario.get('contrasenia2').invalid}"
         popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual"
         #popConfirm="ngbPopover" placement="right">
 
-
       <div class="one" [innerHtml]="htmlToAdd"></div>
-
-
       <div class="row justify-content-sm-center">
         <button class="btn btn-primary m-2" type="submit" [disabled]="!formulario.valid"
-        (click)="registrarse(popCorreo, popName, popContra, popConfirm  )" value="Registrarse">Registrarse</button>
+          (click)="registrarse(popCorreo, popName, popContra, popConfirm  )" value="Registrarse">Registrarse</button>
       </div>
       <div class="row justify-content-sm-center inicio-sesion">
-        <a (click)="irAInicioSesion()" >Volver a inicio de sesión </a>
+        <a (click)="irAInicioSesion()">Volver a inicio de sesión </a>
       </div>
     </form>
-
-
-
   </div>
 </div>
