@@ -18,10 +18,15 @@ export class AppComponent implements OnInit{
   title = 'pocket-ballot-chain';
   navigateValid = false;
   usuario: Usuario;
+  userName;
 
   constructor(private router: Router, public usuarioService: UsuarioService){}
   ngOnInit(): void {
     //this.getUsuario();
+  }
+
+  getNombreUsuario(){
+    return localStorage.getItem('nombre');
   }
 
   toPerfil(){
