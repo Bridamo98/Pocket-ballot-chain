@@ -178,8 +178,8 @@ export class UsuarioEditarComponent implements OnInit, OnDestroy {
   }
 
   mostrarPopoverError(campo: string, nombre: string, mensaje: string): void {
-    $(campo).popover('dispose');
     if (mensaje.length > 0){
+      $(campo).popover('dispose');
       $(campo).popover({
         content: mensaje
       });
@@ -204,7 +204,7 @@ export class UsuarioEditarComponent implements OnInit, OnDestroy {
       return 'Formato incorrecto';
     }
     if (error === 'passwordFormat') {
-      return 'Contraseña incorrecta';
+      return 'La contraseña debe tener al menos 4 caracteres, una letra, un número, una mayúscula y un símbolo';
     }
     if (error === 'dontMatch') {
       return 'No coincide con la contraseña';
@@ -212,8 +212,9 @@ export class UsuarioEditarComponent implements OnInit, OnDestroy {
   }
 
   contrasenaFormat(): ValidatorFn{
+    const regexContrasena = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;
     return (control: AbstractControl): { [key: string]: any } | null => {
-      if (control.value.length < 4 && control.value.length > 0) {
+      if ((!regexContrasena.test(control.value) || control.value.length < 4) && control.value.length > 0) {
         return { 'passwordFormat': true };
       } else {
         return null;
@@ -225,7 +226,6 @@ export class UsuarioEditarComponent implements OnInit, OnDestroy {
     return (control: AbstractControl): { [key: string]: any } | null => {
       if (this.formulario !== undefined){
         let contrasena = this.formulario.get('contrasena').value;
-        console.log(contrasena);
         if (control.value.localeCompare(contrasena) !== 0 &&
           contrasena.length > 0) {
           return { 'dontMatch': true };
