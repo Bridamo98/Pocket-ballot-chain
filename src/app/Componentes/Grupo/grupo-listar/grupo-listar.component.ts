@@ -98,6 +98,12 @@ export class GrupoListarComponent implements OnInit {
     });
   }
 
+
+  crearVotacion(grupo: Grupo){
+    this.router.navigate(['TipoVotacion/' + grupo.id]);
+  }
+
+
   verGrupo(g: Grupo, origen:string):void{
     this.router.navigate(['VerGrupo/' + origen + '/' + g.id]);
   }

@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { VotacionService } from './../../../Servicios/votacion.service'
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Votacion } from 'src/app/Modelo/Votacion';
 import { Opcion } from 'src/app/Modelo/Opcion';
 import { UsuarioService } from 'src/app/Servicios/usuario.service';
@@ -18,6 +18,7 @@ export class VotacionCrearComponent implements OnInit {
   cantiVotos = 1;
   msgErrorFecha: string;
   msgErrorCredenciales: string;
+  idGrupo: number;
   opciones = [
     {id:1, nombre:"Voto popular", descripcion:"descripcion de voto popular"}, 
     {id:2, nombre:'Voto ranking', descripcion:'descripcion para los votos por ranking'}, 
@@ -25,7 +26,9 @@ export class VotacionCrearComponent implements OnInit {
 
   public elemento: HTMLElement;
 
-  constructor(public cifradoService:CifradoService, public votacionService: VotacionService, private modalService: NgbModal, private router: Router, private usuarioService: UsuarioService) { 
+  constructor(public cifradoService:CifradoService, private rutaActiva: ActivatedRoute, public votacionService: VotacionService, private modalService: NgbModal, private router: Router, private usuarioService: UsuarioService) { 
+    this.idGrupo = this.rutaActiva.snapshot.params.grupo;
+    console.log("ID GRUPO: " + this.idGrupo);
   }
 
   ngOnInit() {    
@@ -85,15 +88,30 @@ export class VotacionCrearComponent implements OnInit {
   }
 
   navigatePopular(){
-    this.router.navigate(['CrearVotacion/Popular/' + this.cantiVotos]);
+    if(this.idGrupo != undefined){
+      this.router.navigate(['CrearVotacion/Popular/' + this.cantiVotos + '/' + this.idGrupo]);
+    }
+    else{
+      this.router.navigate(['CrearVotacion/Popular/' + this.cantiVotos]);
+    }
   }
 
   navigateRanking(){
-    this.router.navigate(['CrearVotacion/Ranking']);
+    if(this.idGrupo != undefined){
+      this.router.navigate(['CrearVotacion/Ranking' + '/' + this.idGrupo]);
+    }
+    else{
+      this.router.navigate(['CrearVotacion/Ranking']);
+    }
   }
 
   navigateClasificacion(){
-    this.router.navigate(['CrearVotacion/Clasificacion']);
+    if(this.idGrupo != undefined){
+      this.router.navigate(['CrearVotacion/Clasificacion' + '/' + this.idGrupo]);
+    }
+    else{
+      this.router.navigate(['CrearVotacion/Clasificacion']);
+    }
   }
 
   open(){

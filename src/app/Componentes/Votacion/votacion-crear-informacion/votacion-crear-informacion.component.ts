@@ -10,6 +10,7 @@ import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { GrupoService } from 'src/app/Servicios/grupo.service';
 
 declare var $: any;
 
@@ -41,7 +42,7 @@ export class VotacionCrearInformacionComponent implements OnInit {
   votacionDescripcion;
   tipo: string;
   cantiVotos: number;
-  participantes = []
+  participantes = [];
   participanteParaAgregar;
   //optencion de usuarios
   nombreUsuarios = [];
@@ -56,17 +57,36 @@ export class VotacionCrearInformacionComponent implements OnInit {
   horaInicial = -1;
   minutoInicial = -1;
 
+  idGrupo: number;
+
   status;
 
-  horasPosibles = []
-  minutosPosibles = []
+  horasPosibles = [];
+  minutosPosibles = [];
 
-  constructor(public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal, private usuarioService: UsuarioService) {
+  constructor(public grupoService: GrupoService, public votacionService: VotacionService, private rutaActiva: ActivatedRoute, private router: Router, private modalService: NgbModal, private usuarioService: UsuarioService) {
     this.tipo = this.rutaActiva.snapshot.params.tipo;
     this.cantiVotos = this.rutaActiva.snapshot.params.cantiVotos;
+    
+    console.log("Id Grupo: " + this.idGrupo);
   }
 
   ngOnInit(): void {
+
+    //AGREGAR PARTICIPANTES DE GRUPO SI EXISTEN
+
+    this.idGrupo = this.rutaActiva.snapshot.params.grupo;
+    if(this.idGrupo != undefined){
+      this.grupoService.obtenerMiembrosDeGrupo(this.idGrupo).subscribe(res => {
+        res.forEach(element => {
+          console.log("MIEMBROS GRUPO: " + element.nombre);
+          this.participantes.push(element.nombre);
+        });
+        
+      });
+    }
+
+    //---------------------------------------------
 
     for (let index = 0; index < 24; index++) {
       this.horasPosibles[index] = index;

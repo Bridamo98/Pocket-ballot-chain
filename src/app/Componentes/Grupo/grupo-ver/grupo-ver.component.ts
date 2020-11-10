@@ -23,6 +23,7 @@ export class GrupoVerComponent implements OnInit {
   grupos:Grupo[]=[];
   ruta: string;
   iniciado:string;
+  timeLocal;
 
   confirmationText: string;
   act:number;
@@ -157,6 +158,8 @@ export class GrupoVerComponent implements OnInit {
       this.grupoService.obtenerGrupo(this.id).subscribe(res => {
 
         this.grupo = res;
+
+        this.timeLocal = new Date(this.grupo.creacion).toLocaleString();
 
         this.grupoService.obtenerMiembrosDeGrupo(this.id).subscribe(res2 => {
 
