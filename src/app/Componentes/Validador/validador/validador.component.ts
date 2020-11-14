@@ -56,6 +56,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
     this.cerrarValidador();
   }
 
+
   async iniciarVista(): Promise<void> {
     this.usuario = await this.getUsuario();
     usuarioPeer = this.usuario.nombre.toString();
@@ -161,6 +162,7 @@ export class ValidadorComponent implements OnInit, OnDestroy {
     desconectar();
     this.unsubscribe();
     this.blockchainService.cerrarValidador();
+    this.blockchainService.resetearBlockchain();
   }
 
   unsubscribe(): void{

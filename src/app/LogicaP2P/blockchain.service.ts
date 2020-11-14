@@ -19,6 +19,7 @@ export class BlockchainService {
 
   resetearBlockchain(): void {
     this.blockchain.resetearBlockchain();
+    this.blockchain.reiniciarTransacciones();
   }
 
   activarValidador(): void{

@@ -169,6 +169,10 @@ export class Blockchain {
     this.ultHash = new Map();
   }
 
+  reiniciarTransacciones(): void{
+    this.transacciones = new Array();
+  }
+
   calcularResultado(idVotacion: number, calcularResultado: CalcularResultadoVotacion): void {
     const subBlockchain = this.blockchain.get(idVotacion);
     for (const bloque of subBlockchain.values()) {
@@ -208,6 +212,7 @@ export class Blockchain {
       const votosBloque = bloque.transacciones.filter( (transaccion) =>  transaccion.tipoTransaccion === envTipoTx.voto).length;
       cantVotos = cantVotos + votosBloque;
     }
+    cantVotos = cantVotos + this.transacciones.filter((transaccion) =>  transaccion.tipoTransaccion === envTipoTx.voto).length;
     return cantVotos;
     } catch (error) {
       return 0;
