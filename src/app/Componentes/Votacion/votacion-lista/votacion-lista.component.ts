@@ -209,4 +209,8 @@ export class VotacionListaComponent implements OnInit, OnDestroy {
   cerrarValidador(): void{
     desconectar();
   }
+
+  refrescarPagina(): void{
+    location.reload();
+  }
 }
