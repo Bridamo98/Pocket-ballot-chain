@@ -6,7 +6,7 @@
 
             <div class="form-group">
                 <div class="input-group">
-                    <input id="titulo" class="form-control" [(ngModel)]="tituloVotacion" (ngModelChange)="errorTitulo()" placeholder="Titulo de la votación">  
+                    <input id="titulo" class="form-control" [(ngModel)]="tituloVotacion" (ngModelChange)="errorTitulo()" placeholder="Titulo de la votación">
                 </div>
             </div>
 
@@ -45,11 +45,11 @@
                     </div>
                 </div>
             </div>
-            
-                
-            
 
-            
+
+
+
+
 
 
             <!--div class="row">
@@ -68,13 +68,13 @@
                     <button class="btn btn-primary col-sm-4">Invitar por Credencial</button>
                     <button class="btn btn-primary col-sm-4">Importar datos</button>
                 </div-->
-                
+
 
                 <div class="form-group row">
                     <!--mat-form-field class="col-sm-8"-->
                         <input type="text" class="form-control col-sm-8"
-                               placeholder="Agregar persona o grupo"
-                               matInput 
+                               placeholder="Agregar persona"
+                               matInput
                                [formControl]="myControl"
                                [(ngModel)]="participanteParaAgregar"
                                id="inputPersona"
@@ -112,7 +112,7 @@
                     <div class="form-group">
                         <label for="dateIni">Fecha Inico</label>
                         <div class="input-group">
-                            <input id="dateIni" [(ngModel)]="fechaInicio" (ngModelChange)="fechaInicioError()" class="form-control" placeholder="yyyy-mm-dd" name="dp2" ngbDatepicker #dp2="ngbDatepicker" 
+                            <input id="dateIni" [(ngModel)]="fechaInicio" (ngModelChange)="fechaInicioError()" class="form-control" placeholder="yyyy-mm-dd" name="dp2" ngbDatepicker #dp2="ngbDatepicker"
                             data-toggle="popover" data-placement="top">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp2.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
@@ -124,7 +124,7 @@
                 <div class="form-group col-lg-3">
                     <label for="">Hora Inicio</label>
                     <select [(ngModel)]="horaInicial" placeholder="Hora" class="custom-select my-1 mr-sm-2" id="HoraInicial">
-                        <option disabled selected value="-1">Hora</option>    
+                        <option disabled selected value="-1">Hora</option>
                         <option *ngFor="let hora of horasPosibles" value='{{hora}}'>{{hora}}</option>
                     </select>
                 </div>
@@ -132,7 +132,7 @@
                 <div class="form-group col-lg-3">
                     <label for="">Minutos Inicio</label>
                     <select [(ngModel)]="minutoInicial" placeholder="Minuto" class="custom-select my-1 mr-sm-2" id="MinutoInicial">
-                        <option disabled selected value="-1">Minutos</option>    
+                        <option disabled selected value="-1">Minutos</option>
                         <option *ngFor="let minuto of minutosPosibles" value='{{minuto}}'>{{minuto}}</option>
                     </select>
                 </div>
@@ -143,7 +143,7 @@
                     <label for="date">Fecha limite: </label>
                     <div class="form-group">
                         <div class="input-group">
-                            <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker" 
+                            <input id="date" [(ngModel)]="fechaLimite" (ngModelChange)="fechaError()" class="form-control" placeholder="yyyy-mm-dd" name="dp" ngbDatepicker #dp="ngbDatepicker"
                             data-toggle="popover" data-placement="top">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-secondary calendar btn-primary" (click)="dp.toggle()" type="button"><i class='far fa-calendar-times'></i></button>
@@ -161,7 +161,7 @@
                 </div>
 
                 <div class="form-group col-lg-3 ">
-                    <label for="">Minutos Limite</label> 
+                    <label for="">Minutos Limite</label>
                     <select [(ngModel)]="minutoFinal" placeholder="Minuto" class="custom-select my-1 mr-sm-2" id="MinutoFinal">
                             <option disabled selected value="-1">Minutos</option>
                             <option *ngFor="let minuto of minutosPosibles" value='{{minuto}}'>{{minuto}}</option>
@@ -169,7 +169,7 @@
                 </div>
             </div>
 
-           
+
 
             <div class = "row justify-content-center">
                 <!--input id="credencial" [(ngModel)]="cantidadCredenciales" (ngModelChange)="credencialesError()" placeholder="cantidad de credenciales" type="text" class="form-control col-sm-8"
