@@ -51,16 +51,61 @@ export class RegistrarComponent implements OnInit {
     this.disMissAlertDanger('contrasenia');
     this.disMissAlertDanger('verificar');
 
-    this.nombre = this.nombre.trim().toLocaleLowerCase();
+    if (this.correo === undefined || this.correo === ''){
+      popCorreo.popoverTitle = '';
+      popCorreo.ngbPopover = 'Digite un correo de por lo menos 4 digitos';
+      popCorreo.open();
+      this.alertDanger('correo');
+      return;
+    }else{
+      if (this.correo.length < 4){
+        popCorreo.popoverTitle = '';
+        popCorreo.ngbPopover = 'Digite un correo de por lo menos 4 digitos';
+        popCorreo.open();
+        this.alertDanger('correo');
+        return;
+      }
+    }
+
+    if (this.nombre !== undefined && this.nombre !== ''){
+      if (this.nombre.length >= 4){
+        this.nombre = this.nombre.trim().toLocaleLowerCase();
+      }else{
+        popName.popoverTitle = '';
+        popName.ngbPopover = 'Digite un nombre de por lo menos 4 digitos';
+        popName.open();
+        this.alertDanger('nombre');
+        return;
+      }
+    }else{
+      popName.popoverTitle = '';
+      popName.ngbPopover = 'Digite un nombre de por lo menos 4 digitos';
+      popName.open();
+      this.alertDanger('nombre');
+      return;
+    }
 
     const usuarioYaExiste: boolean = await this.usuarioService.usuarioExiste(
       this.nombre
     );
+
     if (usuarioYaExiste) {
       popName.popoverTitle = '';
       popName.ngbPopover = 'Este usuario ya existe en el sistema';
       popName.open();
       this.alertDanger('nombre');
+      return;
+    }
+    if (this.contrasenia === '' || this.contrasenia === undefined){
+      popContra.popoverTitle = '';
+      popContra.ngbPopover = 'La contraseña debe tener por lo menos una mayuscula, una minuscula, un numero y un caracter especial';
+      popContra.open();
+      return;
+    }
+    if (this.contrasenia.length < 4){
+      popContra.popoverTitle = '';
+      popContra.ngbPopover = 'La contraseña debe tener por lo menos una mayuscula, una minuscula, un numero y un caracter especial';
+      popContra.open();
       return;
     }
     const regexContrasena = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s]).{8,}$/;

@@ -22,13 +22,13 @@
           [ngClass]="{'is-invalid': formulario.get('contrasena').touched && formulario.get('contrasena').invalid}"
           popoverTitle="Pop title" ngbPopover="What a great tip!" [autoClose]="false" triggers="manual"
           #popContra="ngbPopover" placement="right">
-        <div class="row justify-content-sm-center">
+        <div class="col justify-content-sm-center">
           <input [disabled]="!formulario.valid" type="button" (click)="iniciarSesion(popContra, popUsuario)"
             value="Iniciar sesión" class="btn btn-primary">
         </div>
 
       </form>
-      <div class="row justify-content-sm-center registro">
+      <div class="col justify-content-sm-center registro">
         <a (click)="irARegistro()">Registrarse </a>
       </div>
     </div>

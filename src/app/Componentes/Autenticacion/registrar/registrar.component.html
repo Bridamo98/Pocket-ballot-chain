@@ -1,7 +1,7 @@
 <div style = "margin: 10px;" class = "row justify-content-sm-center">
-  <div class="col-sm-4">
+  <div class="col-sm-4 my-auto text-center content">
     <div class="container">
-      <div class="row justify-content-sm-center">
+      <div class="col justify-content-sm-center">
         <h1>Registro</h1>
 
       </div>
@@ -35,11 +35,11 @@
         #popConfirm="ngbPopover" placement="right">
 
       <div class="one" [innerHtml]="htmlToAdd"></div>
-      <div class="row justify-content-sm-center">
-        <button class="btn btn-primary m-2" type="submit" [disabled]="!formulario.valid"
+      <div class="col justify-content-sm-center">
+        <button class="btn btn-primary m-2" type="submit"
           (click)="registrarse(popCorreo, popName, popContra, popConfirm  )" value="Registrarse">Registrarse</button>
       </div>
-      <div class="row justify-content-sm-center inicio-sesion">
+      <div class="col justify-content-sm-center inicio-sesion">
         <a (click)="irAInicioSesion()">Volver a inicio de sesión </a>
       </div>
     </form>
